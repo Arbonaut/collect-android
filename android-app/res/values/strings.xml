@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OFC Mobile</string>
-    <!-- about tab -->
+    <!-- settings screen -->
     <string name="aboutTabTitle">About</string>
     <string name="lblApplicationName">Application name:\u0020</string>
     <string name="lblProgramVersionName">Application version:\u0020</string>
@@ -12,6 +12,10 @@
     <string name="lblLanguage">Language:\u0020</string>
     <string name="lblFormDefinitionFile">Path to form\r\ndefinition\r\nfile on sdcard:\u0020</string>
     <string name="lblUsername">Username:\u0020</string>
+    <string name="lblScreenOrientation">Screen orientation</string>
+    <string name="lblRadioHorizontal">Horizontal</string>
+    <string name="lblRadioVertical">Vertical</string>
+    <string name="lblRadioAutoOrientation">Auto</string>
     <string name="lblSurveyId">Project ID:\u0020</string>
     <string name="lblRecordDownloadPath">Records download path:\u0020</string>
     <string name="lblRecordUploadPath">Records upload path:\u0020</string>

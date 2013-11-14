@@ -22,7 +22,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ScrollView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -48,6 +48,9 @@ public class SettingsScreen extends Activity{
 	
 	private TextView tvUsername;
 	private EditText txtUsername;
+	
+	private TextView tvScreenOrientation;
+	private RadioGroup rgScreenOrientation;
 	
 	private TextView tvSurveyId;
 	private EditText txtSurveyId;
@@ -194,7 +197,11 @@ public class SettingsScreen extends Activity{
 		        public void onTextChanged(CharSequence s, int start, int before, int count){}
 		    });
             
-         	this.tvRecordsDownloadPath = (TextView)findViewById(R.id.lblRecordsDownloadPath);
+         	this.tvScreenOrientation = (TextView)findViewById(R.id.lblScreenOrientation);
+			this.rgScreenOrientation = (RadioGroup)findViewById(R.id.radioScreenOrientation);
+
+            
+         	/*this.tvRecordsDownloadPath = (TextView)findViewById(R.id.lblRecordsDownloadPath);
 			this.txtRecordsDownloadPath = (EditText)findViewById(R.id.txtRecordsDownloadPath);
 			this.txtRecordsDownloadPath.setText(ApplicationManager.appPreferences.getString(getResources().getString(R.string.recordsDownloadPath),getResources().getString(R.string.defaultRecordsDownloadPath)));
             this.txtRecordsDownloadPath.addTextChangedListener(new TextWatcher(){
@@ -228,7 +235,7 @@ public class SettingsScreen extends Activity{
 		        }
 		        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 		        public void onTextChanged(CharSequence s, int start, int before, int count){}
-		    });
+		    });*/
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -277,6 +284,8 @@ public class SettingsScreen extends Activity{
 		this.tvLanguage.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvFormDefinitionFilePath.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvUsername.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+		this.tvScreenOrientation.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+		//this.rgScreenOrientation.getChildAt(0).get;
 		this.tvSurveyId.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvRecordsDownloadPath.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvRecordsUploadPath.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);

@@ -24,9 +24,7 @@ import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.GpsActivity;
-import org.openforis.collect.android.misc.LayoutTouchListener;
 import org.openforis.collect.android.misc.RunnableHandler;
-import org.openforis.collect.android.misc.ScrollViewSwipeDetector;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.manager.CodeListManager;
@@ -106,7 +104,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	private String latitude;
 	private String longitude;
 	
-	private ScrollViewSwipeDetector onTouchListener;
+	//private ScrollViewSwipeDetector onTouchListener;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +152,50 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		}
 	}
 	
+	private Entity findParentEntity2(String path){
+		Log.e("pathENTITYINSTANCE","=="+path);
+		Entity parentEntity = ApplicationManager.currentRecord.getRootEntity();
+		String screenPath = path;
+		String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
+		try{
+			Log.e("entityPath.length","=="+entityPath.length);
+			for (int i=0;i<entityPath.length;i++){
+				Log.e("i"+i,"=="+entityPath[i]);
+			}
+			for (int m=1;m<entityPath.length-1;m++){
+				String[] instancePath = entityPath[m].split(getResources().getString(R.string.valuesSeparator1));				
+				int id = Integer.valueOf(instancePath[0]);
+				int instanceNo = Integer.valueOf(instancePath[1]);
+				Log.e("id"+id,"instanceNo"+instanceNo);
+				
+				/*try{
+					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
+				} catch (IllegalArgumentException e){
+					parentEntity = parentEntity.getParent();
+					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
+				}*/
+				if (parentEntity!=null)
+					Log.e("5returned parententity"+(m-1),"=="+parentEntity.getName());
+				else
+					Log.e("6returned parententity"+(m-1),"==NULL");
+				parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
+				if (parentEntity!=null)
+					Log.e("7returned parententity"+m,"=="+parentEntity.getName());
+				else
+					Log.e("8returned parententity"+m,"==NULL");
+			}			
+		} catch (ClassCastException e){
+			e.printStackTrace();
+		} catch (IllegalArgumentException e){
+			e.printStackTrace();
+		}
+		if (parentEntity!=null)
+			Log.e("9returned parententity","=="+parentEntity.getName());
+		else
+			Log.e("10returned parententity","==NULL");
+		return parentEntity;
+	}
+	
     @Override
 	public void onResume()
 	{
@@ -161,8 +203,21 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
 		long startTime = System.currentTimeMillis();
 		try{
+			Log.e("getFormScreenId()","=="+FormScreen.this.getFormScreenId());
+			Log.e("parentEntity==null","=="+(FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())==null));
+			if (FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())!=null){
+				Log.e("parentEntity.getName()","=="+FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId()).getName());
+			}
 			FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId());
+			Log.e("2FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
 			FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity(FormScreen.this.parentFormScreenId);
+			Log.e("parentEntityMultipleAttribute",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
+			if (FormScreen.this.parentEntitySingleAttribute==null){
+				FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.getFormScreenId());
+				FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.parentFormScreenId);
+				Log.e("3FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
+				Log.e("3parentEntityMultipleAttribute3",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
+			}
 			String loadedValue = "";
 	
 			ArrayList<String> tableColHeaders = new ArrayList<String>();
@@ -1024,24 +1079,44 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 					},
 	 					null).show();			
 			} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleEntity)){
-				Log.e("DELETING","ENTITY");
+				Log.e("DELETING1","ENTITY");
 				AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
 	 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
 	 		    		new DialogInterface.OnClickListener() {
 	 						@Override
 	 						public void onClick(DialogInterface dialog, int which) {
-	 							NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
-	 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
-	 							Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(parentNodeDefinition.getName(), FormScreen.this.currInstanceNo);
-	 							if (foundNode!=null){
-	 								Log.e("not null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
-	 								ServiceFactory.getRecordManager().deleteNode(foundNode);
+	 							//try{
+	 								NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
+		 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
+		 							Log.e("1FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
+		 							if (FormScreen.this.parentEntitySingleAttribute==null){
+		 								Log.e("1FormScreen.this.parentEntitySingleAttribute==null","=========");
+		 										 								
+		 							}
+		 							Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(parentNodeDefinition.getName(), FormScreen.this.currInstanceNo);
+		 							if (foundNode!=null){
+		 								Log.e("not null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
+		 								ServiceFactory.getRecordManager().deleteNode(foundNode);
+		 								if (parentEntity!=null)
+		 									Log.e("11parentEntity","=="+parentEntity.getName());
+		 								Log.e("screeenID","=="+FormScreen.this.getFormScreenId());		 	
+		 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());
+		 								if (tempEntity!=null)
+		 									Log.e("22tempEntity","=="+tempEntity.getName());
+		 								Log.e("nodeToadd",ApplicationManager.getSurvey().getSchema().getDefinitionById(FormScreen.this.idmlId).getName()+"=="+parentNodeDefinition.getName());
+		 								EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
+		 							} else {
+		 								Log.e("null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
+		 							}
+		 							
+	 							/*} catch (Exception e){
+	 								e.printStackTrace();
+	 							} finally {*/
 	 								refreshEntityScreen(2);
 	 								Toast.makeText(FormScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
-	 							} else {
-	 								Log.e("null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
-	 							}
+	 								FormScreen.this.onResume();
+	 							//}
 	 						}
 	 					},
 	 		    		new DialogInterface.OnClickListener() {
@@ -1083,7 +1158,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	
 	private Intent prepareIntentForEntityInstancesList(EntityLink entityLink){
 		Intent intent = new Intent(this,EntityInstancesScreen.class);
-		Log.e("========",entityLink.getTitle()+"prepareIntentForEntityInstancesList"+entityLink.getId());
 		if (!this.breadcrumb.equals("")){
 			String title = "";
 			String entityTitle = "";
@@ -1485,6 +1559,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				    		new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
+									Log.e("getFormScreenId()","=="+FormScreen.this.getFormScreenId());
+									Log.e("parentEntity==null","=="+(FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())==null));
+									if (FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())!=null){
+										Log.e("parentEntity.getName()","=="+FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId()).getName());
+									}
 									Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo+1);
 									while (foundNode!=null){
 										FormScreen.this.currInstanceNo++;
@@ -1567,10 +1646,13 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		screenTitle.setText(FormScreen.this.screenTitle);
 		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
 		FormScreen.this.ll.addView(screenTitle);
+		//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
 		
 		this.ll.removeAllViews();
 		this.ll.addView(firstView,0);
-		this.ll.addView(screenTitle,1);
+		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+		this.ll.addView(screenTitle,2);
+		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
 		
 		//refreshing values of fields in the entity 
 		Entity parentEntity = this.findParentEntity(this.getFormScreenId());
@@ -1590,14 +1672,14 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			//Log.e("newParentEntity","=="+parentEntity.getName());
 		}
 		
-//		Log.e("refreshEntityScreen","this.getFormScreenId()=="+this.getFormScreenId());
-//		Log.e("refreshEntityScreen","this.parentFormScreenId=="+this.parentFormScreenId);
+		Log.e("refreshEntityScreen","this.getFormScreenId()=="+this.getFormScreenId());
+		Log.e("refreshEntityScreen","this.parentFormScreenId=="+this.parentFormScreenId);
 		this.parentEntitySingleAttribute = this.findParentEntity(this.getFormScreenId());
 		this.parentEntityMultipleAttribute = this.findParentEntity(this.parentFormScreenId);
-		/*if (parentEntitySingleAttribute!=null)
+		if (parentEntitySingleAttribute!=null)
 			Log.e("refreshEntityScreen","parentEntitySingleAttribute=="+parentEntitySingleAttribute.getName()+"=="+parentEntitySingleAttribute.getIndex());
 		if (parentEntityMultipleAttribute!=null)
-			Log.e("refreshEntityScreen","parentEntityMultipleAttribute=="+parentEntityMultipleAttribute.getName()+"=="+parentEntityMultipleAttribute.getIndex());*/
+			Log.e("refreshEntityScreen","parentEntityMultipleAttribute=="+parentEntityMultipleAttribute.getName()+"=="+parentEntityMultipleAttribute.getIndex());
 		
 		String loadedValue = "";
 		ArrayList<String> tableColHeaders = new ArrayList<String>();
