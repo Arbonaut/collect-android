@@ -22,7 +22,7 @@
 				android:id="@+id/btnNewPlot"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"        
-				android:src="@drawable/add"	
+				android:src="@drawable/add_new_black"	
 				android:background="#000000"			
 				android:layout_weight="1"/>
 		</TableRow>		

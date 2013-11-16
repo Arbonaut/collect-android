@@ -22,6 +22,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -197,11 +198,7 @@ public class SettingsScreen extends Activity{
 		        public void onTextChanged(CharSequence s, int start, int before, int count){}
 		    });
             
-         	this.tvScreenOrientation = (TextView)findViewById(R.id.lblScreenOrientation);
-			this.rgScreenOrientation = (RadioGroup)findViewById(R.id.radioScreenOrientation);
-
-            
-         	/*this.tvRecordsDownloadPath = (TextView)findViewById(R.id.lblRecordsDownloadPath);
+         	this.tvRecordsDownloadPath = (TextView)findViewById(R.id.lblRecordsDownloadPath);
 			this.txtRecordsDownloadPath = (EditText)findViewById(R.id.txtRecordsDownloadPath);
 			this.txtRecordsDownloadPath.setText(ApplicationManager.appPreferences.getString(getResources().getString(R.string.recordsDownloadPath),getResources().getString(R.string.defaultRecordsDownloadPath)));
             this.txtRecordsDownloadPath.addTextChangedListener(new TextWatcher(){
@@ -235,7 +232,39 @@ public class SettingsScreen extends Activity{
 		        }
 		        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 		        public void onTextChanged(CharSequence s, int start, int before, int count){}
-		    });*/
+		    });
+            
+         	this.tvScreenOrientation = (TextView)findViewById(R.id.lblScreenOrientation);
+			this.rgScreenOrientation = (RadioGroup)findViewById(R.id.radioScreenOrientation);
+			String orientation = ApplicationManager.appPreferences.getString(getResources().getString(R.string.screenOrientation),getResources().getString(R.string.defaultScreenOrientation));
+			int selectedRadioId = -1;
+			if (orientation.equals("vertical")){
+				selectedRadioId = R.id.radioVertical;
+			} else if (orientation.equals("horizontal")){
+				selectedRadioId = R.id.radioHorizontal;
+			} else {
+				selectedRadioId = R.id.radioAutoOrientation;
+			}
+			this.rgScreenOrientation.check(selectedRadioId);
+			this.rgScreenOrientation.setOnCheckedChangeListener(
+				new RadioGroup.OnCheckedChangeListener() {
+				    public void onCheckedChanged(RadioGroup group,
+				            int checkedId) {
+				        Log.e("Selected", "New radio item selected: " + checkedId);
+				        SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
+						editor = ApplicationManager.appPreferences.edit();
+						try{
+							String orientation = "vertical";
+							if (checkedId == R.id.radioHorizontal) orientation = "horizontal";
+							else if  (checkedId == R.id.radioAutoOrientation) orientation = "auto";
+							Log.e("Selected", "New radio item orientation: " + orientation);
+							editor.putString(getResources().getString(R.string.screenOrientation), orientation);
+						} catch (Exception e){
+							
+						}
+						editor.commit();
+				    }
+				});
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -285,7 +314,10 @@ public class SettingsScreen extends Activity{
 		this.tvFormDefinitionFilePath.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvUsername.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvScreenOrientation.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-		//this.rgScreenOrientation.getChildAt(0).get;
+		for (int i=0;i<this.rgScreenOrientation.getChildCount();i++){
+			RadioButton rdBtn = (RadioButton)this.rgScreenOrientation.getChildAt(i);
+			rdBtn.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
+		} 
 		this.tvSurveyId.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvRecordsDownloadPath.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvRecordsUploadPath.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);

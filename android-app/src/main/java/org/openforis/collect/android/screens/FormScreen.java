@@ -60,6 +60,7 @@ import org.openforis.idm.model.Time;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -119,7 +120,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     		this.intentType = this.startingIntent.getIntExtra(getResources().getString(R.string.intentType),-1);
     		this.idmlId = this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId),-1);
     		this.currInstanceNo = this.startingIntent.getIntExtra(getResources().getString(R.string.instanceNo),-1);
-    		Log.e("cureentINstance","=="+this.currInstanceNo);
     		//this.numberOfInstances = this.startingIntent.getIntExtra(getResources().getString(R.string.numberOfInstances),-1);
     		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;
     		this.fieldsNo = this.startingIntent.getExtras().size()-5;
@@ -141,7 +141,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
             };
             //this.ll.setOnTouchListener(gestureListener);*/
     		//this.onTouchListener = new ScrollViewSwipeDetector(this);
-            
+            this.setScreenOrientation();
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -212,12 +212,12 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			Log.e("2FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
 			FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity(FormScreen.this.parentFormScreenId);
 			Log.e("parentEntityMultipleAttribute",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
-			if (FormScreen.this.parentEntitySingleAttribute==null){
+			/*if (FormScreen.this.parentEntitySingleAttribute==null){
 				FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.getFormScreenId());
 				FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.parentFormScreenId);
 				Log.e("3FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
 				Log.e("3parentEntityMultipleAttribute3",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
-			}
+			}*/
 			String loadedValue = "";
 	
 			ArrayList<String> tableColHeaders = new ArrayList<String>();
@@ -254,6 +254,16 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
 	    		FormScreen.this.ll.addView(screenTitle);
 	    		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+			}
+			
+			if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
+				FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, false));
+				FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+			} else if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
+				if (ApplicationManager.currentRecord.getRootEntity().getId()!=FormScreen.this.idmlId){
+					FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, true));
+					FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+				}
 			}
 			
 			for (int i=0;i<FormScreen.this.fieldsNo;i++){
@@ -965,13 +975,13 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					}
 				}    				
 			}
-			if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
+			/*if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
 				FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, false));
 			} else if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
 				if (ApplicationManager.currentRecord.getRootEntity().getId()!=FormScreen.this.idmlId){
 					FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, true));
 				}	
-			}
+			}*/
 			setContentView(FormScreen.this.sv);
 				
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
@@ -1066,8 +1076,18 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 							if (foundNode!=null){
 	 								Log.e("not null", nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
 	 								ServiceFactory.getRecordManager().deleteNode(foundNode);
+	 								/*if (parentEntity!=null)
+	 									Log.e("44","=="+parentEntity.getName());
+	 								Log.e("screeenID","=="+FormScreen.this.getFormScreenId());		 	
+	 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());
+	 								if (tempEntity!=null)
+	 									Log.e("55tempEntity","=="+tempEntity.getName());
+	 								Log.e("nodeToadd",ApplicationManager.getSurvey().getSchema().getDefinitionById(FormScreen.this.idmlId).getName()+"=="+nodeDef.getName());*/
+	 								//codeField.setValue(FormScreen.this.currInstanceNo, loadedValue, FormScreen.this.parentFormScreenId,false);
+	 								//EntityBuilder.addValue(tempEntity, nodeDef.getName(),new Code(null));	
 	 								refreshMultipleAttributeScreen(2);
 	 								Toast.makeText(FormScreen.this, getResources().getString(R.string.attributeDeletedToast), Toast.LENGTH_SHORT).show();
+	 								FormScreen.this.onResume();
 	 							}
 	 						}
 	 					},
@@ -1293,6 +1313,12 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		}
 		
+		NodeDefinition currentEntity = (NodeDefinition)ApplicationManager.getSurvey().getSchema().getDefinitionById(FormScreen.this.idmlId);
+		if (currentEntity.isMultiple()&&!currentEntity.equals(ApplicationManager.getSurvey().getSchema().getDefinitionById(ApplicationManager.currRootEntityId))){
+			View dividerLine = (View)this.ll.getChildAt(5);
+			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
+		}
+		
 		int viewsNo = this.ll.getChildCount();
 		int start = (hasBreadcrumb)?1:0;
 		for (int i=start;i<viewsNo;i++){
@@ -1322,6 +1348,17 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					EntityLink tempEntityLink = (EntityLink)tempView;
 					tempEntityLink.changeBackgroundColor(backgroundColor);
 				}
+			}  else if (tempView instanceof RelativeLayout){
+				RelativeLayout rLayout = (RelativeLayout)tempView;
+				Button leftBtn = (Button)rLayout.getChildAt(0);
+				leftBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_left_black:R.drawable.arrow_left_white);
+				LinearLayout lLayout = (LinearLayout)rLayout.getChildAt(1);				
+				Button addBtn = (Button)lLayout.getChildAt(0);
+				addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
+				Button deleteBtn = (Button)lLayout.getChildAt(1);
+				deleteBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.recycle_bin_black:R.drawable.recycle_bin_white);
+				Button rightBtn = (Button)rLayout.getChildAt(2);
+				rightBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_right_black:R.drawable.arrow_right_white);
 			}
 		}
     }
@@ -1331,18 +1368,32 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
 	            RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 	    relativeButtonsLayout.setLayoutParams(lp);
-		btnLeft.setText(btnLeftLabel);
-		btnRight.setText(btnRightLabel);
-		btnDelete.setText(btnDeleteLabel);
-		btnAdd.setText(btnAddLabel);
+		//btnLeft.setText(btnLeftLabel);
+		//btnRight.setText(btnRightLabel);
+		//btnDelete.setText(btnDeleteLabel);
+	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(32,32);
+	    btnDelete.setLayoutParams(params);
+	    btnDelete.setBackgroundResource(R.drawable.recycle_bin_white);
+		//btnAdd.setText(btnAddLabel);
+	    params = new RelativeLayout.LayoutParams(32,32);
+	    btnAdd.setLayoutParams(params);
+	    btnAdd.setBackgroundResource(R.drawable.add_new_white);
 		
+	    params = new RelativeLayout.LayoutParams(32,32);
+	    btnLeft.setLayoutParams(params);
+	    btnLeft.setBackgroundResource(R.drawable.arrow_left_white);
+	    
+	    params = new RelativeLayout.LayoutParams(32,32);
+	    btnRight.setLayoutParams(params);
+	    btnRight.setBackgroundResource(R.drawable.arrow_right_white);
+	    
 		btnLeft.setOnClickListener(listener);
 		btnRight.setOnClickListener(listener);
 		btnDelete.setOnClickListener(listener);
 		btnAdd.setOnClickListener(listener);
 		
 		RelativeLayout.LayoutParams lpBtnLeft = new RelativeLayout.LayoutParams(
-	            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	            48, 32);
 		lpBtnLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		btnLeft.setLayoutParams(lpBtnLeft);
 		relativeButtonsLayout.addView(btnLeft);
@@ -1351,7 +1402,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		ll.addView(btnAdd);
 		ll.addView(btnDelete);
 		RelativeLayout.LayoutParams lpBtnAddDelete = new RelativeLayout.LayoutParams(
-	            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);		
+	            64, 32);		
 		lpBtnAddDelete.addRule(RelativeLayout.CENTER_IN_PARENT);
 		ll.setLayoutParams(lpBtnAddDelete);
 		relativeButtonsLayout.addView(ll);
@@ -1373,7 +1424,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		relativeButtonsLayout.addView(btnAdd);*/
 		
 		RelativeLayout.LayoutParams lpBtnRight = new RelativeLayout.LayoutParams(
-	            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	            48, 32);
 		lpBtnRight.addRule(RelativeLayout.RIGHT_OF,btnLeft.getId());
 		lpBtnRight.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		btnRight.setLayoutParams(lpBtnRight);
@@ -1653,6 +1704,13 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
 		this.ll.addView(screenTitle,2);
 		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+		
+		if (this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
+			if (ApplicationManager.currentRecord.getRootEntity().getId()!=this.idmlId){
+				this.ll.addView(arrangeButtonsInLine(new Button(this),getResources().getString(R.string.previousInstanceButton),new Button(this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(this), getResources().getString(R.string.deleteInstanceButton), this, true));
+				FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+			}	
+		}
 		
 		//refreshing values of fields in the entity 
 		Entity parentEntity = this.findParentEntity(this.getFormScreenId());
@@ -2409,11 +2467,12 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			}    				
 		}
 		
-		if (this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
+		/*if (this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
 			if (ApplicationManager.currentRecord.getRootEntity().getId()!=this.idmlId){
 				this.ll.addView(arrangeButtonsInLine(new Button(this),getResources().getString(R.string.previousInstanceButton),new Button(this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(this), getResources().getString(R.string.deleteInstanceButton), this, true));
+				FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
 			}	
-		}
+		}*/
 		
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
 		changeBackgroundColor(backgroundColor);
@@ -3000,4 +3059,15 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		}
 		return formattedDateValue;
     }
+    
+	public void setScreenOrientation(){
+		String screenOrientation = ApplicationManager.appPreferences.getString(getResources().getString(R.string.screenOrientation), getResources().getString(R.string.defaultScreenOrientation)); 
+		if (screenOrientation.equals("vertical")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    	} else if (screenOrientation.equals("horizontal")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);	
+    	} else {
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	}
+	}
 }

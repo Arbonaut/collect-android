@@ -45,8 +45,9 @@ public class BaseListActivity extends ListActivity {
         Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");    
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //setContentView(R.layout.welcomescreen);
+        this.setScreenOrientation();
 	}
 	
     @Override
@@ -259,4 +260,14 @@ public class BaseListActivity extends ListActivity {
 	    }
     }
 
+	public void setScreenOrientation(){
+		String screenOrientation = ApplicationManager.appPreferences.getString(getResources().getString(R.string.screenOrientation), getResources().getString(R.string.defaultScreenOrientation)); 
+		if (screenOrientation.equals("vertical")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    	} else if (screenOrientation.equals("horizontal")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);	
+    	} else {
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	}
+	}
 }

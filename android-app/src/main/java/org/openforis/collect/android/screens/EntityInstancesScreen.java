@@ -24,6 +24,7 @@ import org.openforis.idm.model.Node;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -79,6 +81,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		//this.currInstanceNo = this.startingIntent.getIntExtra(getResources().getString(R.string.instanceNo),-1);
     		//this.numberOfInstances = this.startingIntent.getIntExtra(getResources().getString(R.string.numberOfInstances),-1);
     		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;
+    		
+    		this.setScreenOrientation();
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -131,10 +135,14 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}
 			
 			NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1));
-			Log.e("nodeDef",EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1)+"=="+nodeDef.getName());
+			if (nodeDef.isMultiple()){
+				this.ll.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this, true));
+				this.ll.addView(ApplicationManager.getDividerLine(this));
+			}
+			/*Log.e("nodeDef",EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1)+"=="+nodeDef.getName());
 			//EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity(String.valueOf(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1)));
 			Log.e("call","=="+this.getFormScreenId());
-			Log.e("screenId","=="+this.getFormScreenId());
+			Log.e("screenId","=="+this.getFormScreenId());*/
 			
 			EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity(this.getFormScreenId());
 			if (EntityInstancesScreen.this.parentEntitySingleAttribute==null){
@@ -206,9 +214,9 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			
 			//if (this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
 			//if (ApplicationManager.currentRecord.getRootEntity().getId()!=this.idmlId){
-			if (nodeDef.isMultiple()){
+			/*if (nodeDef.isMultiple()){
 				this.ll.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this, true));				
-			}/* else {
+			}*//* else {
 				SummaryList temp = new SummaryList(EntityInstancesScreen.this, entityDef, 45, EntityInstancesScreen.this,0);
 				ViewBacktrack viewBacktrack = new ViewBacktrack(temp,EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
 				ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);			
@@ -560,53 +568,71 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	}*/
 	
     private void changeBackgroundColor(int backgroundColor){
-		getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
+    	try{
+    		getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
 
-		boolean hasBreadcrumb = !this.breadcrumb.equals("");
-		if (hasBreadcrumb){
-			ViewGroup scrollbarViews = ((ViewGroup)this.ll.getChildAt(0));
-			TextView breadcrumb = (TextView)scrollbarViews.getChildAt(0);
-			breadcrumb.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
-		}
+    		boolean hasBreadcrumb = !this.breadcrumb.equals("");
+    		if (hasBreadcrumb){
+    			ViewGroup scrollbarViews = ((ViewGroup)this.ll.getChildAt(0));
+    			TextView breadcrumb = (TextView)scrollbarViews.getChildAt(0);
+    			breadcrumb.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
+    		}
+    		
+    		boolean hasTitle = !this.screenTitle.equals("");
+    		if (hasTitle){
+    			View dividerLine = (View)this.ll.getChildAt(1);
+    			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+    			TextView screenTitle = (TextView)this.ll.getChildAt(2);
+    			screenTitle.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+    			dividerLine = (View)this.ll.getChildAt(3);
+    			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);			
+    		}
+    		    		
+    		View dividerLine = (View)this.ll.getChildAt(5);
+			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
+    		
+    		int viewsNo = this.ll.getChildCount();
+    		int start = (hasBreadcrumb)?1:0;
+    		for (int i=start;i<viewsNo;i++){
+    			View tempView = this.ll.getChildAt(i);
+    			if (tempView instanceof Field){
+    				Field field = (Field)tempView;
+    				field.setLabelTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+    				if (tempView instanceof BooleanField){
+    					BooleanField tempBooleanField = (BooleanField)tempView;
+    					tempBooleanField.setChoiceLabelsTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+    				} else if (tempView instanceof TaxonField){
+    					TaxonField tempTaxonField = (TaxonField)tempView;
+    					tempTaxonField.setFieldsLabelsTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+    				} else if (tempView instanceof CoordinateField){
+    					CoordinateField tempCoordinateField = (CoordinateField)tempView;
+    					tempCoordinateField.setCoordinateLabelTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+    				}
+    			}
+    			else if (tempView instanceof UIElement){
+    				if (tempView instanceof SummaryList){
+    					SummaryList tempSummaryList = (SummaryList)tempView;
+    					tempSummaryList.changeBackgroundColor(backgroundColor);
+    				} else if (tempView instanceof SummaryTable){
+    					SummaryTable tempSummaryTable = (SummaryTable)tempView;
+    					tempSummaryTable.changeBackgroundColor(backgroundColor);
+    				}
+    			} else if (tempView instanceof RelativeLayout){
+    				RelativeLayout rLayout = (RelativeLayout)tempView;
+    				LinearLayout lLayout = (LinearLayout)rLayout.getChildAt(0);
+    				Button btn = (Button)lLayout.getChildAt(0);
+    				btn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
+    			}
+    		}
+    	} catch (Exception e){
+    		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":changeBackgroundColor",
+    				Environment.getExternalStorageDirectory().toString()
+    				+getResources().getString(R.string.logs_folder)
+    				+getResources().getString(R.string.logs_file_name)
+    				+System.currentTimeMillis()
+    				+getResources().getString(R.string.log_file_extension));
+    	}
 		
-		boolean hasTitle = !this.screenTitle.equals("");
-		if (hasTitle){
-			View dividerLine = (View)this.ll.getChildAt(1);
-			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-			TextView screenTitle = (TextView)this.ll.getChildAt(2);
-			screenTitle.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-			dividerLine = (View)this.ll.getChildAt(3);
-			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);			
-		}
-		
-		int viewsNo = this.ll.getChildCount();
-		int start = (hasBreadcrumb)?1:0;
-		for (int i=start;i<viewsNo;i++){
-			View tempView = this.ll.getChildAt(i);
-			if (tempView instanceof Field){
-				Field field = (Field)tempView;
-				field.setLabelTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-				if (tempView instanceof BooleanField){
-					BooleanField tempBooleanField = (BooleanField)tempView;
-					tempBooleanField.setChoiceLabelsTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-				} else if (tempView instanceof TaxonField){
-					TaxonField tempTaxonField = (TaxonField)tempView;
-					tempTaxonField.setFieldsLabelsTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-				} else if (tempView instanceof CoordinateField){
-					CoordinateField tempCoordinateField = (CoordinateField)tempView;
-					tempCoordinateField.setCoordinateLabelTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-				}
-			}
-			else if (tempView instanceof UIElement){
-				if (tempView instanceof SummaryList){
-					SummaryList tempSummaryList = (SummaryList)tempView;
-					tempSummaryList.changeBackgroundColor(backgroundColor);
-				} else if (tempView instanceof SummaryTable){
-					SummaryTable tempSummaryTable = (SummaryTable)tempView;
-					tempSummaryTable.changeBackgroundColor(backgroundColor);
-				}
-			}
-		}
     }
     
     /*private RelativeLayout arrangeButtonsInLine(Button btnLeft, String btnLeftLabel, Button btnRight, String btnRightLabel, OnClickListener listener, boolean isForEntity){
@@ -1762,13 +1788,16 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
 	            RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 	    relativeButtonsLayout.setLayoutParams(lp);
-		btnAdd.setText(btnAddLabel);
+		//btnAdd.setText(btnAddLabel);
+	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(32,32);
+	    btnAdd.setLayoutParams(params);
+	    btnAdd.setBackgroundResource(R.drawable.add_new_white);
 		
 		btnAdd.setOnClickListener(listener);
 		
 		LinearLayout ll = new LinearLayout(this);
-		ll.addView(btnAdd);
-		relativeButtonsLayout.addView(ll);
+		ll.addView(btnAdd);		
+		relativeButtonsLayout.addView(ll);;
 		
 		if (!isForEntity){
 			btnAdd.setId(getResources().getInteger(R.integer.addButtonMultipleAttribute));
@@ -1776,6 +1805,18 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			btnAdd.setId(getResources().getInteger(R.integer.addButtonMultipleEntity));
 		}
 		
+		
 		return relativeButtonsLayout;
     }
+	
+    public void setScreenOrientation(){
+		String screenOrientation = ApplicationManager.appPreferences.getString(getResources().getString(R.string.screenOrientation), getResources().getString(R.string.defaultScreenOrientation)); 
+		if (screenOrientation.equals("vertical")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    	} else if (screenOrientation.equals("horizontal")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);	
+    	} else {
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	}
+	}
 }

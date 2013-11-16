@@ -91,7 +91,6 @@ public class TaxonManager {
 	}
 	
 	//Do search without CollectRecord and nodeId
-	//Added for mobile application by A. Voronov (Arbonaut Ltd.) 
 	@Transactional
 	public List<TaxonOccurrence> findByVernacularName(String taxonomyName, String searchString, int maxResults) {
 		List<TaxonOccurrence> result = new ArrayList<TaxonOccurrence>();

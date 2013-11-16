@@ -36,9 +36,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -222,7 +221,12 @@ public class ApplicationManager extends BaseActivity {
 			String recordsUploadPath = ApplicationManager.appPreferences.getString(getResources().getString(R.string.recordsUploadPath), getResources().getString(R.string.defaultRecordsUploadPath));
 			editor.putString(getResources().getString(R.string.recordsUploadPath), recordsUploadPath);			
 			
+			String screenOrientation = ApplicationManager.appPreferences.getString(getResources().getString(R.string.screenOrientation), getResources().getString(R.string.defaultScreenOrientation));
+			editor.putString(getResources().getString(R.string.screenOrientation), screenOrientation);
+			
 	    	editor.commit();
+	    	
+	    	ApplicationManager.this.setScreenOrientation();
 	    	
         	creationThread.start();
         	
@@ -921,5 +925,16 @@ public class ApplicationManager extends BaseActivity {
 	    dividerView.setBackgroundDrawable(draw);
 	    //mParentLayout.addView(dividerView);*/
 	    return dividerView;
+	}
+	
+	public void setScreenOrientation(){
+		String screenOrientation = getPreferences(MODE_PRIVATE).getString(getResources().getString(R.string.screenOrientation), getResources().getString(R.string.defaultScreenOrientation)); 
+		if (screenOrientation.equals("vertical")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    	} else if (screenOrientation.equals("horizontal")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);	
+    	} else {
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	}
 	}
 }

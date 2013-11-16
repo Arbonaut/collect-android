@@ -53,6 +53,8 @@
     <string name="defaultRecordsDownloadPath">http://ar5.arbonaut.com/awfdatademo/planned/</string>
     <string name="recordsUploadPath">recordsUploadPath</string>
     <string name="defaultRecordsUploadPath">http://ar5.arbonaut.com/webforest/fao-mobile/save-received-data-file</string>
+    <string name="screenOrientation">screeOrientationSetting</string>
+    <string name="defaultScreenOrientation">vertical</string>
     
     <string name="left_swipe">left_swipe</string>
     <string name="right_swipe">right_swipe</string>
