@@ -1109,27 +1109,19 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 							//try{
 	 								NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
 		 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
-		 							Log.e("1FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
-		 							if (FormScreen.this.parentEntitySingleAttribute==null){
-		 								Log.e("1FormScreen.this.parentEntitySingleAttribute==null","=========");
-		 										 								
-		 							}
 		 							Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(parentNodeDefinition.getName(), FormScreen.this.currInstanceNo);
+		 							
 		 							if (foundNode!=null){
 		 								Log.e("not null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
-		 								ServiceFactory.getRecordManager().deleteNode(foundNode);
-		 								if (parentEntity!=null)
-		 									Log.e("11parentEntity","=="+parentEntity.getName());
-		 								Log.e("screeenID","=="+FormScreen.this.getFormScreenId());		 	
-		 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());
-		 								if (tempEntity!=null)
-		 									Log.e("22tempEntity","=="+tempEntity.getName());
-		 								Log.e("nodeToadd",ApplicationManager.getSurvey().getSchema().getDefinitionById(FormScreen.this.idmlId).getName()+"=="+parentNodeDefinition.getName());
-		 								EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
+		 								ServiceFactory.getRecordManager().deleteNode(foundNode);	 	
+		 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());		 								
+		 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
+		 								Log.e("tempNode==null","=="+(tempNode==null));
+		 								if (tempNode==null)
+		 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
 		 							} else {
 		 								Log.e("null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
-		 							}
-		 							
+		 							}		 							
 	 							/*} catch (Exception e){
 	 								e.printStackTrace();
 	 							} finally {*/

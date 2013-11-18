@@ -21,15 +21,20 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RecordChoiceActivity extends BaseListActivity implements OnItemLongClickListener{
 	
@@ -59,9 +64,11 @@ public class RecordChoiceActivity extends BaseListActivity implements OnItemLong
         	
         	this.getListView().setLongClickable(true);
         	this.getListView().setOnItemLongClickListener(this); 
-        	Log.e("rootEntity",ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName()+"=="+ApplicationManager.currRootEntityId);
+        	//Log.e("rootEntity",ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName()+"=="+ApplicationManager.currRootEntityId);
         	/*ProgressDialog pd = ProgressDialog.show(ClusterChoiceActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loading), true, false);
     		pd.dismiss();*/
+        	
+        	registerForContextMenu(getListView());
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -80,6 +87,70 @@ public class RecordChoiceActivity extends BaseListActivity implements OnItemLong
 		changeBackgroundColor(backgroundColor);
 		
 		refreshRecordsList();
+    }
+    
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {    	
+        AdapterContextMenuInfo adapInfo = (AdapterContextMenuInfo) item
+                .getMenuInfo();
+        
+        //String selectedName = clusterList[(int)adapInfo.id];
+        final int position = (int)adapInfo.id;
+        switch (item.getItemId()) {
+        case R.id.view:
+        	if (this.recordsList.size()==0){
+    			Intent resultHolder = new Intent();
+    			resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
+    			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
+    			RecordChoiceActivity.this.finish();		
+    		} else {
+    			if (position!=recordsList.size()){
+    				Intent resultHolder = new Intent();
+    				if (position<recordsList.size()){
+    					resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
+    				} else {
+    					resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
+    				}			
+    				setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
+    				RecordChoiceActivity.this.finish();	
+    			}
+    		}
+            return true;
+        /*case R.id.save:
+            Toast.makeText(RecordChoiceActivity.this,
+            		position+"You have pressed Save Context Menu for " + selectedName,
+                    Toast.LENGTH_LONG).show();
+            return true;
+        case R.id.edit:
+            Toast.makeText(RecordChoiceActivity.this,
+            		position+"You have pressed Edit Context Menu for " + selectedName,
+                    Toast.LENGTH_LONG).show();
+            return true;*/
+        case R.id.delete:
+        	AlertMessage.createPositiveNegativeDialog(RecordChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
+    				getResources().getString(R.string.deleteRecordTitle), getResources().getString(R.string.deleteRecord),
+    				getResources().getString(R.string.yes), getResources().getString(R.string.no),
+    	    		new DialogInterface.OnClickListener() {
+    					@Override
+    					public void onClick(DialogInterface dialog, int which) {							
+    						ApplicationManager.dataManager.deleteRecord(position);
+    						refreshRecordsList();
+    					}
+    				},
+    	    		new DialogInterface.OnClickListener() {
+    					@Override
+    					public void onClick(DialogInterface dialog, int which) {
+    						
+    					}
+    				},
+    				null).show();
+            return true;
+        }
+        return false;
     }
     
     @Override
@@ -131,7 +202,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnItemLong
 			long id) {
 		if ((recordsList.size()!=0) && (position<recordsList.size())){
 			final int number = position;
-			AlertMessage.createPositiveNegativeDialog(RecordChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
+			/*AlertMessage.createPositiveNegativeDialog(RecordChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
 					getResources().getString(R.string.deleteRecordTitle), getResources().getString(R.string.deleteRecord),
 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
 		    		new DialogInterface.OnClickListener() {
@@ -147,7 +218,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnItemLong
 							
 						}
 					},
-					null).show();
+					null).show();*/
 		}		
 		return false;
 	}

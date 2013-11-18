@@ -589,7 +589,9 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		}
     		    		
     		View dividerLine = (View)this.ll.getChildAt(5);
-			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
+    		if (dividerLine!=null){
+    			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
+    		}
     		
     		int viewsNo = this.ll.getChildCount();
     		int start = (hasBreadcrumb)?1:0;
