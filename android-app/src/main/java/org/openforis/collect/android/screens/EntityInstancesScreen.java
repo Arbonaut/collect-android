@@ -11,6 +11,7 @@ import org.openforis.collect.android.fields.SummaryList;
 import org.openforis.collect.android.fields.SummaryTable;
 import org.openforis.collect.android.fields.TaxonField;
 import org.openforis.collect.android.fields.UIElement;
+import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;
@@ -30,16 +31,20 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EntityInstancesScreen extends BaseActivity implements OnClickListener {
 	
@@ -83,6 +88,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;
     		
     		this.setScreenOrientation();
+    		
+    		
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -210,6 +217,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				summaryListView.setOnClickListener(EntityInstancesScreen.this);
 				summaryListView.setId(nodeDef.getId());
 				EntityInstancesScreen.this.ll.addView(summaryListView);
+				registerForContextMenu(summaryListView);
 			}
 			
 			//if (this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
@@ -225,10 +233,13 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			//}	
 			//}	
 			setContentView(EntityInstancesScreen.this.sv);
-				
+			
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
 			changeBackgroundColor(backgroundColor);
 
+			registerForContextMenu(EntityInstancesScreen.this.sv);
+			registerForContextMenu(EntityInstancesScreen.this.ll);
+			//registerForContextMenu(getListView());
 	    	/*sv.post(new Runnable() {
 	    	    @Override
 	    	    public void run() {
@@ -1821,4 +1832,40 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     	}
 	}
+    
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {    	
+        AdapterContextMenuInfo adapInfo = (AdapterContextMenuInfo) item
+                .getMenuInfo();
+        
+        String selectedName = "HLKJ";//clusterList[(int)adapInfo.id];
+        final int position = (int)adapInfo.id;
+        switch (item.getItemId()) {
+        case R.id.view:
+        	Toast.makeText(EntityInstancesScreen.this,
+            		position+"You have pressed Save Context Menu for " + selectedName,
+                    Toast.LENGTH_LONG).show();
+            return true;
+        /*case R.id.save:
+            Toast.makeText(RecordChoiceActivity.this,
+            		position+"You have pressed Save Context Menu for " + selectedName,
+                    Toast.LENGTH_LONG).show();
+            return true;
+        case R.id.edit:
+            Toast.makeText(RecordChoiceActivity.this,
+            		position+"You have pressed Edit Context Menu for " + selectedName,
+                    Toast.LENGTH_LONG).show();
+            return true;*/
+        case R.id.delete:
+        	Toast.makeText(EntityInstancesScreen.this,
+            		position+"You have pressed Delete Context Menu for " + selectedName,
+                    Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
+    }
 }

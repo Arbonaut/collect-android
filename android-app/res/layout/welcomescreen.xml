@@ -33,5 +33,4 @@ android:background="#000000">
    		android:contentDescription="@string/ofclogo"
    		android:src="@drawable/ofclogo"
    		 />
- 	
 </RelativeLayout>

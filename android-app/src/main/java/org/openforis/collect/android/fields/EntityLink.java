@@ -1,10 +1,13 @@
 package org.openforis.collect.android.fields;
 
 import org.openforis.collect.android.R;
+import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.idm.metamodel.EntityDefinition;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.StateListDrawable;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -30,22 +33,23 @@ public class EntityLink extends UIElement {
 		
 		this.relativeLayout = new RelativeLayout(context);
 		
-		
-
-
-		
-		TextView titleView = new TextView(context);		
+		TextView titleView = new TextView(context);
 		titleView.setText(this.label.getText());
+		RelativeLayout.LayoutParams titleParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+		titleParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		titleParams.addRule(RelativeLayout.CENTER_VERTICAL);
+		titleView.setLayoutParams(titleParams);
 		
 		ImageView linkView = new ImageView(context);
 		linkView.setBackgroundResource(R.drawable.multiple_entity_arrow_black);
 //		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(32,32);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(64,64);
 		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		linkView.setLayoutParams(params);
 		
 		this.relativeLayout.addView(titleView);
 		this.relativeLayout.addView(linkView);
+		this.relativeLayout.addView(ApplicationManager.getDividerLine(context));
 		
 		this.container.addView(this.relativeLayout);
 		this.addView(this.container);
@@ -245,7 +249,9 @@ public class EntityLink extends UIElement {
 		TextView titleView = (TextView)row.getChildAt(0);*/
 		titleView.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		ImageView linkView = (ImageView)this.relativeLayout.getChildAt(1);
-		linkView.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.multiple_entity_arrow_white:R.drawable.multiple_entity_arrow_black);
+		linkView.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.multiple_entity_arrow_black:R.drawable.multiple_entity_arrow_white);
+		View dividerView = (View)this.relativeLayout.getChildAt(2);
+		dividerView.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		/*TextView linkView = (TextView)row.getChildAt(1);
 		linkView.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);*/
 		/*int childrenNo = this.tableLayout.getChildCount();

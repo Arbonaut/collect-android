@@ -209,7 +209,7 @@ public class SummaryList extends UIElement {
 			tv.setOnClickListener(listener);
 			final Entity entityToRemove = currentEntity;
 			final Entity parent = parentEntity;
-			tv.setOnLongClickListener(new OnLongClickListener() {
+			/*tv.setOnLongClickListener(new OnLongClickListener() {
 		        @Override
 		        public boolean onLongClick(View v) {		        
 		        	AlertMessage.createPositiveNegativeDialog(SummaryList.this.context, false, getResources().getDrawable(R.drawable.warningsign),
@@ -235,17 +235,6 @@ public class SummaryList extends UIElement {
 		 							((EntityInstancesScreen)SummaryList.this.context).onResume();
 		 							//TODO: Validation. What exactly to validate if entityToRemove was deleted?
 		 						}
-		 						/*NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
-	 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
-	 							Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(parentNodeDefinition.getName(), FormScreen.this.currInstanceNo);
-	 							if (foundNode!=null){
-	 								Log.e("not null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
-	 								ServiceFactory.getRecordManager().deleteNode(foundNode);
-	 								refreshEntityScreen(2);
-	 								
-	 							} else {
-	 								Log.e("null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
-	 							}*/
 		 					},
 		 		    		new DialogInterface.OnClickListener() {
 		 						@Override
@@ -257,7 +246,7 @@ public class SummaryList extends UIElement {
 		 					null).show();
 		            return true;
 		        }
-		    });
+		    });*/
 			tv.setOnClickListener(this.context);
 
 			TableRow tr = new TableRow(context);
