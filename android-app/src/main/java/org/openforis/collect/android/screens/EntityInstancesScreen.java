@@ -315,7 +315,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}
 			
 		}*/
-		//Log.e("arg0","=="+arg0.getClass());
+		Log.e("arg01","=="+arg0.getClass());
 		if (arg0 instanceof Button){
 			Button btn = (Button)arg0;
 			//Log.e("ADDING",btn.getId()+"ENTITY"+getResources().getInteger(R.integer.addButtonMultipleEntity));
@@ -324,10 +324,9 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				addNewEntity();
 			}
 		} else if (arg0 instanceof TextView){
-			Object parentView = arg0.getParent().getParent().getParent().getParent();
-			//Log.e("parentView","=="+parentView.getClass());
+			Object parentView = arg0.getParent().getParent().getParent();
 			if (parentView instanceof SummaryList){
-				SummaryList temp = (SummaryList)arg0.getParent().getParent().getParent().getParent();
+				SummaryList temp = (SummaryList)parentView;
 				ViewBacktrack viewBacktrack = new ViewBacktrack(temp,EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
 				ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
 				//Log.e("clickedON",temp.getInstanceNo()+"=="+EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));

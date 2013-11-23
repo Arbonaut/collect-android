@@ -68,12 +68,6 @@ public class SummaryList extends UIElement {
 		
 		this.entityDefinition = entityDef;
 		//Log.e("entityDef",this.entityDefinition.getName()+"=="+this.instanceNo);
-		TextView titleView = new TextView(context);
-		if (this.entityDefinition.isMultiple())
-			titleView.setText(this.label.getText()+" "+(this.instanceNo+1));
-		else
-			titleView.setText(this.label.getText());
-		this.tableLayout.addView(titleView);
 		
 		//adding the entity and its nodes if do not exist yet
 		/*for (int i=0;i<entityDef.getChildDefinitions().size();i++){
@@ -116,25 +110,26 @@ public class SummaryList extends UIElement {
 		//Log.e("currentEntity","=="+currentEntity.getName());
 		//if (this.context.getFormScreenId()!=null){			
 			//fetching keys and their values
-			List<AttributeDefinition> keyAttrDefsList = entityDef.getKeyAttributeDefinitions();
-			for (AttributeDefinition attrDef : keyAttrDefsList){
-				List<String> key = new ArrayList<String>();
-				Value attrValue = null;			
-				attrValue = (Value)currentEntity.getValue(attrDef.getName(),0);
-				//key.add(attrDef.getName());
-				String label = ApplicationManager.getLabel(attrDef);
-				key.add(label);
-				String stringValue = convertValueToString(attrValue, (NodeDefinition)attrDef);
-				if (stringValue!=null){
-					key.add(stringValue);
-					isAtLeastOneKeyValue = true;
-				}
-						
-				keysList.add(key);
-			}
+		List<AttributeDefinition> keyAttrDefsList = entityDef.getKeyAttributeDefinitions();
+		for (AttributeDefinition attrDef : keyAttrDefsList){
+			List<String> key = new ArrayList<String>();
+			Value attrValue = null;			
+			attrValue = (Value)currentEntity.getValue(attrDef.getName(),0);
+			//key.add(attrDef.getName());
+			String label = ApplicationManager.getLabel(attrDef);
+			key.add(label);
+			String stringValue = convertValueToString(attrValue, (NodeDefinition)attrDef);
+			if (stringValue!=null && !stringValue.equals("")){
+				Log.e("keyAttribute","=="+attrDef.getName());
+				key.add(stringValue);
+				isAtLeastOneKeyValue = true;
+			}					
+			keysList.add(key);
+		}
 			
 			String keysLine = "";
-			if (isAtLeastOneKeyValue){				
+			Log.e("has>1key","=="+isAtLeastOneKeyValue);
+			if (isAtLeastOneKeyValue){
 				for (List<String> key : keysList){
 					if (key.size()==1){
 						keysLine += key.get(0) + getResources().getString(R.string.valuesSeparator1);
@@ -147,17 +142,20 @@ public class SummaryList extends UIElement {
 					isAtLeastOneKeyValue = false;
 				}
 			} else {
+				
 				keysLine += (entityInstanceNo+1);
+				Log.e("keysLinewithNUMBER","="+keysLine);
 			}
 			
-		
+			Log.e("threshold==keysLine",threshold+"=="+keysLine.length());
 			if (keysLine.length()>threshold){
 				keysLine = keysLine.substring(0,threshold-3)+"...";
 			} else {
-				if (!keysLine.equals("")){
+				if (!keysLine.equals("")&&keysLine.length()>1){
 					keysLine = keysLine.substring(0,keysLine.length()-1);	
 				}				
 			}
+			Log.e("keysLine2","=="+keysLine);
 			
 			//fetching details and their values
 			List<NodeDefinition> detailNodeDefsList = entityDef.getChildDefinitions();
@@ -203,12 +201,22 @@ public class SummaryList extends UIElement {
 				detailsLine = detailsLine.substring(0,detailsLine.length()-1);
 			}*/
 			
-			TextView tv = new TextView(context);
-			tv.setText(keysLine/*+"\r\n"+detailsLine*/);
-			tv.setId(entityInstanceNo);
+			Log.e("keysLine==","=="+keysLine);
+			TextView titleView = new TextView(context);
+			if (this.entityDefinition.isMultiple())
+				//titleView.setText(this.label.getText()+" "+(this.instanceNo+1));
+				titleView.setText(this.label.getText()+" "+keysLine);
+			else
+				titleView.setText(this.label.getText()+" "+keysLine);
+			titleView.setOnClickListener(this.context);
+			this.tableLayout.addView(titleView);
+			
+			/*TextView tv = new TextView(context);
+			tv.setText(keysLine/*+"\r\n"+detailsLine*///);
+			/*tv.setId(entityInstanceNo);
 			tv.setOnClickListener(listener);
 			final Entity entityToRemove = currentEntity;
-			final Entity parent = parentEntity;
+			final Entity parent = parentEntity;*/
 			/*tv.setOnLongClickListener(new OnLongClickListener() {
 		        @Override
 		        public boolean onLongClick(View v) {		        
@@ -247,11 +255,11 @@ public class SummaryList extends UIElement {
 		            return true;
 		        }
 		    });*/
-			tv.setOnClickListener(this.context);
+			//tv.setOnClickListener(this.context);
 
-			TableRow tr = new TableRow(context);
+			/*TableRow tr = new TableRow(context);
 			tr.addView(tv);
-			this.tableLayout.addView(tr);
+			this.tableLayout.addView(tr);*/
 		//}
 		
 		this.container.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

@@ -86,6 +86,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 
 	private ScrollView sv;			
     private LinearLayout ll;
+    private LinearLayout mainLayout;
 	
 	private Intent startingIntent;
 	private String parentFormScreenId;
@@ -158,15 +159,15 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		String screenPath = path;
 		String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
 		try{
-			Log.e("entityPath.length","=="+entityPath.length);
+			/*Log.e("entityPath.length","=="+entityPath.length);
 			for (int i=0;i<entityPath.length;i++){
 				Log.e("i"+i,"=="+entityPath[i]);
-			}
+			}*/
 			for (int m=1;m<entityPath.length-1;m++){
 				String[] instancePath = entityPath[m].split(getResources().getString(R.string.valuesSeparator1));				
 				int id = Integer.valueOf(instancePath[0]);
 				int instanceNo = Integer.valueOf(instancePath[1]);
-				Log.e("id"+id,"instanceNo"+instanceNo);
+				//Log.e("id"+id,"instanceNo"+instanceNo);
 				
 				/*try{
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
@@ -229,7 +230,10 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			//this.ll.setOnTouchListener(new ScrollViewSwipeDetector(this));
 			FormScreen.this.sv.addView(ll);
 			//this.sv.setOnTouchListener(new ScrollViewSwipeDetector(this));
-	
+			
+			FormScreen.this.mainLayout = new LinearLayout(FormScreen.this);
+			FormScreen.this.mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);		
+			
 			if (!FormScreen.this.breadcrumb.equals("")){				
 				TextView breadcrumb = new TextView(FormScreen.this);
 				if (FormScreen.this.intentType != getResources().getInteger(R.integer.singleEntityIntent)){
@@ -245,24 +249,32 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    		breadcrumb.setSingleLine();
 	    		HorizontalScrollView scroller = new HorizontalScrollView(FormScreen.this);
 	    		scroller.addView(breadcrumb);
-	    		FormScreen.this.ll.addView(scroller);
+	    		//FormScreen.this.ll.addView(scroller);
+	    		FormScreen.this.mainLayout.addView(scroller);
 	    		//FormScreen.this.ll.addView(breadcrumb);
-	    		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+	    		//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+	    		FormScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 	    		
 	    		TextView screenTitle = new TextView(FormScreen.this);
 	    		screenTitle.setText(FormScreen.this.screenTitle);
 	    		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
-	    		FormScreen.this.ll.addView(screenTitle);
-	    		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+	    		//FormScreen.this.ll.addView(screenTitle);
+	    		FormScreen.this.mainLayout.addView(screenTitle);
+	    		//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+	    		FormScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 			}
 			
 			if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
-				FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, false));
-				FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+				//FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, false));
+				FormScreen.this.mainLayout.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, false));
+				//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+				FormScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 			} else if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
 				if (ApplicationManager.currentRecord.getRootEntity().getId()!=FormScreen.this.idmlId){
-					FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, true));
-					FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+					//FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, true));
+					FormScreen.this.mainLayout.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, true));
+					//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+					FormScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 				}
 			}
 			
@@ -982,7 +994,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					FormScreen.this.ll.addView(arrangeButtonsInLine(new Button(FormScreen.this),getResources().getString(R.string.previousInstanceButton),new Button(FormScreen.this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(FormScreen.this), getResources().getString(R.string.deleteInstanceButton), FormScreen.this, true));
 				}	
 			}*/
-			setContentView(FormScreen.this.sv);
+			//setContentView(FormScreen.this.sv);
+			FormScreen.this.mainLayout.addView(sv);	
+			setContentView(FormScreen.this.mainLayout);
 				
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
 			changeBackgroundColor(backgroundColor);
@@ -1290,24 +1304,29 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
 		boolean hasBreadcrumb = !this.breadcrumb.equals("");
 		if (hasBreadcrumb){
-			ViewGroup scrollbarViews = ((ViewGroup)this.ll.getChildAt(0));
+			//ViewGroup scrollbarViews = ((ViewGroup)this.ll.getChildAt(0));
+			ViewGroup scrollbarViews = (ViewGroup)this.mainLayout.getChildAt(0);
 			TextView breadcrumb = (TextView)scrollbarViews.getChildAt(0);
 			breadcrumb.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
 		}
 		
 		boolean hasTitle = !this.screenTitle.equals("");
 		if (hasTitle){
-			View dividerLine = (View)this.ll.getChildAt(1);
+			//View dividerLine = (View)this.ll.getChildAt(1);
+			View dividerLine = (View)this.mainLayout.getChildAt(1);
 			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-			TextView screenTitle = (TextView)this.ll.getChildAt(2);
+			//TextView screenTitle = (TextView)this.ll.getChildAt(2);
+			TextView screenTitle = (TextView)this.mainLayout.getChildAt(2);
 			screenTitle.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-			dividerLine = (View)this.ll.getChildAt(3);
+			//dividerLine = (View)this.ll.getChildAt(3);
+			dividerLine = (View)this.mainLayout.getChildAt(3);
 			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		}
 		
 		NodeDefinition currentEntity = (NodeDefinition)ApplicationManager.getSurvey().getSchema().getDefinitionById(FormScreen.this.idmlId);
 		if (currentEntity.isMultiple()&&!currentEntity.equals(ApplicationManager.getSurvey().getSchema().getDefinitionById(ApplicationManager.currRootEntityId))){
-			View dividerLine = (View)this.ll.getChildAt(5);
+			//View dividerLine = (View)this.ll.getChildAt(5);
+			View dividerLine = (View)this.mainLayout.getChildAt(5);
 			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
 		}
 		
@@ -1672,8 +1691,10 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				return;
 			}	
 		}
+
 		
-		View firstView = this.ll.getChildAt(0);
+		//View firstView = this.ll.getChildAt(0);
+		View firstView = FormScreen.this.mainLayout.getChildAt(0);
 		if (firstView instanceof HorizontalScrollView){
 			ViewGroup scrollbarView = ((ViewGroup)this.ll.getChildAt(0));
 			TextView breadcrumb = (TextView)scrollbarView.getChildAt(0);
@@ -1688,19 +1709,27 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		TextView screenTitle = new TextView(FormScreen.this);
 		screenTitle.setText(FormScreen.this.screenTitle);
 		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
-		FormScreen.this.ll.addView(screenTitle);
+		//FormScreen.this.ll.addView(screenTitle);
 		//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
 		
 		this.ll.removeAllViews();
-		this.ll.addView(firstView,0);
-		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
-		this.ll.addView(screenTitle,2);
-		FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+		this.mainLayout.removeAllViews();
+		this.sv.removeAllViews();
+		//this.ll.addView(firstView,0);
+		this.mainLayout.addView(firstView);
+		//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+		FormScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
+		//this.ll.addView(screenTitle,2);
+		this.mainLayout.addView(screenTitle,2);
+		//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+		FormScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 		
 		if (this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
 			if (ApplicationManager.currentRecord.getRootEntity().getId()!=this.idmlId){
-				this.ll.addView(arrangeButtonsInLine(new Button(this),getResources().getString(R.string.previousInstanceButton),new Button(this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(this), getResources().getString(R.string.deleteInstanceButton), this, true));
-				FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+				//this.ll.addView(arrangeButtonsInLine(new Button(this),getResources().getString(R.string.previousInstanceButton),new Button(this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(this), getResources().getString(R.string.deleteInstanceButton), this, true));
+				this.mainLayout.addView(arrangeButtonsInLine(new Button(this),getResources().getString(R.string.previousInstanceButton),new Button(this),getResources().getString(R.string.nextInstanceButton), new Button(this), getResources().getString(R.string.addInstanceButton), new Button(this), getResources().getString(R.string.deleteInstanceButton), this, true));
+				//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+				FormScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 			}	
 		}
 		
@@ -2631,6 +2660,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				}
 			}
 		}
+		
+		this.sv.addView(ll);
+		FormScreen.this.mainLayout.addView(sv);
 		sv.post(new Runnable() {
     	    @Override
     	    public void run() {

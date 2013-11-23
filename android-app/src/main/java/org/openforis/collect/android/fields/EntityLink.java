@@ -6,17 +6,15 @@ import org.openforis.idm.metamodel.EntityDefinition;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.StateListDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class EntityLink extends UIElement {
 	
-	private TableLayout tableLayout;
+	//private TableLayout tableLayout;
 	private RelativeLayout relativeLayout;
 	
 	private EntityDefinition entityDefinition;
