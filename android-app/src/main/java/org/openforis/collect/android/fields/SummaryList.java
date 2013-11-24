@@ -299,11 +299,15 @@ public class SummaryList extends UIElement {
 				valueToReturn = textValue.getValue();
 			} else if (value instanceof NumberValue){
 				NumberValue<?> numberValue = (NumberValue<?>)value;
-				if (((NumberAttributeDefinition) nodeDef).isInteger()){
-					valueToReturn = String.valueOf(numberValue.getValue().intValue());	
+				if (numberValue.getValue()==null){
+					valueToReturn = "";
 				} else {
-					valueToReturn = String.valueOf(numberValue.getValue().doubleValue());
-				}
+					if (((NumberAttributeDefinition) nodeDef).isInteger()){
+						valueToReturn = String.valueOf(numberValue.getValue().intValue());	
+					} else {
+						valueToReturn = String.valueOf(numberValue.getValue().doubleValue());
+					}	
+				}				
 			} else if (value instanceof BooleanValue){
 				BooleanValue booleanValue = (BooleanValue)value;
 				if (booleanValue.getValue()!=null)

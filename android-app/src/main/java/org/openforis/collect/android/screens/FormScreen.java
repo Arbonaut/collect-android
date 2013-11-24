@@ -408,11 +408,17 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		    					if (((NumberAttributeDefinition) nodeDef).isInteger()){
 		    						IntegerValue intValue = (IntegerValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 		    						if (intValue!=null)
-			    						loadedValue = intValue.getValue().toString();
+		    							if (intValue.getValue()!=null)
+		    								loadedValue = intValue.getValue().toString();
+		    							else 
+		    								loadedValue = "";
 		    					} else {
 		    						RealValue realValue = (RealValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 		    						if (realValue!=null)
-			    						loadedValue = realValue.getValue().toString();
+		    							if (realValue.getValue()!=null)
+		    								loadedValue = realValue.getValue().toString();
+		    							else 
+		    								loadedValue = "";
 		    					}
 		    				}
 	        				final NumberField numberField= new NumberField(FormScreen.this, nodeDef);
@@ -432,13 +438,19 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    					Node<?> foundNode = FormScreen.this.parentEntityMultipleAttribute.get(nodeDef.getName(), FormScreen.this.currInstanceNo);
 		    				if (foundNode!=null){
 		    					if (((NumberAttributeDefinition) nodeDef).isInteger()){
-		    						IntegerValue intValue = (IntegerValue)FormScreen.this.parentEntityMultipleAttribute.getValue(nodeDef.getName(), FormScreen.this.currInstanceNo);
+		    						IntegerValue intValue = (IntegerValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 		    						if (intValue!=null)
-			    						loadedValue = intValue.getValue().toString();
+		    							if (intValue.getValue()!=null)
+		    								loadedValue = intValue.getValue().toString();
+		    							else 
+		    								loadedValue = "";
 		    					} else {
-		    						RealValue realValue = (RealValue)FormScreen.this.parentEntityMultipleAttribute.getValue(nodeDef.getName(), FormScreen.this.currInstanceNo);
+		    						RealValue realValue = (RealValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 		    						if (realValue!=null)
-			    						loadedValue = realValue.getValue().toString();
+		    							if (realValue.getValue()!=null)
+		    								loadedValue = realValue.getValue().toString();
+		    							else 
+		    								loadedValue = "";
 		    					}
 		    				}
 	        				final NumberField numberField= new NumberField(FormScreen.this, nodeDef);
@@ -1890,17 +1902,21 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     				loadedValue = "";
     				if (!nodeDef.isMultiple()){
     					Node<?> foundNode = this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
-	    				if (foundNode!=null){
-	    					if (((NumberAttributeDefinition) nodeDef).isInteger()){
-	    						IntegerValue intValue = (IntegerValue)this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
-	    						if (intValue!=null)
-		    						loadedValue = intValue.getValue().toString();
-	    					} else {
-	    						RealValue realValue = (RealValue)this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
-	    						if (realValue!=null)
-		    						loadedValue = realValue.getValue().toString();
-	    					}
-	    				}
+    					if (((NumberAttributeDefinition) nodeDef).isInteger()){
+    						IntegerValue intValue = (IntegerValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
+    						if (intValue!=null)
+    							if (intValue.getValue()!=null)
+    								loadedValue = intValue.getValue().toString();
+    							else 
+    								loadedValue = "";
+    					} else {
+    						RealValue realValue = (RealValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
+    						if (realValue!=null)
+    							if (realValue.getValue()!=null)
+    								loadedValue = realValue.getValue().toString();
+    							else 
+    								loadedValue = "";
+    					}
         				final NumberField numberField= new NumberField(this, nodeDef);
         				numberField.setOnClickListener(this);
         				numberField.setId(nodeDef.getId());
@@ -2860,13 +2876,19 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				} else if (nodeDef instanceof NumberAttributeDefinition){
 					String loadedValue = "";
 					if (((NumberAttributeDefinition) nodeDef).isInteger()){
-						IntegerValue intValue = (IntegerValue)parentEntity.getValue(nodeDef.getName(), this.currInstanceNo);
+						IntegerValue intValue = (IntegerValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 						if (intValue!=null)
-							loadedValue = intValue.getValue().toString();	
+							if (intValue.getValue()!=null)
+								loadedValue = intValue.getValue().toString();
+							else 
+								loadedValue = "";
 					} else {
-						RealValue realValue = (RealValue)parentEntity.getValue(nodeDef.getName(), this.currInstanceNo);					
+						RealValue realValue = (RealValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 						if (realValue!=null)
-							loadedValue = realValue.getValue().toString();
+							if (realValue.getValue()!=null)
+								loadedValue = realValue.getValue().toString();
+							else 
+								loadedValue = "";
 					}					
 					NumberField numberField = (NumberField) ApplicationManager.getUIElement(nodeDef.getId());
 					if (numberField!=null)

@@ -149,6 +149,12 @@ public class NumberField extends InputField {
 						//Log.d("Number(real) field with Id: ",node.getDefinition().getId() + " is updating. Node name is: " + node.getName() + " Node ID is: " + node.getInternalId());
 						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealAttribute)node, new RealValue(Double.valueOf(value), null));						
 					}
+				} else if (value.equals("")){
+					if (((NumberAttributeDefinition) this.nodeDefinition).isInteger()){
+						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((IntegerAttribute)node, new IntegerValue(null, null));					
+					} else {
+						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealAttribute)node, new RealValue(null, null));						
+					}
 				}
 			} else {
 				if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
