@@ -5,11 +5,7 @@ import java.util.List;
 
 import org.openforis.collect.android.R;
 import org.openforis.collect.android.management.ApplicationManager;
-import org.openforis.collect.android.messages.AlertMessage;
-import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.screens.EntityInstancesScreen;
-import org.openforis.collect.android.screens.FormScreen;
-import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.idm.metamodel.AttributeDefinition;
 import org.openforis.idm.metamodel.CodeAttributeDefinition;
 import org.openforis.idm.metamodel.EntityDefinition;
@@ -22,7 +18,6 @@ import org.openforis.idm.model.Date;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.File;
 import org.openforis.idm.model.IntegerRange;
-import org.openforis.idm.model.Node;
 import org.openforis.idm.model.NumberValue;
 import org.openforis.idm.model.RealRange;
 import org.openforis.idm.model.TaxonOccurrence;
@@ -31,15 +26,11 @@ import org.openforis.idm.model.Time;
 import org.openforis.idm.model.Value;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SummaryList extends UIElement {
 	
@@ -120,7 +111,6 @@ public class SummaryList extends UIElement {
 			key.add(label);
 			String stringValue = convertValueToString(attrValue, (NodeDefinition)attrDef);
 			if (stringValue!=null && !stringValue.equals("")){
-				Log.e("keyAttribute","=="+attrDef.getName());
 				key.add(stringValue);
 				isAtLeastOneKeyValue = true;
 			}					
@@ -128,7 +118,6 @@ public class SummaryList extends UIElement {
 		}
 			
 			String keysLine = "";
-			Log.e("has>1key","=="+isAtLeastOneKeyValue);
 			if (isAtLeastOneKeyValue){
 				for (List<String> key : keysList){
 					if (key.size()==1){
@@ -144,10 +133,8 @@ public class SummaryList extends UIElement {
 			} else {
 				
 				keysLine += (entityInstanceNo+1);
-				Log.e("keysLinewithNUMBER","="+keysLine);
 			}
 			
-			Log.e("threshold==keysLine",threshold+"=="+keysLine.length());
 			if (keysLine.length()>threshold){
 				keysLine = keysLine.substring(0,threshold-3)+"...";
 			} else {
@@ -155,7 +142,6 @@ public class SummaryList extends UIElement {
 					keysLine = keysLine.substring(0,keysLine.length()-1);	
 				}				
 			}
-			Log.e("keysLine2","=="+keysLine);
 			
 			//fetching details and their values
 			List<NodeDefinition> detailNodeDefsList = entityDef.getChildDefinitions();
@@ -201,7 +187,6 @@ public class SummaryList extends UIElement {
 				detailsLine = detailsLine.substring(0,detailsLine.length()-1);
 			}*/
 			
-			Log.e("keysLine==","=="+keysLine);
 			TextView titleView = new TextView(context);
 			if (this.entityDefinition.isMultiple())
 				//titleView.setText(this.label.getText()+" "+(this.instanceNo+1));
@@ -241,7 +226,6 @@ public class SummaryList extends UIElement {
 		 							ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
 		 							Toast.makeText(SummaryList.this.context, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
 		 							((EntityInstancesScreen)SummaryList.this.context).onResume();
-		 							//TODO: Validation. What exactly to validate if entityToRemove was deleted?
 		 						}
 		 					},
 		 		    		new DialogInterface.OnClickListener() {

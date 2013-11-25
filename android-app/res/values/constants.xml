@@ -124,6 +124,10 @@
     <integer name="deleteButtonMultipleEntity">55</integer>
     <integer name="addButtonMultipleEntity">88</integer>
     
+    <!-- BUTTONS SIZES -->
+	<integer name="addButtonWidth">64</integer>
+	<integer name="addButtonHeight">64</integer>
+     
     <!-- SEPARATORS -->
     <string name="valuesSeparator1">,</string>
     <string name="valuesSeparator2">;</string>

@@ -63,6 +63,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -1374,7 +1375,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			}  else if (tempView instanceof RelativeLayout){
 				RelativeLayout rLayout = (RelativeLayout)tempView;
 				Button leftBtn = (Button)rLayout.getChildAt(0);
+				Log.e("getclass","=="+rLayout.getChildAt(0).getClass());
 				leftBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_left_black:R.drawable.arrow_left_white);
+				Log.e("getclass","=="+rLayout.getChildAt(1).getClass());
 				LinearLayout lLayout = (LinearLayout)rLayout.getChildAt(1);				
 				Button addBtn = (Button)lLayout.getChildAt(0);
 				addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
@@ -1384,6 +1387,30 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				rightBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_right_black:R.drawable.arrow_right_white);
 			}
 		}
+		
+		if (!(this.mainLayout.getChildAt(4) instanceof ScrollView)){
+			RelativeLayout rLayout = (RelativeLayout)this.mainLayout.getChildAt(4);
+			viewsNo = rLayout.getChildCount();
+			//Log.e("viewsNo","=="+viewsNo);
+			//for (int i=0;i<viewsNo;i++){
+				//View tempView = rl.getChildAt(i);
+				//Log.e("klasaTempViews","=="+tempView.getClass());
+				//if (tempView instanceof RelativeLayout){
+					//RelativeLayout rLayout = (RelativeLayout)tempView;
+					Button leftBtn = (Button)rLayout.getChildAt(0);
+					//Log.e("getclass","=="+rLayout.getChildAt(0).getClass());
+					leftBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_left_black:R.drawable.arrow_left_white);
+					Log.e("getclass","=="+rLayout.getChildAt(1).getClass());
+					RelativeLayout lLayout = (RelativeLayout)rLayout.getChildAt(1);				
+					Button addBtn = (Button)lLayout.getChildAt(0);
+					addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
+					Button deleteBtn = (Button)lLayout.getChildAt(1);
+					deleteBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.recycle_bin_black:R.drawable.recycle_bin_white);
+					Button rightBtn = (Button)rLayout.getChildAt(2);
+					rightBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_right_black:R.drawable.arrow_right_white);
+				//}
+			//}
+		}		
     }
     
     private RelativeLayout arrangeButtonsInLine(Button btnLeft, String btnLeftLabel, Button btnRight, String btnRightLabel, Button btnAdd, String btnAddLabel, Button btnDelete, String btnDeleteLabel, OnClickListener listener, boolean isForEntity){
@@ -1397,17 +1424,19 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(32,32);
 	    btnDelete.setLayoutParams(params);
 	    btnDelete.setBackgroundResource(R.drawable.recycle_bin_white);
+	    btnDelete.setId(11111);
 		//btnAdd.setText(btnAddLabel);
-	    params = new RelativeLayout.LayoutParams(32,32);
+	    params = new RelativeLayout.LayoutParams(getResources().getInteger(R.integer.addButtonWidth),getResources().getInteger(R.integer.addButtonHeight));
 	    btnAdd.setLayoutParams(params);
 	    btnAdd.setBackgroundResource(R.drawable.add_new_white);
+	    btnAdd.setId(22222);
 		
-	    params = new RelativeLayout.LayoutParams(32,32);
-	    btnLeft.setLayoutParams(params);
+	    /*params = new RelativeLayout.LayoutParams(32,32);
+	    btnLeft.setLayoutParams(params);*/
 	    btnLeft.setBackgroundResource(R.drawable.arrow_left_white);
 	    
-	    params = new RelativeLayout.LayoutParams(32,32);
-	    btnRight.setLayoutParams(params);
+	    /*params = new RelativeLayout.LayoutParams(32,32);
+	    btnRight.setLayoutParams(params);*/
 	    btnRight.setBackgroundResource(R.drawable.arrow_right_white);
 	    
 		btnLeft.setOnClickListener(listener);
@@ -1416,38 +1445,42 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		btnAdd.setOnClickListener(listener);
 		
 		RelativeLayout.LayoutParams lpBtnLeft = new RelativeLayout.LayoutParams(
-	            48, 32);
-		lpBtnLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+	            48, 64);
+		lpBtnLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);		
 		btnLeft.setLayoutParams(lpBtnLeft);
+		
 		relativeButtonsLayout.addView(btnLeft);
-			
-		LinearLayout ll = new LinearLayout(this);
-		ll.addView(btnAdd);
-		ll.addView(btnDelete);
-		RelativeLayout.LayoutParams lpBtnAddDelete = new RelativeLayout.LayoutParams(
-	            64, 32);		
-		lpBtnAddDelete.addRule(RelativeLayout.CENTER_IN_PARENT);
-		ll.setLayoutParams(lpBtnAddDelete);
-		relativeButtonsLayout.addView(ll);
-		/*RelativeLayout.LayoutParams lpBtnDelete = new RelativeLayout.LayoutParams(
-	            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		//lpBtnDelete.addRule(RelativeLayout.RIGHT_OF,btnLeft.getId());
-		lpBtnDelete.addRule(RelativeLayout.CENTER_IN_PARENT);
-		lpBtnDelete.addRule(RelativeLayout.LEFT_OF,btnRight.getId());
-		//lpBtnDelete.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		btnDelete.setLayoutParams(lpBtnDelete);
-		relativeButtonsLayout.addView(btnDelete);
 		
 		RelativeLayout.LayoutParams lpBtnAdd = new RelativeLayout.LayoutParams(
-	            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);		
-		//lpBtnAdd.addRule(RelativeLayout.CENTER_IN_PARENT);
+	            64, 64);
+		lpBtnAdd.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		lpBtnAdd.addRule(RelativeLayout.LEFT_OF,btnDelete.getId());
-		lpBtnAdd.addRule(RelativeLayout.RIGHT_OF,btnLeft.getId());
+		//lpBtnAdd.setMargins(50, 0, 50, 0);
 		btnAdd.setLayoutParams(lpBtnAdd);
-		relativeButtonsLayout.addView(btnAdd);*/
+		
+		RelativeLayout.LayoutParams lpBtnDelete = new RelativeLayout.LayoutParams(
+	            64, 64);
+		//lpBtnDelete.addRule(RelativeLayout.CENTER_IN_PARENT);
+		lpBtnDelete.addRule(RelativeLayout.RIGHT_OF,btnAdd.getId());
+		lpBtnDelete.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		//lpBtnDelete.setMargins(50, 0, 50, 0);
+		btnDelete.setLayoutParams(lpBtnDelete);
+		
+		RelativeLayout ll = new RelativeLayout(this);
+		RelativeLayout.LayoutParams llparams = new RelativeLayout.LayoutParams(
+				300, RelativeLayout.LayoutParams.WRAP_CONTENT);		
+		llparams.addRule(RelativeLayout.CENTER_IN_PARENT);
+		ll.setLayoutParams(llparams);
+		ll.addView(btnAdd);
+		//btnAdd.setVisibility(View.GONE);
+		ll.addView(btnDelete);
+		Log.e("ll.getChildCount()","=="+ll.getChildCount());
+
+		//ll.setLayoutParams(lpBtnAddDelete);
+		relativeButtonsLayout.addView(ll);
 		
 		RelativeLayout.LayoutParams lpBtnRight = new RelativeLayout.LayoutParams(
-	            48, 32);
+	            48, 64);
 		lpBtnRight.addRule(RelativeLayout.RIGHT_OF,btnLeft.getId());
 		lpBtnRight.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		btnRight.setLayoutParams(lpBtnRight);
@@ -1464,7 +1497,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			btnAdd.setId(getResources().getInteger(R.integer.addButtonMultipleEntity));
 			btnDelete.setId(getResources().getInteger(R.integer.deleteButtonMultipleEntity));
 		}
-		
+		btnLeft.requestLayout();
 		return relativeButtonsLayout;
     }
     

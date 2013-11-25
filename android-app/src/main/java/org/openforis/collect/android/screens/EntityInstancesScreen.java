@@ -1801,7 +1801,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	            RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 	    relativeButtonsLayout.setLayoutParams(lp);
 		//btnAdd.setText(btnAddLabel);
-	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(32,32);
+	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(getResources().getInteger(R.integer.addButtonWidth),getResources().getInteger(R.integer.addButtonHeight));
 	    btnAdd.setLayoutParams(params);
 	    btnAdd.setBackgroundResource(R.drawable.add_new_white);
 		
