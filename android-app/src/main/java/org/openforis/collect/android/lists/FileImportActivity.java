@@ -34,7 +34,7 @@ public class FileImportActivity extends Activity{
 	private TextView activityLabel;
 	private TextView columnLabel;
 	
-	private String[] filesList;
+	//private String[] filesList;
 	
 	private ListView lv;
 	

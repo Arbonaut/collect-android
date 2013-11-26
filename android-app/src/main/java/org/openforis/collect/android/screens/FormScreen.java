@@ -1344,7 +1344,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		}
 		
 		int viewsNo = this.ll.getChildCount();
-		int start = (hasBreadcrumb)?1:0;
+		//int start = (hasBreadcrumb)?1:0;
+		int start = 0;
 		for (int i=start;i<viewsNo;i++){
 			View tempView = this.ll.getChildAt(i);
 			if (tempView instanceof Field){
@@ -1400,7 +1401,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					Button leftBtn = (Button)rLayout.getChildAt(0);
 					//Log.e("getclass","=="+rLayout.getChildAt(0).getClass());
 					leftBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_left_black:R.drawable.arrow_left_white);
-					Log.e("getclass","=="+rLayout.getChildAt(1).getClass());
 					RelativeLayout lLayout = (RelativeLayout)rLayout.getChildAt(1);				
 					Button addBtn = (Button)lLayout.getChildAt(0);
 					addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
@@ -1410,7 +1410,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					rightBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_right_black:R.drawable.arrow_right_white);
 				//}
 			//}
-		}		
+		}
     }
     
     private RelativeLayout arrangeButtonsInLine(Button btnLeft, String btnLeftLabel, Button btnRight, String btnRightLabel, Button btnAdd, String btnAddLabel, Button btnDelete, String btnDeleteLabel, OnClickListener listener, boolean isForEntity){

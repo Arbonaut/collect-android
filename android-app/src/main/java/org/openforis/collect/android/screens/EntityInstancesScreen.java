@@ -11,7 +11,6 @@ import org.openforis.collect.android.fields.SummaryList;
 import org.openforis.collect.android.fields.SummaryTable;
 import org.openforis.collect.android.fields.TaxonField;
 import org.openforis.collect.android.fields.UIElement;
-import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;
@@ -52,6 +51,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 
 	private ScrollView sv;			
     private LinearLayout ll;
+    private LinearLayout mainLayout;
 	
 	private Intent startingIntent;
 	private String parentFormScreenId;
@@ -85,11 +85,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		this.idmlId = this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId),-1);
     		//this.currInstanceNo = this.startingIntent.getIntExtra(getResources().getString(R.string.instanceNo),-1);
     		//this.numberOfInstances = this.startingIntent.getIntExtra(getResources().getString(R.string.numberOfInstances),-1);
-    		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;
-    		
+    		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;    		
     		this.setScreenOrientation();
-    		
-    		
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -114,7 +111,10 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			EntityInstancesScreen.this.ll = new LinearLayout(EntityInstancesScreen.this);
 			EntityInstancesScreen.this.ll.setOrientation(android.widget.LinearLayout.VERTICAL);
 			EntityInstancesScreen.this.sv.addView(ll);
-	
+			
+			EntityInstancesScreen.this.mainLayout = new LinearLayout(EntityInstancesScreen.this);
+			EntityInstancesScreen.this.mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
+
 			if (!EntityInstancesScreen.this.breadcrumb.equals("")){				
 				TextView breadcrumb = new TextView(EntityInstancesScreen.this);
 				if (EntityInstancesScreen.this.intentType != getResources().getInteger(R.integer.singleEntityIntent)){
@@ -130,21 +130,26 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	    		breadcrumb.setSingleLine();
 	    		HorizontalScrollView scroller = new HorizontalScrollView(EntityInstancesScreen.this);
 	    		scroller.addView(breadcrumb);
-	    		EntityInstancesScreen.this.ll.addView(scroller);
-	    		//FormScreen.this.ll.addView(breadcrumb);
-	    		EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+	    		//EntityInstancesScreen.this.ll.addView(scroller);
+	    		EntityInstancesScreen.this.mainLayout.addView(scroller);
+	    		//EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+	    		EntityInstancesScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 	    		
 	    		TextView screenTitle = new TextView(EntityInstancesScreen.this);
 	    		screenTitle.setText(EntityInstancesScreen.this.screenTitle);
 	    		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
-	    		EntityInstancesScreen.this.ll.addView(screenTitle);
-	    		EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+	    		//EntityInstancesScreen.this.ll.addView(screenTitle);
+	    		EntityInstancesScreen.this.mainLayout.addView(screenTitle);
+	    		//EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
+	    		EntityInstancesScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 			}
 			
 			NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1));
 			if (nodeDef.isMultiple()){
-				this.ll.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this, true));
-				this.ll.addView(ApplicationManager.getDividerLine(this));
+				//this.ll.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this, true));
+				this.mainLayout.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this, true));
+				//this.ll.addView(ApplicationManager.getDividerLine(this));
+				this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 			}
 			/*Log.e("nodeDef",EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1)+"=="+nodeDef.getName());
 			//EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity(String.valueOf(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1)));
@@ -177,28 +182,17 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			Entity tempEntity = EntityInstancesScreen.this.parentEntitySingleAttribute;
 			boolean error = false;
 			try {
-				Log.e("parentEntitySingleAttribute11",nodeDef.getName()+"=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName()+"|"+EntityInstancesScreen.this.parentEntitySingleAttribute.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0));
 				EntityInstancesScreen.this.parentEntitySingleAttribute = (Entity) EntityInstancesScreen.this.parentEntitySingleAttribute.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
-				Log.e("parentEntitySingleAttribute12",nodeDef.getName()+"=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
 				error = false;
 			} catch (IllegalArgumentException e){
 				error = true;
-				Log.e("parentEntitySingleAttribute21",nodeDef.getName()+"=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
 				EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.parentEntitySingleAttribute.getParent();
-				Log.e("parentEntitySingleAttribute22",nodeDef.getName()+"=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
 			} catch (ClassCastException e){
 				error = true;
-				Log.e("parentEntitySingleAttribute31",nodeDef.getName()+"=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
 				EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.parentEntitySingleAttribute.getParent();
-				Log.e("parentEntitySingleAttribute32",nodeDef.getName()+"=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
 			} catch (NullPointerException e){
 				error = true;
 				e.printStackTrace();				
-			}
-			Log.e("eRROR==","=="+error);
-			Log.e("tempEntity==null","=="+(tempEntity==null));
-			if (tempEntity!=null){
-				Log.e("tempEntity.getname()","=="+(tempEntity.getName()));	
 			}
 			if (!error){
 				EntityInstancesScreen.this.parentEntitySingleAttribute = tempEntity;
@@ -217,6 +211,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				summaryListView.setOnClickListener(EntityInstancesScreen.this);
 				summaryListView.setId(nodeDef.getId());
 				EntityInstancesScreen.this.ll.addView(summaryListView);
+				EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(EntityInstancesScreen.this));
 				registerForContextMenu(summaryListView);
 			}
 			
@@ -232,13 +227,17 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}*/
 			//}	
 			//}	
-			setContentView(EntityInstancesScreen.this.sv);
+			//setContentView(EntityInstancesScreen.this.sv);
+			EntityInstancesScreen.this.mainLayout.addView(sv);	
+			setContentView(EntityInstancesScreen.this.mainLayout);
+
 			
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
 			changeBackgroundColor(backgroundColor);
 
 			registerForContextMenu(EntityInstancesScreen.this.sv);
 			registerForContextMenu(EntityInstancesScreen.this.ll);
+			registerForContextMenu(EntityInstancesScreen.this.mainLayout);
 			//registerForContextMenu(getListView());
 	    	/*sv.post(new Runnable() {
 	    	    @Override
@@ -583,30 +582,44 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 
     		boolean hasBreadcrumb = !this.breadcrumb.equals("");
     		if (hasBreadcrumb){
-    			ViewGroup scrollbarViews = ((ViewGroup)this.ll.getChildAt(0));
-    			TextView breadcrumb = (TextView)scrollbarViews.getChildAt(0);
+    			//ViewGroup scrollbarViews = ((ViewGroup)this.ll.getChildAt(0));
+    			ViewGroup scrollbarViews = ((ViewGroup)this.mainLayout.getChildAt(0));
+    			TextView breadcrumb = (TextView)scrollbarViews.getChildAt(0);    			
     			breadcrumb.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
     		}
     		
     		boolean hasTitle = !this.screenTitle.equals("");
     		if (hasTitle){
-    			View dividerLine = (View)this.ll.getChildAt(1);
+    			//View dividerLine = (View)this.ll.getChildAt(1);
+    			View dividerLine = (View)this.mainLayout.getChildAt(1);
     			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-    			TextView screenTitle = (TextView)this.ll.getChildAt(2);
+    			//TextView screenTitle = (TextView)this.ll.getChildAt(2);
+    			TextView screenTitle = (TextView)this.mainLayout.getChildAt(2);
     			screenTitle.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-    			dividerLine = (View)this.ll.getChildAt(3);
+    			//dividerLine = (View)this.ll.getChildAt(3);
+    			dividerLine = (View)this.mainLayout.getChildAt(3);
     			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);			
     		}
     		    		
-    		View dividerLine = (View)this.ll.getChildAt(5);
+    		//View dividerLine = (View)this.ll.getChildAt(5);
+    		View dividerLine = (View)this.mainLayout.getChildAt(5);
     		if (dividerLine!=null){
     			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
     		}
     		
-    		int viewsNo = this.ll.getChildCount();
-    		int start = (hasBreadcrumb)?1:0;
+    		//int viewsNo = this.ll.getChildCount();
+    		//int viewsNo = this.mainLayout.getChildCount();
+    		
+    		LinearLayout fieldsLayout= (LinearLayout)this.sv.getChildAt(0);
+    		int viewsNo = fieldsLayout.getChildCount();
+    		Log.e("viewsNoSV","=="+viewsNo);
+    		//int start = (hasBreadcrumb)?1:0;
+    		int start = 0;
     		for (int i=start;i<viewsNo;i++){
-    			View tempView = this.ll.getChildAt(i);
+    			//View tempView = this.ll.getChildAt(i);
+    			//View tempView = this.mainLayout.getChildAt(i);
+    			View tempView = fieldsLayout.getChildAt(i);
+    			Log.e("tempView","=="+tempView.getClass());
     			if (tempView instanceof Field){
     				Field field = (Field)tempView;
     				field.setLabelTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
@@ -634,7 +647,37 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     				LinearLayout lLayout = (LinearLayout)rLayout.getChildAt(0);
     				Button btn = (Button)lLayout.getChildAt(0);
     				btn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
+    			} else if ((tempView instanceof View)&&(!(tempView instanceof TextView))){
+    				dividerLine = (View)tempView;
+    				dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
     			}
+    		}
+    		
+    		if (!(this.mainLayout.getChildAt(4) instanceof ScrollView)){
+    			RelativeLayout rLayout = (RelativeLayout)this.mainLayout.getChildAt(4);
+    			//viewsNo = rLayout.getChildCount();
+    			//Log.e("viewsNo","=="+viewsNo);
+    			LinearLayout ll = (LinearLayout)rLayout.getChildAt(0);
+    			Button addBtn = (Button)ll.getChildAt(0);
+				addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
+    			//for (int i=0;i<viewsNo;i++){
+    				//View tempView = rl.getChildAt(i);
+    				//Log.e("klasaTempViews","=="+tempView.getClass());
+    				//if (tempView instanceof RelativeLayout){
+    					//RelativeLayout rLayout = (RelativeLayout)tempView;
+    					/*Button leftBtn = (Button)rLayout.getChildAt(0);
+    					//Log.e("getclass","=="+rLayout.getChildAt(0).getClass());
+    					leftBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_left_black:R.drawable.arrow_left_white);
+    					Log.e("getclass","=="+rLayout.getChildAt(1).getClass());
+    					RelativeLayout lLayout = (RelativeLayout)rLayout.getChildAt(1);				
+    					Button addBtn = (Button)lLayout.getChildAt(0);
+    					addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
+    					Button deleteBtn = (Button)lLayout.getChildAt(1);
+    					deleteBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.recycle_bin_black:R.drawable.recycle_bin_white);
+    					Button rightBtn = (Button)rLayout.getChildAt(2);
+    					rightBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_right_black:R.drawable.arrow_right_white);*/
+    				//}
+    			//}
     		}
     	} catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":changeBackgroundColor",
