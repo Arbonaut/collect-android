@@ -1741,7 +1741,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		//View firstView = this.ll.getChildAt(0);
 		View firstView = FormScreen.this.mainLayout.getChildAt(0);
 		if (firstView instanceof HorizontalScrollView){
-			ViewGroup scrollbarView = ((ViewGroup)this.ll.getChildAt(0));
+			//ViewGroup scrollbarView = ((ViewGroup)this.ll.getChildAt(0));
+			ViewGroup scrollbarView = ((ViewGroup)this.mainLayout.getChildAt(0));
 			TextView breadcrumb = (TextView)scrollbarView.getChildAt(0);
 			breadcrumb.setText(this.breadcrumb.substring(0, this.breadcrumb.lastIndexOf(" "))+" "+(this.currInstanceNo+1));
 			breadcrumb.setTextSize(getResources().getInteger(R.integer.breadcrumbFontSize));
