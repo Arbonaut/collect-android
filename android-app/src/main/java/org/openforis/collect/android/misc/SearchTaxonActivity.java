@@ -42,7 +42,7 @@ public class SearchTaxonActivity extends Activity {
 	private String path;
 	private int taxonFieldId;
 	//private TaxonManager taxonManager;
-	private String taxonomy;
+	private String taxonomyName;
 	private int backgroundColor;
 	//UI elements
 	private ListView lstResult;
@@ -71,13 +71,13 @@ public class SearchTaxonActivity extends Activity {
 	    	this.criteria = extras.getString("criteria");  
 	    	this.taxonFieldId = extras.getInt("taxonId");
 	    	this.path = extras.getString("path");
+	    	this.taxonomyName = extras.getString("taxonomyName");
 	    	//Set up species manager
 			/*this.taxonManager = new TaxonManager();
 			this.taxonManager.setTaxonomyDao(new TaxonomyDao());
 			this.taxonManager.setTaxonDao(new TaxonDao());
 			this.taxonManager.setTaxonVernacularNameDao(new TaxonVernacularNameDao());
 			this.taxonManager.setSurveyId(ApplicationManager.getSurvey().getId());*/
-			this.taxonomy = "trees";
 	    }
 	    else{
 	    	Log.i(getResources().getString(R.string.app_name), "Cannot get extras in SearchTaxon activity");
@@ -206,17 +206,15 @@ public class SearchTaxonActivity extends Activity {
         		Log.i(getResources().getString(R.string.app_name), "Search by: " + SearchTaxonActivity.this.criteria);        		    		
         		if(SearchTaxonActivity.this.criteria.equalsIgnoreCase("Code")){
     				Log.i(getResources().getString(R.string.app_name), "Search by Code");
-    				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByCode(SearchTaxonActivity.this.taxonomy, strSearch, 1000);			
+    				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByCode(SearchTaxonActivity.this.taxonomyName, strSearch, 1000);			
     			}
     			else if (SearchTaxonActivity.this.criteria.equalsIgnoreCase("SciName")){
     				Log.i(getResources().getString(R.string.app_name), "Search by Scientific name");
-    				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByScientificName(SearchTaxonActivity.this.taxonomy, strSearch, 1000);		
+    				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByScientificName(SearchTaxonActivity.this.taxonomyName, strSearch, 1000);		
     			}
     			else if (SearchTaxonActivity.this.criteria.equalsIgnoreCase("VernacularName")){
     				Log.i(getResources().getString(R.string.app_name), "Search by VernacularName");
-    				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByVernacularName(SearchTaxonActivity.this.taxonomy, strSearch, 1000);
-    					
-
+    				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByVernacularName(SearchTaxonActivity.this.taxonomyName, strSearch, 1000);
     			} else{
     				Log.i(getResources().getString(R.string.app_name), "Undefined criteria is: " + SearchTaxonActivity.this.criteria);
     			}

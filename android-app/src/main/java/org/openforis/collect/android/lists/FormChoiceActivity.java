@@ -60,7 +60,9 @@ public class FormChoiceActivity extends BaseListActivity {
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 		changeBackgroundColor(backgroundColor);
 		String selectedFormDefinitionFile = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
+		ServiceFactory.getSurveyManager().init();
 		this.surveysList = ServiceFactory.getSurveyManager().getAll();
+		Log.e("this.sruveysList.size","=="+this.surveysList.size());
 		String[] formsList;
 		if (this.surveysList.size()==0){
 			formsList = new String[1];

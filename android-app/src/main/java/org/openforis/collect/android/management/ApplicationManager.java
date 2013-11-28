@@ -38,6 +38,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -45,6 +47,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 //import org.openforis.collect.manager.codelistimport.CodeListImportProcess;
 
@@ -936,5 +939,22 @@ public class ApplicationManager extends BaseActivity {
     	} else {
     		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     	}
+	}
+	
+	public static void setImageButtonEnabled(Context ctxt, boolean enabled, Button item,
+	        int iconResId) {
+	    item.setEnabled(enabled);
+	    Drawable originalIcon = ctxt.getResources().getDrawable(iconResId);
+	    Drawable icon = enabled ? originalIcon : convertDrawableToGrayScale(originalIcon);
+	    item.setBackgroundDrawable(icon);
+	}
+
+	public static Drawable convertDrawableToGrayScale(Drawable drawable) {
+	    if (drawable == null) {
+	        return null;
+	    }
+	    Drawable res = drawable.mutate();
+	    res.setColorFilter(Color.GRAY, Mode.SRC_IN);
+	    return res;
 	}
 }

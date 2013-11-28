@@ -61,6 +61,7 @@ public class TaxonManager {
 	@Transactional
 	public List<TaxonOccurrence> findByCode(String taxonomyName, String searchString, int maxResults) {
 		List<TaxonOccurrence> result = new ArrayList<TaxonOccurrence>();
+		Log.e("taxonomyName",ApplicationManager.getSurvey().getId()+"=="+taxonomyName);
 		Taxonomy taxonomy = taxonomyDao.load(ApplicationManager.getSurvey().getId()/*this.getSurveyId()*/, taxonomyName);
 		if (taxonomy!=null){
 			List<Taxon> list = taxonDao.findByCode(taxonomy.getId(), searchString, maxResults);			

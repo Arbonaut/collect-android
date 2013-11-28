@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -70,6 +71,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	//private String photoPath;
 	//private String latitude;
 	//private String longitude;
+	
+	private boolean isTextViewClicked = false;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +216,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				EntityInstancesScreen.this.ll.addView(summaryListView);
 				EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(EntityInstancesScreen.this));
 				registerForContextMenu(summaryListView);
+				TextView titleView = (TextView)summaryListView.tableLayout.getChildAt(0);
+				registerForContextMenu(titleView);
 			}
 			
 			//if (this.intentType==getResources().getInteger(R.integer.multipleEntityIntent)){ 				
@@ -235,9 +240,9 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
 			changeBackgroundColor(backgroundColor);
 
-			registerForContextMenu(EntityInstancesScreen.this.sv);
-			registerForContextMenu(EntityInstancesScreen.this.ll);
-			registerForContextMenu(EntityInstancesScreen.this.mainLayout);
+			//registerForContextMenu(EntityInstancesScreen.this.sv);
+			//registerForContextMenu(EntityInstancesScreen.this.ll);
+			//registerForContextMenu(EntityInstancesScreen.this.mainLayout);
 			//registerForContextMenu(getListView());
 	    	/*sv.post(new Runnable() {
 	    	    @Override
@@ -1877,20 +1882,52 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
-        getMenuInflater().inflate(R.menu.context_menu, menu);
+    	
+    	Log.e("contextMenu","=="+v.getClass());
+    	Log.e("this.isTextViewClicked","=="+this.isTextViewClicked);
+        if (v instanceof TextView){
+        	this.isTextViewClicked = true;
+    	} else {
+    		this.isTextViewClicked = false;
+    	}
+        if (!this.isTextViewClicked){
+        	Log.e("contextMenu","INFLATE");
+            getMenuInflater().inflate(R.menu.context_menu, menu);
+            MenuItem viewItem = menu.findItem(R.id.view);
+            viewItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    Log.e("contextMenuListener","VIEW");
+                    return true;
+                }
+            });
+            MenuItem deleteItem = menu.findItem(R.id.delete);
+            deleteItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    Log.e("contextMenuListener","DELETE");
+                    return true;
+                }
+            });
+            this.isTextViewClicked = false;
+        }
     }
 
-    public boolean onContextItemSelected(MenuItem item) {    	
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+
         AdapterContextMenuInfo adapInfo = (AdapterContextMenuInfo) item
                 .getMenuInfo();
-        
-        String selectedName = "HLKJ";//clusterList[(int)adapInfo.id];
+        String selectedName = "HLKJ";//clusterList[(int)adapInfo.id];s
         final int position = (int)adapInfo.id;
+        Log.e("contextMenu","position=="+position);
         switch (item.getItemId()) {
         case R.id.view:
         	Toast.makeText(EntityInstancesScreen.this,
-            		position+"You have pressed Save Context Menu for " + selectedName,
+            		position+"You have pressed View Context Menu for " + selectedName,
                     Toast.LENGTH_LONG).show();
+        	Log.e("contextMenu",position+"You have pressed View Context Menu for " + selectedName);
             return true;
         /*case R.id.save:
             Toast.makeText(RecordChoiceActivity.this,
@@ -1906,6 +1943,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
         	Toast.makeText(EntityInstancesScreen.this,
             		position+"You have pressed Delete Context Menu for " + selectedName,
                     Toast.LENGTH_LONG).show();
+        	Log.e("contextMenu",position+"You have pressed Delete Context Menu for " + selectedName);
             return true;
         }
         return false;

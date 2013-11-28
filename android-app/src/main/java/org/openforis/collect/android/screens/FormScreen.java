@@ -1657,7 +1657,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		} else if (actionCode==3){
 			NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+0, -1));
 			if (!nodeDef.isMultiple()){
-
 				AlertMessage.createPositiveNegativeDialog(FormScreen.this, true, null,
 						getResources().getString(R.string.addNewEntityTitle), 
 						getResources().getString(R.string.addNewEntityMessage),
@@ -1751,6 +1750,37 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			scroller.addView(breadcrumb);*/
 		}
 		this.breadcrumb = this.breadcrumb.substring(0, this.breadcrumb.lastIndexOf(" "))+" "+(this.currInstanceNo+1);
+		
+		//enabling/disabling buttons
+		if (FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())!=null){
+			
+			Log.e("disabling","BUTTONS");
+			RelativeLayout buttonsBar = (RelativeLayout)this.mainLayout.getChildAt(4);
+			Button leftBtn = (Button)buttonsBar.getChildAt(0);
+			Log.e("isFirst","=="+(FormScreen.this.currInstanceNo==0));
+			if (FormScreen.this.currInstanceNo==0){	
+				Log.e("disabling","LEFT");
+				//leftBtn.setClickable(false);
+				//leftBtn.setEnabled(false);
+				ApplicationManager.setImageButtonEnabled(this, false, leftBtn, R.drawable.arrow_left_black);
+			} else {
+				Log.e("enabling","LEFT");
+				leftBtn.setClickable(true);
+				leftBtn.setEnabled(true);
+			}
+			Button rightBtn = (Button)buttonsBar.getChildAt(2);
+			Node<?> foundNode = this.parentEntityMultipleAttribute.getParent().get(this.parentEntityMultipleAttribute.getName(), this.currInstanceNo+1);
+			Log.e("isLast","=="+(foundNode!=null));
+			if (foundNode!=null){
+				Log.e("disabling","RIGHT");
+				rightBtn.setClickable(false);
+				rightBtn.setEnabled(false);
+			} else {
+				Log.e("enabling","RIGHT");
+				rightBtn.setClickable(true);
+				rightBtn.setEnabled(true);
+			}
+		}
 
 		TextView screenTitle = new TextView(FormScreen.this);
 		screenTitle.setText(FormScreen.this.screenTitle);

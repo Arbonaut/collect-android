@@ -4,6 +4,7 @@ import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.database.SQLDroidDataSource;
 import org.openforis.collect.android.management.TaxonManager;
+import org.openforis.collect.manager.RecordFileManager;
 import org.openforis.collect.manager.RecordManager;
 import org.openforis.collect.manager.SurveyManager;
 import org.openforis.collect.manager.UserManager;
@@ -18,7 +19,6 @@ import org.openforis.collect.persistence.UserDao;
 import org.openforis.collect.service.CollectCodeListService;
 import org.openforis.idm.metamodel.validation.Validator;
 import org.openforis.idm.model.expression.ExpressionFactory;
-import org.sqldroid.SQLDroidDriver;
 
 /**
  * 
@@ -28,6 +28,7 @@ import org.sqldroid.SQLDroidDriver;
 public class ServiceFactory {
 
 	private static RecordManager recordManager;
+	private static RecordFileManager recordFileManager;
 	private static SurveyManager surveyManager;
 	private static UserManager userManager;
 	private static TaxonManager taxonManager;
@@ -76,6 +77,8 @@ public class ServiceFactory {
 	    	recordDao.setDataSource(dataSource);
 	    	recordManager.setRecordDao(recordDao);
 	    	
+	    	recordFileManager = new RecordFileManager();
+	    	
 			userManager = new UserManager();
 	    	UserDao userDao = new UserDao();
 	    	userDao.setDataSource(dataSource);
@@ -107,6 +110,10 @@ public class ServiceFactory {
 	
 	public static RecordManager getRecordManager() {
 		return recordManager;
+	}
+	
+	public static RecordFileManager getRecordFileManager() {
+		return recordFileManager;
 	}
 	
 	public static org.openforis.collect.android.management.MobileCodeListManager getCodeListManager() {

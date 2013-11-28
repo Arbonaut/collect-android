@@ -1,6 +1,5 @@
 package org.openforis.collect.android.management;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.openforis.collect.android.R;
@@ -8,7 +7,6 @@ import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.filechooser.FileChooser;
 import org.openforis.collect.android.lists.FileImportActivity;
-import org.openforis.collect.android.lists.FormChoiceActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.screens.SettingsScreen;
@@ -235,7 +233,7 @@ public class BaseListActivity extends ListActivity {
 				if (selectedFileName.endsWith(".db")){
 					DatabaseHelper.copyDataBase(selectedFileName);
 					Configuration config = Configuration.getDefault(BaseListActivity.this);
-					ServiceFactory.init(config, false);
+					ServiceFactory.init(config, false);					
 				} else {
 					AlertMessage.createPositiveDialog(BaseListActivity.this, true, null,
 							getResources().getString(R.string.copyingDatabaseTitle), 

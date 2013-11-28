@@ -105,10 +105,15 @@ public class DataManager {
 	
 	public void saveAllRecordsToFile(String folderToSave){
 		try{
-			BackupProcess backup = new BackupProcess(ServiceFactory.getSurveyManager(), ServiceFactory.getRecordManager(), 
+			/*BackupProcess backup = new BackupProcess(ServiceFactory.getSurveyManager(), ServiceFactory.getRecordManager(), 
 					this.dataMarshaller, new File(folderToSave),
-					this.survey, this.survey.getSchema().getDefinitionById(ApplicationManager.currRootEntityId).getName(), new int[]{1,2,3});
+					this.survey, this.survey.getSchema().getDefinitionById(ApplicationManager.currRootEntityId).getName(), new int[]{1,2,3});*/
+			BackupProcess backup = new BackupProcess(ServiceFactory.getSurveyManager(),
+					ServiceFactory.getRecordManager(),ServiceFactory.getRecordFileManager(),
+					this.dataMarshaller, new File(folderToSave),
+					this.survey, this.survey.getSchema().getDefinitionById(ApplicationManager.currRootEntityId).getName());
 			backup.init();
+			backup.setIncludeIdm(false);
 			backup.call();
 		} catch (Exception e){
 			e.printStackTrace();

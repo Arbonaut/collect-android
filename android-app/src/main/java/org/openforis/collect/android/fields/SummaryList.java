@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 public class SummaryList extends UIElement {
 	
-	private TableLayout tableLayout;
+	public TableLayout tableLayout;
 	
 	private EntityDefinition entityDefinition;
 	
