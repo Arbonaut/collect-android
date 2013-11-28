@@ -172,8 +172,8 @@ public class SearchTaxonActivity extends Activity {
 		int color = (backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK;
 		//Set text color
 		this.lblSearch.setTextColor(color);
-		this.txtSearch.setTextColor(color);
-		this.btnSearch.setTextColor(color);
+		//this.txtSearch.setTextColor(color);
+		//this.btnSearch.setTextColor(color);
     }	
     
     private void doSearch(String strSearch, int parentTaxonFieldId){
