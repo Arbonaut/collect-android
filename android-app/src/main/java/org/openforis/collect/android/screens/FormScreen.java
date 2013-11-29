@@ -1091,7 +1091,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleAttribute)){
 				Log.e("DELETING","ATTRIBUTE");
 				AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
-	 					getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
+	 					getResources().getString(R.string.deleteAttributeTitle), getResources().getString(R.string.deleteAttribute),
 	 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
 	 		    		new DialogInterface.OnClickListener() {
 	 						@Override

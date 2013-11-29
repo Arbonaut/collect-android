@@ -11,11 +11,13 @@ import org.openforis.collect.android.fields.SummaryList;
 import org.openforis.collect.android.fields.SummaryTable;
 import org.openforis.collect.android.fields.TaxonField;
 import org.openforis.collect.android.fields.UIElement;
+import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.misc.ViewBacktrack;
+import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.model.Entity;
@@ -319,7 +321,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}
 			
 		}*/
-		Log.e("arg01","=="+arg0.getClass());
 		if (arg0 instanceof Button){
 			Button btn = (Button)arg0;
 			//Log.e("ADDING",btn.getId()+"ENTITY"+getResources().getInteger(R.integer.addButtonMultipleEntity));
@@ -1885,6 +1886,13 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     	
     	Log.e("contextMenu","=="+v.getClass());
     	Log.e("this.isTextViewClicked","=="+this.isTextViewClicked);
+    	final View clickedView = v;
+    	Log.e("clickedView.getId()","=="+clickedView.getId());
+    	Log.e("arg0.getClass()","=="+clickedView.getClass());
+        Log.e("arg01","=="+clickedView.getParent().getClass());
+        Log.e("arg02","=="+clickedView.getParent().getParent().getClass());
+        Log.e("arg03","=="+clickedView.getParent().getParent().getParent().getClass());
+        
         if (v instanceof TextView){
         	this.isTextViewClicked = true;
     	} else {
@@ -1895,19 +1903,73 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
             getMenuInflater().inflate(R.menu.context_menu, menu);
             MenuItem viewItem = menu.findItem(R.id.view);
             viewItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     Log.e("contextMenuListener","VIEW");
+                    Object parentView = clickedView;//arg0.getParent().getParent().getParent();
+        			if (parentView instanceof SummaryList){
+        				SummaryList temp = (SummaryList)parentView;
+        				ViewBacktrack viewBacktrack = new ViewBacktrack(temp,EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
+        				ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
+        				//Log.e("clickedON",temp.getInstanceNo()+"=="+EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
+        				//ApplicationManager.isToBeScrolled = false;				
+        				EntityInstancesScreen.this.startActivity(EntityInstancesScreen.this.prepareIntentForNewScreen(temp));
+        			}
                     return true;
                 }
             });
             MenuItem deleteItem = menu.findItem(R.id.delete);
             deleteItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     Log.e("contextMenuListener","DELETE");
+                	AlertMessage.createPositiveNegativeDialog(EntityInstancesScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
+            				getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
+            				getResources().getString(R.string.yes), getResources().getString(R.string.no),
+            	    		new DialogInterface.OnClickListener() {
+            					@Override
+            					public void onClick(DialogInterface dialog, int which) {
+            						int position = -1;
+            						Log.e("ll.getChildCount()","=="+EntityInstancesScreen.this.ll.getChildCount());
+            						for (int i=0;i<EntityInstancesScreen.this.ll.getChildCount();i++){
+            							if (clickedView.equals(EntityInstancesScreen.this.ll.getChildAt(i))){
+            								position = i;
+            								break;
+            							}
+            						}
+            						position /= 2;
+            						Log.e("positionToDelete","=="+position);
+            						NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
+		 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
+		 							Log.e("parentEntitySingleAttribute","=="+(EntityInstancesScreen.this.parentEntitySingleAttribute==null));
+		 							Log.e("parentEntitySingleAttribute","=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
+		 							Log.e("parentEntitySingleAttribute.parent","=="+(EntityInstancesScreen.this.parentEntitySingleAttribute.getParent()==null));
+		 							Log.e("nodeDef","=="+nodeDef.getName());
+		 							Log.e("parentNodeDef","=="+parentNodeDefinition.getName());
+		 							Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute/*.getParent()*/.get(parentNodeDefinition.getName(), position);		 							
+		 							if (foundNode!=null){
+		 								Log.e("not null",nodeDef.getName()+"=="+position);
+		 								ServiceFactory.getRecordManager().deleteNode(foundNode);	 	
+		 								Entity tempEntity = findParentEntity2(EntityInstancesScreen.this.getFormScreenId());		 								
+		 								Node<?> tempNode = tempEntity.get(EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), 0).getName(), position);
+		 								Log.e("tempNode==null","=="+(tempNode==null));
+		 								if (tempNode==null)
+		 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
+		 							} else {
+		 								Log.e("null",nodeDef.getName()+"=="+position);
+		 							}
+	 								//refreshEntityScreen(2);
+	 								Toast.makeText(EntityInstancesScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
+	 								EntityInstancesScreen.this.onResume();
+            					}
+            				},
+            	    		new DialogInterface.OnClickListener() {
+            					@Override
+            					public void onClick(DialogInterface dialog, int which) {
+            						
+            					}
+            				},
+            				null).show();
                     return true;
                 }
             });
@@ -1922,12 +1984,19 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
         String selectedName = "HLKJ";//clusterList[(int)adapInfo.id];s
         final int position = (int)adapInfo.id;
         Log.e("contextMenu","position=="+position);
+        Log.e("item","=="+item.getClass());
         switch (item.getItemId()) {
         case R.id.view:
-        	Toast.makeText(EntityInstancesScreen.this,
-            		position+"You have pressed View Context Menu for " + selectedName,
-                    Toast.LENGTH_LONG).show();
         	Log.e("contextMenu",position+"You have pressed View Context Menu for " + selectedName);
+        	/*Object parentView = arg0.getParent().getParent().getParent();
+			if (parentView instanceof SummaryList){
+				SummaryList temp = (SummaryList)parentView;
+				ViewBacktrack viewBacktrack = new ViewBacktrack(temp,EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
+				ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
+				//Log.e("clickedON",temp.getInstanceNo()+"=="+EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
+				//ApplicationManager.isToBeScrolled = false;				
+				this.startActivity(this.prepareIntentForNewScreen(temp));
+			}*/
             return true;
         /*case R.id.save:
             Toast.makeText(RecordChoiceActivity.this,
@@ -1940,10 +2009,24 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
                     Toast.LENGTH_LONG).show();
             return true;*/
         case R.id.delete:
-        	Toast.makeText(EntityInstancesScreen.this,
-            		position+"You have pressed Delete Context Menu for " + selectedName,
-                    Toast.LENGTH_LONG).show();
         	Log.e("contextMenu",position+"You have pressed Delete Context Menu for " + selectedName);
+        	/*AlertMessage.createPositiveNegativeDialog(EntityInstancesScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
+    				getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
+    				getResources().getString(R.string.yes), getResources().getString(R.string.no),
+    	    		new DialogInterface.OnClickListener() {
+    					@Override
+    					public void onClick(DialogInterface dialog, int which) {							
+    						//ApplicationManager.dataManager.deleteRecord(position);
+    						EntityInstancesScreen.this.onResume();
+    					}
+    				},
+    	    		new DialogInterface.OnClickListener() {
+    					@Override
+    					public void onClick(DialogInterface dialog, int which) {
+    						
+    					}
+    				},
+    				null).show();*/
             return true;
         }
         return false;

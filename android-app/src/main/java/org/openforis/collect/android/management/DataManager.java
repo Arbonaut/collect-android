@@ -190,8 +190,7 @@ public class DataManager {
 			e.printStackTrace();
 		} finally {
 			DatabaseHelper.closeConnection();
-		}
-		
+		}		
 	}
 	
 	public List<CollectRecord> loadSummaries(){
