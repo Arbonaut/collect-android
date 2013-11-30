@@ -11,7 +11,6 @@ import org.openforis.collect.android.fields.SummaryList;
 import org.openforis.collect.android.fields.SummaryTable;
 import org.openforis.collect.android.fields.TaxonField;
 import org.openforis.collect.android.fields.UIElement;
-import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;

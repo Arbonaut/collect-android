@@ -26,14 +26,19 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class RecordChoiceActivity extends BaseListActivity /*implements OnItemLongClickListener*/{
+public class RecordChoiceActivity extends BaseListActivity implements OnClickListener/*implements OnItemLongClickListener*/{
 	
 	private static final String TAG = "RecordChoiceActivity";
 
@@ -46,23 +51,27 @@ public class RecordChoiceActivity extends BaseListActivity /*implements OnItemLo
 	
 	private String[] clusterList;
 	
+	//private ScrollView sv;			
+    private ListView lv;
+    private LinearLayout mainLayout;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.clusterchoiceactivity);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //setContentView(R.layout.clusterchoiceactivity);
         try{
         	ApplicationManager.recordSelectionActivity = this;
         	
-        	this.activityLabel = (TextView)findViewById(R.id.lblList);
-        	this.activityLabel.setText(getResources().getString(R.string.clusterChoiceListLabel));
+        	//this.activityLabel = (TextView)findViewById(R.id.lblList);
+        	//this.activityLabel.setText(getResources().getString(R.string.clusterChoiceListLabel));
         	
-        	this.getListView().setLongClickable(true);
+        	//this.getListView().setLongClickable(true);
         	//this.getListView().setOnItemLongClickListener(this);
         	
-        	registerForContextMenu(getListView());
+        	//registerForContextMenu(getListView());
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -77,10 +86,65 @@ public class RecordChoiceActivity extends BaseListActivity /*implements OnItemLo
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
 
+		//RecordChoiceActivity.this.sv = new ScrollView(RecordChoiceActivity.this);
+		LayoutParams lp = new LayoutParams(
+	            LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		//RecordChoiceActivity.this.sv.setLayoutParams(lp);
+		RecordChoiceActivity.this.lv = new ListView(RecordChoiceActivity.this);
+		RecordChoiceActivity.this.lv.setLayoutParams(lp);
+		RecordChoiceActivity.this.lv.setId(android.R.id.list);
+		//RecordChoiceActivity.this.sv.addView(lv);
+		registerForContextMenu(lv);
+		
+		RecordChoiceActivity.this.mainLayout = new LinearLayout(RecordChoiceActivity.this);
+		RecordChoiceActivity.this.mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
+		
+		TextView screenTitle = new TextView(RecordChoiceActivity.this);
+		screenTitle.setText(getResources().getString(R.string.clusterChoiceListLabel));
+		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
+		RecordChoiceActivity.this.mainLayout.addView(screenTitle);
+		RecordChoiceActivity.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
+		
+		this.mainLayout.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this));
+		this.mainLayout.addView(ApplicationManager.getDividerLine(this));
+		
+		RecordChoiceActivity.this.mainLayout.addView(lv);	
+		setContentView(RecordChoiceActivity.this.mainLayout);
+		
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 		changeBackgroundColor(backgroundColor);
 		
 		refreshRecordsList();
+    }
+    
+    @Override
+	public void onClick(View arg0) {
+		if (arg0 instanceof Button){
+			Log.e("button","CLICKED");
+			Intent resultHolder = new Intent();
+			resultHolder.putExtra(getResources().getString(R.string.recordId), -1);			
+			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
+			RecordChoiceActivity.this.finish();	
+		}
+	}
+    
+    private RelativeLayout arrangeButtonsInLine(Button btnAdd, String btnAddLabel, OnClickListener listener){
+		RelativeLayout relativeButtonsLayout = new RelativeLayout(this);
+	    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+	            RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	    relativeButtonsLayout.setLayoutParams(lp);
+		//btnAdd.setText(btnAddLabel);
+	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(getResources().getInteger(R.integer.addButtonWidth),getResources().getInteger(R.integer.addButtonHeight));
+	    btnAdd.setLayoutParams(params);
+	    btnAdd.setBackgroundResource(R.drawable.add_new_white);
+		
+		btnAdd.setOnClickListener(listener);
+		
+		LinearLayout ll = new LinearLayout(this);
+		ll.addView(btnAdd);		
+		relativeButtonsLayout.addView(ll);;	
+		
+		return relativeButtonsLayout;
     }
     
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -187,8 +251,27 @@ public class RecordChoiceActivity extends BaseListActivity /*implements OnItemLo
 	}
 	
     private void changeBackgroundColor(int backgroundColor){
+		//this.activityLabel.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
-		this.activityLabel.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+
+		TextView screenTitle = (TextView)this.mainLayout.getChildAt(0);
+		screenTitle.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+		View dividerLine = (View)this.mainLayout.getChildAt(1);
+		dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);			
+	
+		    		
+		//View dividerLine = (View)this.ll.getChildAt(5);
+		dividerLine = (View)this.mainLayout.getChildAt(3);
+		if (dividerLine!=null){
+			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
+		}
+		
+		if (!(this.mainLayout.getChildAt(2) instanceof ScrollView)){
+			RelativeLayout rLayout = (RelativeLayout)this.mainLayout.getChildAt(2);
+			LinearLayout ll = (LinearLayout)rLayout.getChildAt(0);
+			Button addBtn = (Button)ll.getChildAt(0);
+			addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
+		}
     }
 
 	/*@Override
@@ -223,9 +306,9 @@ public class RecordChoiceActivity extends BaseListActivity /*implements OnItemLo
 			    public void handleMessage(Message msg) {
 			    	int layout = (backgroundColor!=Color.WHITE)?R.layout.localclusterrow_white:R.layout.localclusterrow_black;
 					RecordChoiceActivity.this.adapter = new ArrayAdapter<String>(RecordChoiceActivity.this, layout, R.id.plotlabel, clusterList);
-					RecordChoiceActivity.this.setListAdapter(RecordChoiceActivity.this.adapter);
-			        }
-			    };
+				    RecordChoiceActivity.this.lv.setAdapter(RecordChoiceActivity.this.adapter);
+					//RecordChoiceActivity.this.setListAdapter(RecordChoiceActivity.this.adapter);
+			    }};
 		  new Thread(new Runnable() {
 			    public void run() {
 			    	RecordChoiceActivity.this.rootEntityDef = ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(getIntent().getIntExtra(getResources().getString(R.string.rootEntityId),1));
@@ -242,8 +325,9 @@ public class RecordChoiceActivity extends BaseListActivity /*implements OnItemLo
 					
 					if (RecordChoiceActivity.this.recordsList.size()==0){
 						clusterList = new String[1];
+						clusterList[0]="";
 					} else {
-						clusterList = new String[recordsList.size()+2];
+						clusterList = new String[recordsList.size()/*+2*/];
 					}
 					for (int i=0;i<recordsList.size();i++){
 						CollectRecord record = recordsList.get(i);
@@ -253,12 +337,12 @@ public class RecordChoiceActivity extends BaseListActivity /*implements OnItemLo
 							clusterList[i] += "\n"+record.getModifiedDate();
 						}
 					}
-					if (RecordChoiceActivity.this.recordsList.size()==0){		
+					/*if (RecordChoiceActivity.this.recordsList.size()==0){		
 						clusterList[0]=getResources().getString(R.string.addNewRecord)+" "+ApplicationManager.getLabel(RecordChoiceActivity.this.rootEntityDef);;
 					} else {
 						clusterList[recordsList.size()]="";
 						clusterList[recordsList.size()+1]=getResources().getString(R.string.addNewRecord)+" "+ApplicationManager.getLabel(RecordChoiceActivity.this.rootEntityDef);;
-					}
+					}*/
 					
 					Message msg = Message.obtain();
 			        msg.what = 1;
