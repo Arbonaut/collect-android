@@ -1883,32 +1883,21 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
-    	
-    	Log.e("contextMenu","=="+v.getClass());
-    	Log.e("this.isTextViewClicked","=="+this.isTextViewClicked);
     	final View clickedView = v;
-    	Log.e("clickedView.getId()","=="+clickedView.getId());
-    	Log.e("arg0.getClass()","=="+clickedView.getClass());
-        Log.e("arg01","=="+clickedView.getParent().getClass());
-        Log.e("arg02","=="+clickedView.getParent().getParent().getClass());
-        Log.e("arg03","=="+clickedView.getParent().getParent().getParent().getClass());
-        
         if (v instanceof TextView){
         	this.isTextViewClicked = true;
     	} else {
     		this.isTextViewClicked = false;
     	}
         if (!this.isTextViewClicked){
-        	Log.e("contextMenu","INFLATE");
             getMenuInflater().inflate(R.menu.context_menu, menu);
             MenuItem viewItem = menu.findItem(R.id.view);
             viewItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    Log.e("contextMenuListener","VIEW");
-                    Object parentView = clickedView;//arg0.getParent().getParent().getParent();
-        			if (parentView instanceof SummaryList){
-        				SummaryList temp = (SummaryList)parentView;
+                    //Object parentView = clickedView;//arg0.getParent().getParent().getParent();
+        			if (clickedView instanceof SummaryList){
+        				SummaryList temp = (SummaryList)clickedView;
         				ViewBacktrack viewBacktrack = new ViewBacktrack(temp,EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
         				ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
         				//Log.e("clickedON",temp.getInstanceNo()+"=="+EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
@@ -1930,7 +1919,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
             					@Override
             					public void onClick(DialogInterface dialog, int which) {
             						int position = -1;
-            						Log.e("ll.getChildCount()","=="+EntityInstancesScreen.this.ll.getChildCount());
             						for (int i=0;i<EntityInstancesScreen.this.ll.getChildCount();i++){
             							if (clickedView.equals(EntityInstancesScreen.this.ll.getChildAt(i))){
             								position = i;
@@ -1938,14 +1926,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
             							}
             						}
             						position /= 2;
-            						Log.e("positionToDelete","=="+position);
             						NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
 		 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
-		 							Log.e("parentEntitySingleAttribute","=="+(EntityInstancesScreen.this.parentEntitySingleAttribute==null));
-		 							Log.e("parentEntitySingleAttribute","=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
-		 							Log.e("parentEntitySingleAttribute.parent","=="+(EntityInstancesScreen.this.parentEntitySingleAttribute.getParent()==null));
-		 							Log.e("nodeDef","=="+nodeDef.getName());
-		 							Log.e("parentNodeDef","=="+parentNodeDefinition.getName());
 		 							Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute/*.getParent()*/.get(parentNodeDefinition.getName(), position);		 							
 		 							if (foundNode!=null){
 		 								Log.e("not null",nodeDef.getName()+"=="+position);

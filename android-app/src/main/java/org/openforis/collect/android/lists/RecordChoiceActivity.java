@@ -28,15 +28,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class RecordChoiceActivity extends BaseListActivity implements OnItemLongClickListener{
+public class RecordChoiceActivity extends BaseListActivity /*implements OnItemLongClickListener*/{
 	
 	private static final String TAG = "RecordChoiceActivity";
 
@@ -63,10 +60,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnItemLong
         	this.activityLabel.setText(getResources().getString(R.string.clusterChoiceListLabel));
         	
         	this.getListView().setLongClickable(true);
-        	this.getListView().setOnItemLongClickListener(this); 
-        	//Log.e("rootEntity",ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName()+"=="+ApplicationManager.currRootEntityId);
-        	/*ProgressDialog pd = ProgressDialog.show(ClusterChoiceActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loading), true, false);
-    		pd.dismiss();*/
+        	//this.getListView().setOnItemLongClickListener(this);
         	
         	registerForContextMenu(getListView());
         } catch (Exception e){
@@ -197,12 +191,12 @@ public class RecordChoiceActivity extends BaseListActivity implements OnItemLong
 		this.activityLabel.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
     }
 
-	@Override
+	/*@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		if ((recordsList.size()!=0) && (position<recordsList.size())){
 			final int number = position;
-			/*AlertMessage.createPositiveNegativeDialog(RecordChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
+			AlertMessage.createPositiveNegativeDialog(RecordChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
 					getResources().getString(R.string.deleteRecordTitle), getResources().getString(R.string.deleteRecord),
 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
 		    		new DialogInterface.OnClickListener() {
@@ -218,10 +212,10 @@ public class RecordChoiceActivity extends BaseListActivity implements OnItemLong
 							
 						}
 					},
-					null).show();*/
+					null).show();
 		}		
 		return false;
-	}
+	}*/
 	
 	public void refreshRecordsList(){
 		 final Handler handler = new Handler(){
@@ -253,7 +247,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnItemLong
 					}
 					for (int i=0;i<recordsList.size();i++){
 						CollectRecord record = recordsList.get(i);
-						clusterList[i] = record.getId()+" "+record.getCreatedBy().getName()
+						clusterList[i] = /*record.getId()*/(i+1)+" "+record.getCreatedBy().getName()
 								+"\n"+record.getCreationDate();
 						if (record.getModifiedDate()!=null){
 							clusterList[i] += "\n"+record.getModifiedDate();
