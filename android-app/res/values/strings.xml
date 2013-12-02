@@ -13,9 +13,9 @@
     <string name="lblFormDefinitionFile">Ubicación de la definición de forma en la tarjeta SD:\u0020</string>
     <string name="lblUsername">Usuario:\u0020</string>
     <string name="lblSurveyId">ID del Proyecto:\u0020</string>
-    <string name="lblRecordDownloadPath">Records download path:\u0020</string>
-    <string name="lblRecordUploadPath">Records upload path:\u0020</string>
-    <string name="lblScreenOrientation">Screen orientation</string>
+	<string name="lblRecordDownloadPath">Ruta descarga del set de datos:\u0020</string>
+    <string name="lblRecordUploadPath">Ruta de subida del set de datos:\u0020</string>
+    <string name="lblScreenOrientation">Orientación de la pantalla</string>
     <string name="lblRadioHorizontal">Horizontal</string>
     <string name="lblRadioVertical">Vertical</string>
     <string name="lblRadioAutoOrientation">Auto</string>
@@ -71,8 +71,8 @@
     <string name="backupingDatabaseMessageSuccess">Archivo base de datos exportado.</string>
     <string name="backupingDatabaseMessageFileNotFound">El archivo base de datos no se ha podido exportar, porque no se ha encontrado la base de datos.</string>
     <string name="backupingDatabaseMessageIOException">El archivo base de datos no se ha podido exportar, porque la carpeta de destino en la tarjeta SD no se ha encontrado.</string>
-    <string name="retrievingGpsTitle">Retrieving location from GPS&#8230;</string>    
-    <string name="retrievingGpsMessage">Please wait until location is being retrieved from GPS.</string>
+	<string name="retrievingGpsTitle">Recuperando la posición desde el GPS&#8230;</string>    
+    <string name="retrievingGpsMessage"> Por favor espere hasta que la posición del GPS se haya recuperado.</string>
     
     <!-- toasts -->
     <string name="attributeDeletedToast">Atributo borrado.</string>
@@ -156,13 +156,12 @@
     <string name="dataToDownload">Seleccione los archivos para descargar</string>
     <string name="dataToImport">Seleccione los archivos para importar</string>
     <string name="noDataToDownload">No existen archivos XML en el servidor. </string>
-        <string name="dataToDownloadNotExisting">There is no files on the server in the specified location.</string>
+	<string name="dataToDownloadNotExisting">No se han encontrado los archivos en el servidor para la posición especificada.</string>
     <string name="noDataToImport">No existen archivos XML en la carpeta de exportación. </string>
     <string name="dataToUplaodColumnHeaders">Cargar  sobrescribir </string>
     <string name="dataToDownlaodColumnHeaders">Descargar</string>
     <string name="dataToImportColumnHeaders">Importar</string>
     
     <!-- others -->
-    <string name="entityMarker">[]</string>
-    
+    <string name="entityMarker">[]</string>    
 </resources>

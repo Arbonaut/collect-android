@@ -185,28 +185,7 @@ public class ApplicationManager extends BaseActivity {
 	    	if(valueForNum == null)
 	    		editor.putBoolean(getResources().getString(R.string.showSoftKeyboardOnNumericField), false);
 	    	if(valueForText == null)
-	    		editor.putBoolean(getResources().getString(R.string.showSoftKeyboardOnTextField), false);
-	    	
-	    	/*String language = ApplicationManager.appPreferences.getString(getResources().getString(R.string.selectedLanguage), getResources().getString(R.string.defaultLanguage));			
-			boolean languageFound = false;
-			List<String> languageList = ApplicationManager.getSurvey().getLanguages();
-			if (ApplicationManager.getSurvey()!=null){	        		        
-	    		for (int i=0;i<languageList.size();i++){
-	    			if (languageList.get(i).equals(language)){
-	    				languageFound = true;
-	    			}
-	    		}
-	        }
-			if (!languageFound){
-				if (languageList.size()>0){
-					language = languageList.get(0);
-				} else {
-					language = "null";
-				}
-			}
-			editor = ApplicationManager.appPreferences.edit();
-			editor.putString(getResources().getString(R.string.selectedLanguage), language);
-			ApplicationManager.selectedLanguage = language;*/
+	    		editor.putBoolean(getResources().getString(R.string.showSoftKeyboardOnTextField), false);	    	
 			
 			String formDefinitionPath = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
 			editor = ApplicationManager.appPreferences.edit();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/welcomeLayout"
+<!--<RelativeLayout android:id="@+id/welcomeLayout"
 android:layout_width="fill_parent" 
 android:layout_height="fill_parent"
 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,4 +33,46 @@ android:background="#000000">
    		android:contentDescription="@string/ofclogo"
    		android:src="@drawable/ofclogo"
    		 />
-</RelativeLayout>
+</RelativeLayout>-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/faologo"
+            android:adjustViewBounds="true"
+            />
+    </RelativeLayout>
+     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/arbonaut_logo_big"
+            android:adjustViewBounds="true"
+            />
+    </RelativeLayout>
+     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ofclogo"
+            android:adjustViewBounds="true"
+            />
+    </RelativeLayout>
+</LinearLayout>
