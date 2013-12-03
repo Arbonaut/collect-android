@@ -90,6 +90,10 @@ public class RootEntityChoiceActivity extends BaseListActivity{
     public void onResume(){
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
+		
+		ApplicationManager.isRecordListUpToDate = false;
+		ApplicationManager.recordsList = null;
+		
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 		changeBackgroundColor(backgroundColor);
 		CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();

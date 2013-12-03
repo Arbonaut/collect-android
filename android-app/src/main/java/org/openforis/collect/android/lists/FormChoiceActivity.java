@@ -21,8 +21,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.RelativeLayout.LayoutParams;
 
 public class FormChoiceActivity extends BaseListActivity {
 	
@@ -33,16 +38,19 @@ public class FormChoiceActivity extends BaseListActivity {
 	private List<CollectSurvey> surveysList;
 	private ArrayAdapter<String> adapter;
 	
+    private ListView lv;
+    private LinearLayout mainLayout;  
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
-        setContentView(R.layout.clusterchoiceactivity);
+        //setContentView(R.layout.clusterchoiceactivity);
         try{
         	ApplicationManager.formSelectionActivity = this;
         	
-        	this.activityLabel = (TextView)findViewById(R.id.lblList);
-        	this.activityLabel.setText(getResources().getString(R.string.formChoiceListLabel));           
+        	//this.activityLabel = (TextView)findViewById(R.id.lblList);
+        	//this.activityLabel.setText(getResources().getString(R.string.formChoiceListLabel));           
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -56,6 +64,34 @@ public class FormChoiceActivity extends BaseListActivity {
     public void onResume(){
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
+		
+		ApplicationManager.isRecordListUpToDate = false;
+		ApplicationManager.recordsList = null;
+		
+		LayoutParams lp = new LayoutParams(
+	            LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		//RecordChoiceActivity.this.sv.setLayoutParams(lp);
+		FormChoiceActivity.this.lv = new ListView(FormChoiceActivity.this);
+		FormChoiceActivity.this.lv.setLayoutParams(lp);
+		FormChoiceActivity.this.lv.setId(android.R.id.list);
+		//RecordChoiceActivity.this.sv.addView(lv);
+		registerForContextMenu(lv);
+		
+		FormChoiceActivity.this.mainLayout = new LinearLayout(FormChoiceActivity.this);
+		FormChoiceActivity.this.mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
+		
+		TextView screenTitle = new TextView(FormChoiceActivity.this);
+		screenTitle.setText(getResources().getString(R.string.formChoiceListLabel));
+		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
+		FormChoiceActivity.this.mainLayout.addView(screenTitle);
+		FormChoiceActivity.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
+		
+		//FormChoiceActivity.this.mainLayout.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this));
+		//FormChoiceActivity.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
+		
+		FormChoiceActivity.this.mainLayout.addView(lv);	
+		setContentView(FormChoiceActivity.this.mainLayout);
+		
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 		changeBackgroundColor(backgroundColor);
 		String selectedFormDefinitionFile = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
@@ -64,19 +100,20 @@ public class FormChoiceActivity extends BaseListActivity {
 		String[] formsList;
 		if (this.surveysList.size()==0){
 			formsList = new String[1];
+			formsList[0] = "";
 		} else {
-			formsList = new String[surveysList.size()+2];
+			formsList = new String[surveysList.size()/*+2*/];
 		}
 		for (int i=0;i<surveysList.size();i++){
 			CollectSurvey survey = surveysList.get(i);
 			formsList[i] = survey.getName();
 		}
-		if (this.surveysList.size()==0){			
+		/*if (this.surveysList.size()==0){			
 			formsList[0]=getResources().getString(R.string.addNewSurvey)+selectedFormDefinitionFile;
 		} else {
 			formsList[surveysList.size()]="";
 			formsList[surveysList.size()+1]=getResources().getString(R.string.addNewSurvey)+selectedFormDefinitionFile;
-		}
+		}*/
 		
 		int layout = (backgroundColor!=Color.WHITE)?R.layout.localclusterrow_white:R.layout.localclusterrow_black;
         this.adapter = new ArrayAdapter<String>(this, layout, R.id.plotlabel, formsList);
@@ -164,6 +201,25 @@ public class FormChoiceActivity extends BaseListActivity {
 	
     private void changeBackgroundColor(int backgroundColor){
 		getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
-		this.activityLabel.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+		//this.activityLabel.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+		
+		TextView screenTitle = (TextView)this.mainLayout.getChildAt(0);
+		screenTitle.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+		View dividerLine = (View)this.mainLayout.getChildAt(1);
+		dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);			
+	
+		    		
+		//View dividerLine = (View)this.ll.getChildAt(5);
+		/*dividerLine = (View)this.mainLayout.getChildAt(3);
+		if (dividerLine!=null){
+			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
+		}*/
+		
+		/*if (!(this.mainLayout.getChildAt(2) instanceof ScrollView)){
+			RelativeLayout rLayout = (RelativeLayout)this.mainLayout.getChildAt(2);
+			LinearLayout ll = (LinearLayout)rLayout.getChildAt(0);
+			Button addBtn = (Button)ll.getChildAt(0);
+			addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
+		}*/
     }
 }
