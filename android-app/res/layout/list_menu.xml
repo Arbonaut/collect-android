@@ -18,6 +18,9 @@
     <item android:id="@+id/menu_backup_database"
     	  android:title="@string/backup_database" />   
     
+    <item android:id="@+id/menu_add_new_survey"
+    	  android:title="@string/addNewSurvey" />  
+    	      
     <item android:id="@+id/menu_settings"
           android:title="@string/settings" />
     

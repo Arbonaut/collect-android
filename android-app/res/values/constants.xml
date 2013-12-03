@@ -75,6 +75,8 @@
     <!-- REQUEST CODES FOR ACTIVITIES -->
     <integer name="chooseDatabaseFile">69</integer>
     <integer name="databaseFileChosen">44</integer>
+    <integer name="chooseFormFile">691</integer>
+    <integer name="formFileChosen">692</integer>
     <integer name="clusterSelection">789</integer>
     <integer name="rootEntitySelection">111</integer>
     <integer name="formDefinitionSelection">101</integer>
@@ -113,6 +115,10 @@
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
     <string name="databaseFileName">databaseFileName</string>
+    <string name="databaseFileNameRequest">databaseFileNameRequest</string>
+    <string name="formFileName">formFileName</string>
+    <string name="formFileNameRequest">formFileNameRequest</string>
+    <string name="fileNameRequestType">fileNameRequestType</string>
     
     <!-- BUTTONS IDs -->
     <integer name="leftButtonMultipleAttribute">11</integer>

@@ -10,6 +10,8 @@ import org.openforis.collect.android.R;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -18,10 +20,24 @@ public class FileChooser extends ListActivity {
     private File currentDir;
     private FileArrayAdapter adapter;
     
+    private String selectedFile;
+    private int selectedFileType;
+    private int fileChosen;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentDir = new File("/sdcard/ofcm/");
+        currentDir = new File(Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.application_folder));
+        Log.e("currentDir",currentDir.getAbsolutePath()+"=="+currentDir.getName());
+        this.selectedFileType = getIntent().getIntExtra(getResources().getString(R.string.fileNameRequestType), -1);
+        if (this.selectedFileType==getResources().getInteger(R.integer.chooseFormFile)){
+        	this.selectedFile = getResources().getString(R.string.formFileName);
+        	this.fileChosen = getResources().getInteger(R.integer.formFileChosen);
+        } else if (this.selectedFileType==getResources().getInteger(R.integer.chooseDatabaseFile)){
+        	this.selectedFile = getResources().getString(R.string.databaseFileName);
+        	this.fileChosen = getResources().getInteger(R.integer.databaseFileChosen);
+        }
+        Log.e("requestType",this.fileChosen+this.selectedFile+"=="+this.selectedFileType);
         fill(currentDir);
     }
     
@@ -71,10 +87,11 @@ public class FileChooser extends ListActivity {
     
     private void onFileClick(Option o)
     {
-    	//Log.e("File Clicked: "+o.getName(), "================"+o.getPath()+"\nDATA"+o.getData());
-		Intent resultHolder = new Intent();
-		resultHolder.putExtra(getResources().getString(R.string.databaseFileName), o.getPath());		
-		setResult(getResources().getInteger(R.integer.databaseFileChosen),resultHolder);
+    	Log.e("File Clicked: "+o.getName(), "================"+o.getPath()+"\nDATA"+o.getData());
+		Intent resultHolder = new Intent();	
+		Log.e("selectedFile=="+this.selectedFile, "path=="+o.getPath());
+		resultHolder.putExtra(this.selectedFile, o.getPath());		
+		setResult(this.fileChosen,resultHolder);
 		FileChooser.this.finish();	
     }
 }

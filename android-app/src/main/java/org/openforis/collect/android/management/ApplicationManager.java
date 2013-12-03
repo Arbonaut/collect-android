@@ -43,10 +43,13 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 //import org.openforis.collect.manager.codelistimport.CodeListImportProcess;
@@ -299,10 +302,10 @@ public class ApplicationManager extends BaseActivity {
 	 	    } else if (requestCode==getResources().getInteger(R.integer.formDefinitionSelection)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.formDefinitionChoiceSuccessful)){//form was selected
 	 	    		int formId = data.getIntExtra(getResources().getString(R.string.formId), -1);
+	 	    		Log.e("formId","=="+formId);
 	 	    		if (formId==-1){//new form to be added from file
 	 	    			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingNewFormDefinitionMessage));
-	 	    			//loadingFormDefinitionThread.start();
-	 	    			new loadingFormDefinition().execute("");
+	 	    			new loadingFormDefinition().execute(data.getStringExtra(getResources().getString(R.string.formFileName)));
 	 	    		} else {
 	 	    			survey = ServiceFactory.getSurveyManager().getById(formId);
 	 	    			showRootEntitiesListScreen();
@@ -389,19 +392,18 @@ public class ApplicationManager extends BaseActivity {
         @Override
         protected String doInBackground(String... params) {
 			try {
-				Log.e("doInBackground","=============================");
     			try{
     				Log.i(getResources().getString(R.string.app_name),TAG+":loadingForm");
     	        	
         			long startTimeParsing = System.currentTimeMillis();
      	           	
         			String sdcardPath = Environment.getExternalStorageDirectory().toString();
-
-    	        	String selectedFormDefinitionFile = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
+        			Log.e("params[0]","=="+params[0]);
+    	        	String selectedFormDefinitionFile = params[0];//ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
     	        	Log.e("loadingForm","=FROM=="+selectedFormDefinitionFile);
-    	        	
+ 
     	        	SurveyManager surveyManager = ServiceFactory.getSurveyManager();
-    	        	File idmlFile = new File(sdcardPath, selectedFormDefinitionFile);
+    	        	File idmlFile = new File(selectedFormDefinitionFile);
     	        	
     	        	//ApplicationManager.pd.setMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
     	        	changeMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
@@ -419,12 +421,14 @@ public class ApplicationManager extends BaseActivity {
             		}
             		CollectSurvey loadedSurvey = surveyManager.get(survey.getName());
             		if (loadedSurvey==null){
+            			Log.e("importedSurvey","==");
     					survey = surveyManager.importModel(idmlFile, survey.getName(), false);
             			//Debug.startMethodTracing("loadingSURVEY");
             			//surveyManager.importModel(survey);
             			//ServiceFactory.getCodeListManager().importCodeLists(survey, idmlFile);
             			//Debug.stopMethodTracing();
             		} else {
+            			Log.e("loadedSurvey","==");
             			survey = loadedSurvey;
             		}
             		/*            		if (loadedSurvey==null){
@@ -456,6 +460,7 @@ public class ApplicationManager extends BaseActivity {
     				e.printStackTrace();
     				survey = null;
     			}
+    			Log.e("survey==null","=="+(survey==null));
             	if (survey!=null){
             		ApplicationManager.pd.dismiss();
             		SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
@@ -483,7 +488,8 @@ public class ApplicationManager extends BaseActivity {
             		showRootEntitiesListScreen();		    	            
             	} else {
             		ApplicationManager.pd.dismiss();
-            		AlertMessage.createPositiveDialog(ApplicationManager.this, false, getResources().getDrawable(R.drawable.warningsign),
+            		showFormsListScreen();
+            		/*AlertMessage.createPositiveDialog(ApplicationManager.this, false, getResources().getDrawable(R.drawable.warningsign),
 		 					getResources().getString(R.string.loadFormDefinitionTitle), getResources().getString(R.string.loadFormDefinitionMessage),
 		 					getResources().getString(R.string.okay),
 		 		    		new DialogInterface.OnClickListener() {
@@ -493,7 +499,7 @@ public class ApplicationManager extends BaseActivity {
 		 							showFormsListScreen();
 		 						}
 		 					},
-		 					null).show();	
+		 					null).show();*/
             	}
 	            
 			} catch (Exception e) {
@@ -644,13 +650,12 @@ public class ApplicationManager extends BaseActivity {
 		}
 	};
 	
-	private Runnable changeMessage = new Runnable() {
+	/*private Runnable changeMessage = new Runnable() {
 	    @Override
 	    public void run() {
-	        //Log.v(TAG, strCharacters);
 	        ApplicationManager.pd.setMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
 	    }
-	};
+	};*/
 	
 	public void changeMessage(final String message) {
 	    runOnUiThread(new Runnable() {
@@ -713,7 +718,7 @@ public class ApplicationManager extends BaseActivity {
     	ApplicationManager.isRecordListUpToDate = false;
 	}
     
-	private boolean userExists(User user){
+	/*private boolean userExists(User user){
 		List<User> usersList = ServiceFactory.getUserManager().loadAll();
 		boolean userExists = false;
 		Log.e("iloscUserowWBazie","=="+usersList.size());
@@ -725,7 +730,7 @@ public class ApplicationManager extends BaseActivity {
 	 		}
 	 	}
 		return userExists;
-	}
+	}*/
 	
 	public static User getLoggedInUser(){
 		return ApplicationManager.loggedInUser;
@@ -768,7 +773,7 @@ public class ApplicationManager extends BaseActivity {
 		this.startActivityForResult(new Intent(this, RootEntityChoiceActivity.class),getResources().getInteger(R.integer.rootEntitySelection));
 	}
 	
-	public void showFormsListScreen(){		
+	public void showFormsListScreen(){
 		this.startActivityForResult(new Intent(this, FormChoiceActivity.class),getResources().getInteger(R.integer.formDefinitionSelection));
 	}
 	

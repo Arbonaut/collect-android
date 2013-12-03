@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
-import android.view.WindowManager;
 
 
 public class BaseListActivity extends ListActivity {
@@ -84,7 +83,6 @@ public class BaseListActivity extends ListActivity {
     
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
-    	Log.e("onPrepareOptionsMenu","=="+(ApplicationManager.getSurvey()!=null));
     	menu.findItem(R.id.menu_import_from_file).setVisible(ApplicationManager.getSurvey()!=null);
         return true;
     }
@@ -157,7 +155,9 @@ public class BaseListActivity extends ListActivity {
 			    return true;
 			case R.id.menu_import_database_from_file:
 				//startActivity(new Intent(BaseListActivity.this, FileChooser.class));
-				startActivityForResult(new Intent(BaseListActivity.this, FileChooser.class), getResources().getInteger(R.integer.chooseDatabaseFile));
+				Intent databaseFileIntent = new Intent(BaseListActivity.this, FileChooser.class);
+				databaseFileIntent.putExtra(getResources().getString(R.string.fileNameRequestType), getResources().getInteger(R.integer.chooseDatabaseFile));
+				startActivityForResult(databaseFileIntent, getResources().getInteger(R.integer.chooseDatabaseFile));
 			    return true;
 			case R.id.menu_backup_database: 
 				try {
@@ -181,7 +181,12 @@ public class BaseListActivity extends ListActivity {
 		 					null).show();
 				}
 				
-			    return true; 				    
+			    return true;
+			case R.id.menu_add_new_survey:
+				Intent formFileIntent = new Intent(BaseListActivity.this, FileChooser.class);
+				formFileIntent.putExtra(getResources().getString(R.string.fileNameRequestType), getResources().getInteger(R.integer.chooseFormFile));
+				startActivityForResult(formFileIntent, getResources().getInteger(R.integer.chooseFormFile));				
+			    return true;	
 			case R.id.menu_settings:
 				startActivity(new Intent(BaseListActivity.this, SettingsScreen.class));
 			    return true;			    
@@ -224,7 +229,12 @@ public class BaseListActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {    	
 	    super.onActivityResult(requestCode, resultCode, data);
 	    try{
-	    	if (requestCode==getResources().getInteger(R.integer.chooseDatabaseFile)){
+	    	Log.e("onActivityResult","BaseListActivity");
+	    	Log.e("requestCode"+requestCode,"resultCode"+resultCode);
+	    	Log.e(""+getResources().getInteger(R.integer.chooseFormFile),""+getResources().getInteger(R.integer.formFileChosen));
+	    	if (requestCode==getResources().getInteger(R.integer.chooseDatabaseFile)
+	    			&&
+	    		resultCode==getResources().getInteger(R.integer.databaseFileChosen)){
 				Log.e("choosing database","=========================");
 				Log.e("CHOSEN FILE","=="+data.getStringExtra(getResources().getString(R.string.databaseFileName)));
 				String selectedFileName = data.getStringExtra(getResources().getString(R.string.databaseFileName));
@@ -243,8 +253,19 @@ public class BaseListActivity extends ListActivity {
 										
 									}
 								},
-								null).show();	
+								null).show();
 				}
+			} else if (requestCode==getResources().getInteger(R.integer.chooseFormFile)
+						&&
+					   resultCode==getResources().getInteger(R.integer.formFileChosen)){
+				Intent resultHolder = new Intent();
+				String selectedFileName = data.getStringExtra(getResources().getString(R.string.formFileName));
+				Log.e("CHOSEN FILE1","=="+selectedFileName);
+				resultHolder.putExtra(getResources().getString(R.string.formId), -1);
+				resultHolder.putExtra(getResources().getString(R.string.formFileName), selectedFileName);	
+				setResult(getResources().getInteger(R.integer.formDefinitionChoiceSuccessful),resultHolder);
+				ApplicationManager.formSelectionActivity.finish();
+				ApplicationManager.formSelectionActivity = null;
 			}
 	    } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onActivityResult",

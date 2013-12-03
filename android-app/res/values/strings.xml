@@ -118,7 +118,7 @@
     <string name="exit">Salir</string>
     
     <string name="addNewRecord">Añadir nuevo</string>
-    <string name="addNewSurvey">Añadir nueva definición de forma desde el archivo ubicado en: /sdcard</string>
+    <string name="addNewSurvey">Añadir nueva definición de forma <!--desde el archivo ubicado en: /sdcard--></string>
     
     
     <!-- settings screen -->
