@@ -88,6 +88,9 @@ public class ApplicationManager extends BaseActivity {
 	
 	public static boolean addNewEntity;
 	
+	public static List<CollectRecord> recordsList;
+	public static boolean isRecordListUpToDate;
+	
 	private Thread creationThread = new Thread() {
 		@Override
 		public void run() {
@@ -310,7 +313,11 @@ public class ApplicationManager extends BaseActivity {
 	 	    } else if (requestCode==getResources().getInteger(R.integer.startingFormScreen)){
 	 	    	CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 		    	DataManager dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
-				if (dataManager.loadSummaries().size()==0){
+		    	if (!ApplicationManager.isRecordListUpToDate){
+		    		ApplicationManager.recordsList = dataManager.loadSummaries();
+		    	}		    	
+				//if (dataManager.loadSummaries().size()==0){
+		    	if (ApplicationManager.recordsList.size()==0){
 		        	if (ApplicationManager.getSurvey().getSchema().getRootEntityDefinitions().size()==1){
 		        		AlertMessage.createPositiveNegativeDialog(ApplicationManager.this, false, getResources().getDrawable(R.drawable.warningsign),
 			 					getResources().getString(R.string.selectFormDefinitionTitle), getResources().getString(R.string.selectFormDefinitionMessage),
@@ -702,6 +709,8 @@ public class ApplicationManager extends BaseActivity {
     	ApplicationManager.formScreenActivityList = new ArrayList<Activity>();
     	ApplicationManager.formSelectionActivity = null;
     	ApplicationManager.addNewEntity = false;
+    	ApplicationManager.recordsList = null;
+    	ApplicationManager.isRecordListUpToDate = false;
 	}
     
 	private boolean userExists(User user){

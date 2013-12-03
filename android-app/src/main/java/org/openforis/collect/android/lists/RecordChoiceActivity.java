@@ -51,9 +51,9 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 	
 	private String[] clusterList;
 	
-	//private ScrollView sv;			
+	//private ScrollView sv;
     private ListView lv;
-    private LinearLayout mainLayout;
+    private LinearLayout mainLayout;       
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,7 +120,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
     @Override
 	public void onClick(View arg0) {
 		if (arg0 instanceof Button){
-			Log.e("button","CLICKED");
+			ApplicationManager.isRecordListUpToDate = false;
 			Intent resultHolder = new Intent();
 			resultHolder.putExtra(getResources().getString(R.string.recordId), -1);			
 			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
@@ -196,6 +196,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
     					@Override
     					public void onClick(DialogInterface dialog, int which) {							
     						ApplicationManager.dataManager.deleteRecord(position);
+    						ApplicationManager.recordsList.remove(position);
     						refreshRecordsList();
     					}
     				},
@@ -216,12 +217,14 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 		super.onListItemClick(l, v, position, id);
 		Log.i(getResources().getString(R.string.app_name),TAG+":onListItemClick");
 		if (this.recordsList.size()==0){
+			ApplicationManager.isRecordListUpToDate = false;
 			Intent resultHolder = new Intent();
 			resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
 			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
-			RecordChoiceActivity.this.finish();		
+			RecordChoiceActivity.this.finish();					
 		} else {
 			if (position!=recordsList.size()){
+				ApplicationManager.isRecordListUpToDate = false;
 				Intent resultHolder = new Intent();
 				if (position<recordsList.size()){
 					resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
@@ -315,7 +318,10 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 					
 					CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			    	DataManager dataManager = new DataManager(collectSurvey,RecordChoiceActivity.this.rootEntityDef.getName(),ApplicationManager.getLoggedInUser());
-			    	RecordChoiceActivity.this.recordsList = dataManager.loadSummaries();
+			    	if (!ApplicationManager.isRecordListUpToDate){
+			    		ApplicationManager.recordsList = dataManager.loadSummaries();
+			    	}
+			    	RecordChoiceActivity.this.recordsList = ApplicationManager.recordsList;
 			    	if (RecordChoiceActivity.this.recordsList.size()==0){
 			    		Intent resultHolder = new Intent();
 						resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	

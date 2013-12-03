@@ -24,7 +24,7 @@ import org.openforis.collect.android.service.ServiceFactory;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+//import android.util.Log;
 
 /**
  * 
@@ -50,7 +50,6 @@ public abstract class DatabaseHelper {
 	}
 	
 	public static void init(Context ctx, Configuration config){
-		Log.e("FROM DB CREATING", "Try to init db");
 		contex = ctx;
 		DatabaseHelper.config = config;
 		/*try {
@@ -59,20 +58,17 @@ public abstract class DatabaseHelper {
 			e.printStackTrace();
 		}*/
 		createDatabase(ctx, config);
-		Log.e("FROM DB CREATING", "Finish init db");
 	}
 
 	private static void createDatabase(Context ctx, Configuration config) {
 			OpenHelper openHelper = new OpenHelper(ctx, config);
 			SQLiteDatabase db = openHelper.getWritableDatabase();
-	       	Log.e("FROM DB CREATING", "Try to create db");
 	       	try{
 	       		if ( db == null ) {
 	       		throw new RuntimeException("Null db");
 	       	}
 	       	db.close();
        	}catch(Exception e){
-       		Log.d("FROM DB CREATING", "Got an error when tried to create db");
        		e.printStackTrace();
        	}finally{
        		db.close();
@@ -83,24 +79,15 @@ public abstract class DatabaseHelper {
 		Connection c = null;
 		Database database = new AndroidSQLiteDatabase();
 		try {
-			Log.e("FROM DB UPDATE SCHEMA", "Try to update db");
 			c = ServiceFactory.getDataSource().getConnection();
 			LogFactory.putLogger(new AndroidLiquibaseLogger());
-			Log.e("FROM DB UPDATE SCHEMA", "new sqlLite db");			
-			Log.e("FROM DB UPDATE SCHEMA", "Set connection");
 			database.setConnection(new JdbcConnection(c));
-			Log.e("FROM DB UPDATE SCHEMA", "Create Liqui db");
 			Liquibase liquibase = new Liquibase(LIQUIBASE_CHANGELOG, 
 					new ClassLoaderResourceAccessor(), database);
-			Log.e("FROM DB UPDATE SCHEMA", "Update Liqui db");
 			liquibase.update(null);
-			Log.e("FROM DB UPDATE SCHEMA", "Liqui db was updated");
-			Log.e("FROM DB UPDATE SCHEMA", "Close db");
 			//database.close();
 //		    c.close();
 		} catch(Exception e) {
-			Log.e("FROM DB UPDATE SCHEMA", "Exception when update db");
-			Log.e("==", e.getMessage(), e);
 			if (c != null) {
                 try {
 					c.rollback();
@@ -150,7 +137,6 @@ public abstract class DatabaseHelper {
 
 	
 	public static void copyDataBase(String pathToFileOnSdcard) throws IOException{
-		Log.e("copying","database file");
 		//Open your local db as the input stream
 		InputStream myInput;
 		if (pathToFileOnSdcard!=null){
@@ -192,8 +178,7 @@ public abstract class DatabaseHelper {
 		 
 		}
 	
-	public static void backupDatabase(String pathToDestinationFolderOnSdcard, String destFileName) throws IOException{
-		Log.e("backuping","database file");			
+	public static void backupDatabase(String pathToDestinationFolderOnSdcard, String destFileName) throws IOException{		
 		String dbFileName = DB_PATH + DB_NAME;		
 		File file = new File(dbFileName);
 		if(file.exists()){

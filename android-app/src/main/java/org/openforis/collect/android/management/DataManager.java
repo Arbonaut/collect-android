@@ -203,6 +203,7 @@ public class DataManager {
 		//android.os.Debug.stopMethodTracing();
 		Log.e("loadSummaries","=="+((System.currentTimeMillis()-startTime)));
 		//JdbcDaoSupport.close();
+		ApplicationManager.isRecordListUpToDate = true;
 		return recordsList;
 	}
 	
