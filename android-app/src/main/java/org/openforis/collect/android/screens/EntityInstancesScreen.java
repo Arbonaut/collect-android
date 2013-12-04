@@ -1931,13 +1931,18 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 		 							if (foundNode!=null){
 		 								Log.e("not null",nodeDef.getName()+"=="+position);
 		 								ServiceFactory.getRecordManager().deleteNode(foundNode);	 	
-		 								Entity tempEntity = findParentEntity2(EntityInstancesScreen.this.getFormScreenId());		 								
-		 								Node<?> tempNode = tempEntity.get(EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), 0).getName(), position);
-		 								Log.e("tempNode==null","=="+(tempNode==null));
+		 								Entity tempEntity = findParentEntity2(EntityInstancesScreen.this.getFormScreenId());
+		 								/*Log.e("tempEntity","=="+tempEntity.getName());
+		 								Log.e("formScreenID","=="+EntityInstancesScreen.this.getFormScreenId());
+		 								Log.e("parentEntity","=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
+		 								Log.e("parentNode","=="+parentNodeDefinition.getName());
+		 								//Node<?> tempNode = tempEntity.get(EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), 0).getName(), position);
+		 								*/Node<?> tempNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), position);
+		 								//Log.e("tempNode==null","=="+(tempNode==null));
 		 								if (tempNode==null)
-		 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
+		 									EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute/*tempEntity*/, parentNodeDefinition.getName());		 								
 		 							} else {
-		 								Log.e("null",nodeDef.getName()+"=="+position);
+		 								//Log.e("null",nodeDef.getName()+"=="+position);
 		 							}
 	 								//refreshEntityScreen(2);
 	 								Toast.makeText(EntityInstancesScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
