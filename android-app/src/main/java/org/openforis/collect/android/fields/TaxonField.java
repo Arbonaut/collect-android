@@ -117,7 +117,7 @@ public class TaxonField extends InputField {
 				} else {
 					TaxonField.this.btnSearchByCode.setEnabled(false);
 				}
-				TaxonField.this.setValue(0, s.toString(), 
+				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, s.toString(), 
 						TaxonField.this.txtSciName.getText().toString(), 
 						TaxonField.this.txtVernacularName.getText().toString(), 
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
@@ -201,7 +201,7 @@ public class TaxonField extends InputField {
 				} else {
 					TaxonField.this.btnSearchBySciName.setEnabled(false);
 				}
-				TaxonField.this.setValue(0, TaxonField.this.txtCodes.getText().toString(), 
+				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, TaxonField.this.txtCodes.getText().toString(), 
 						s.toString(), 
 						TaxonField.this.txtVernacularName.getText().toString(), 
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
@@ -293,7 +293,7 @@ public class TaxonField extends InputField {
 				} else {
 					TaxonField.this.btnSearchByVernName.setEnabled(false);
 				}
-				TaxonField.this.setValue(0, TaxonField.this.txtCodes.getText().toString(), 
+				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, TaxonField.this.txtCodes.getText().toString(), 
 						TaxonField.this.txtSciName.getText().toString(), 
 						s.toString(), 
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
@@ -363,7 +363,7 @@ public class TaxonField extends InputField {
 					TaxonField.this.txtLangVariant.getText().toString(),
 					TaxonField.form.getFormScreenId(),true);
 		    	} else {
-		    		TaxonField.this.setValue(0, 
+		    		TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, 
 				    		TaxonField.this.txtCodes.getText().toString(), 
 				    		TaxonField.this.txtSciName.getText().toString(),
 							TaxonField.this.txtVernacularName.getText().toString(), 
@@ -453,7 +453,7 @@ public class TaxonField extends InputField {
 		this.langVariantLabel = new TextView(context);
 		this.langVariantLabel.setMaxLines(1);
 		this.langVariantLabel.setTextColor(Color.BLACK);
-		this.langVariantLabel.setText(getResources().getString(R.string.taxonVernacularLanguageLabel));	
+		this.langVariantLabel.setText(getResources().getString(R.string.taxonLanguageVariantLabel));	
 		//this.langVariantLabel.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 2));
 		//Add textbox for language variants
 		this.txtLangVariant = new EditText(context);
@@ -489,7 +489,7 @@ public class TaxonField extends InputField {
 			public void afterTextChanged(Editable s) {}
 			public void beforeTextChanged(CharSequence s, int start,  int count, int after) {}				 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				TaxonField.this.setValue(0, TaxonField.this.txtCodes.getText().toString(), 
+				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, TaxonField.this.txtCodes.getText().toString(), 
 						TaxonField.this.txtSciName.getText().toString(), 
 						TaxonField.this.txtVernacularName.getText().toString(), 
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
@@ -538,6 +538,9 @@ public class TaxonField extends InputField {
 	}
 	
 	public void setValue(int position, String code, String sciName, String vernName, String vernLang, String langVariant, String path, boolean isTextChanged){
+		Log.e("setValue","=="+position);
+		Log.e("setValue","=="+code);
+		Log.e("setValue","=="+path);
 		if (!isTextChanged){
 			this.txtCodes.setText(code);
 			this.txtSciName.setText(sciName);
@@ -568,7 +571,12 @@ public class TaxonField extends InputField {
 			/*if (vernLang.equals("")){
 				vernLang = null;
 			}*/
-			EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new TaxonOccurrence(code, sciName, vernName, vernLang, langVariant), position);	
+			try {
+				Log.e("setValue",this.findParentEntity(path).getName()+"value added"+position);
+				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new TaxonOccurrence(code, sciName, vernName, vernLang, langVariant), position);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 

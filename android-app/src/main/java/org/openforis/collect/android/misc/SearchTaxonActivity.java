@@ -41,6 +41,7 @@ public class SearchTaxonActivity extends Activity {
 	private String criteria;
 	private String path;
 	private int taxonFieldId;
+	private int currentInstanceNo;
 	//private TaxonManager taxonManager;
 	private String taxonomyName;
 	private int backgroundColor;
@@ -71,6 +72,8 @@ public class SearchTaxonActivity extends Activity {
 	    	this.criteria = extras.getString("criteria");  
 	    	this.taxonFieldId = extras.getInt("taxonId");
 	    	this.path = extras.getString("path");
+	    	String[] splittedPath = path.split(getResources().getString(R.string.valuesSeparator2));
+	    	this.currentInstanceNo = Integer.valueOf(splittedPath[splittedPath.length-1].split(getResources().getString(R.string.valuesSeparator1))[1]);
 	    	this.taxonomyName = extras.getString("taxonomyName");
 	    	//Set up species manager
 			/*this.taxonManager = new TaxonManager();
@@ -273,7 +276,7 @@ public class SearchTaxonActivity extends Activity {
     				TaxonField parentTaxonField = (TaxonField)ApplicationManager.getUIElement(parentTaxonFieldId);
     				try{
     					if(parentTaxonField != null){
-        					parentTaxonField.setValue(0, arrItemValues[0].trim(), arrItemValues[1].trim(), arrItemValues[2].trim(), arrItemValues[3].trim(), arrItemValues[4].trim(), SearchTaxonActivity.this.path,false);
+        					parentTaxonField.setValue(SearchTaxonActivity.this.currentInstanceNo/*0*/, arrItemValues[0].trim(), arrItemValues[1].trim(), arrItemValues[2].trim(), arrItemValues[3].trim(), arrItemValues[4].trim(), SearchTaxonActivity.this.path,false);
         				}
         				else{
         					Log.i(getResources().getString(R.string.app_name), "Parent taxon field is: NULL");

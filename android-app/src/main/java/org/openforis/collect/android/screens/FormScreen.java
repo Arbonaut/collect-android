@@ -1083,20 +1083,28 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			Button btn = (Button)arg0;
 			if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleAttribute)){
 				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
+				long startTime = System.currentTimeMillis();
 				refreshMultipleAttributeScreen(0);
 				ApplicationManager.pd.dismiss();
+				Log.e("visibilityTime","=="+(startTime-System.currentTimeMillis()));
 			} else if (btn.getId()==getResources().getInteger(R.integer.rightButtonMultipleAttribute)){
 				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
+				long startTime = System.currentTimeMillis();
 				refreshMultipleAttributeScreen(1);
 				ApplicationManager.pd.dismiss();
+				Log.e("visibilityTime","=="+(startTime-System.currentTimeMillis()));
 			} else if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleEntity)){
+				long startTime = System.currentTimeMillis();
 				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherEntity));
 				refreshEntityScreen(0);
 				ApplicationManager.pd.dismiss();
+				Log.e("visibilityTime","=="+(startTime-System.currentTimeMillis()));
 			} else if (btn.getId()==getResources().getInteger(R.integer.rightButtonMultipleEntity)){
+				long startTime = System.currentTimeMillis();
 				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherEntity));
 				refreshEntityScreen(1);
 				ApplicationManager.pd.dismiss();
+				Log.e("visibilityTime","=="+(startTime-System.currentTimeMillis()));
 			} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleAttribute)){
 				//Log.e("DELETING","ATTRIBUTE");
 				AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
@@ -2760,7 +2768,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	
 	private void refreshMultipleAttributeScreen(int actionCode){
 		//0 - previous, 1 - next, 2 - delete, 3 - add
-		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
+		//ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
 		if (actionCode==0){
 			if (this.currInstanceNo>0){
 				this.currInstanceNo--;
@@ -2895,7 +2903,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 							null).show();
 			}		
 		}
-		ApplicationManager.pd.dismiss();
+		//ApplicationManager.pd.dismiss();
 	}
 	
 	private void refreshMultipleAttributeScreenField(){

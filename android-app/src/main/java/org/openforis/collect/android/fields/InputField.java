@@ -2,7 +2,6 @@ package org.openforis.collect.android.fields;
 
 import java.util.List;
 
-import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.model.AttributeChange;
 import org.openforis.collect.model.NodeChange;
 import org.openforis.collect.model.NodeChangeSet;
@@ -20,7 +19,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.text.method.KeyListener;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
