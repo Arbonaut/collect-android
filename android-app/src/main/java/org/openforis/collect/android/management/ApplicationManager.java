@@ -284,6 +284,7 @@ public class ApplicationManager extends BaseActivity {
 	 	    		}
 	 	    		showFormRootScreen();
     	            DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
+    	            ApplicationManager.pd.dismiss();    	            
 	 	    	} else if (resultCode==getResources().getInteger(R.integer.backButtonPressed)){
 	 	    		if (ApplicationManager.getSurvey().getSchema().getRootEntityDefinitions().size()==1){
 	 	    			showFormsListScreen();

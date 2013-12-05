@@ -58,12 +58,12 @@ import org.openforis.idm.model.TaxonOccurrence;
 import org.openforis.idm.model.TextValue;
 import org.openforis.idm.model.Time;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -155,7 +155,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	}
 	
 	private Entity findParentEntity2(String path){
-		Log.e("pathENTITYINSTANCE","=="+path);
 		Entity parentEntity = ApplicationManager.currentRecord.getRootEntity();
 		String screenPath = path;
 		String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
@@ -176,25 +175,25 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					parentEntity = parentEntity.getParent();
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
 				}*/
-				if (parentEntity!=null)
+				/*if (parentEntity!=null)
 					Log.e("5returned parententity"+(m-1),"=="+parentEntity.getName());
 				else
-					Log.e("6returned parententity"+(m-1),"==NULL");
+					Log.e("6returned parententity"+(m-1),"==NULL");*/
 				parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
-				if (parentEntity!=null)
+				/*if (parentEntity!=null)
 					Log.e("7returned parententity"+m,"=="+parentEntity.getName());
 				else
-					Log.e("8returned parententity"+m,"==NULL");
+					Log.e("8returned parententity"+m,"==NULL");*/
 			}			
 		} catch (ClassCastException e){
 			e.printStackTrace();
 		} catch (IllegalArgumentException e){
 			e.printStackTrace();
 		}
-		if (parentEntity!=null)
+		/*if (parentEntity!=null)
 			Log.e("9returned parententity","=="+parentEntity.getName());
 		else
-			Log.e("10returned parententity","==NULL");
+			Log.e("10returned parententity","==NULL");*/
 		return parentEntity;
 	}
 	
@@ -205,15 +204,16 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
 		long startTime = System.currentTimeMillis();
 		try{
-			Log.e("getFormScreenId()","=="+FormScreen.this.getFormScreenId());
+			
+			/*Log.e("getFormScreenId()","=="+FormScreen.this.getFormScreenId());
 			Log.e("parentEntity==null","=="+(FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())==null));
 			if (FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())!=null){
 				Log.e("parentEntity.getName()","=="+FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId()).getName());
-			}
+			}*/
 			FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId());
-			Log.e("2FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
+			//Log.e("2FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
 			FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity(FormScreen.this.parentFormScreenId);
-			Log.e("parentEntityMultipleAttribute",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
+			//Log.e("parentEntityMultipleAttribute",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
 			/*if (FormScreen.this.parentEntitySingleAttribute==null){
 				FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.getFormScreenId());
 				FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.parentFormScreenId);
@@ -829,11 +829,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        				final TimeField timeField= new TimeField(FormScreen.this, nodeDef);
 	        				timeField.setOnClickListener(FormScreen.this);
 	        				timeField.setId(nodeDef.getId());
-	        				Log.d("TIME FIELD DEBUG", "Set value: " + loadedValue + " from FormScreen activity"); 
+	        				//Log.d("TIME FIELD DEBUG", "Set value: " + loadedValue + " from FormScreen activity"); 
 	        				timeField.setValue(0, loadedValue, FormScreen.this.getFormScreenId(),false);
 	        				timeField.addTextChangedListener(new TextWatcher(){
 	        			        public void afterTextChanged(Editable s) {
-	        			        	Log.d("TIME FIELD DEBUG", "Set value: " + s.toString() + " from FormScreen activity (from listener)");
+	        			        	//Log.d("TIME FIELD DEBUG", "Set value: " + s.toString() + " from FormScreen activity (from listener)");
 	        			        	timeField.setValue(0, s.toString(), FormScreen.this.getFormScreenId(),true);
 	        			        }
 	        			        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
@@ -874,11 +874,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        				final TimeField timeField= new TimeField(FormScreen.this, nodeDef);
 	        				timeField.setOnClickListener(FormScreen.this);
 	        				timeField.setId(nodeDef.getId());
-	        				Log.d("TIME FIELD DEBUG", "Set value: " + loadedValue + " from FormScreen activity (multiple instance)");
+	        				//Log.d("TIME FIELD DEBUG", "Set value: " + loadedValue + " from FormScreen activity (multiple instance)");
 	        				timeField.setValue(FormScreen.this.currInstanceNo, loadedValue, FormScreen.this.parentFormScreenId,false);
 	        				timeField.addTextChangedListener(new TextWatcher(){
 	        			        public void afterTextChanged(Editable s) {        			            
-	        			        	Log.d("TIME FIELD DEBUG", "Set value: " + s.toString() + " from FormScreen activity (from listener, multiple instance)");
+	        			        	//Log.d("TIME FIELD DEBUG", "Set value: " + s.toString() + " from FormScreen activity (from listener, multiple instance)");
 	        			        	timeField.setValue(FormScreen.this.currInstanceNo, s.toString(), FormScreen.this.parentFormScreenId,true);
 	        			        }
 	        			        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
@@ -1021,6 +1021,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	            	ApplicationManager.isToBeScrolled = false;	
 	    		}
 	    	}*/
+			ApplicationManager.pd.dismiss();
 	    	sv.post(new Runnable() {
 	    	    @Override
 	    	    public void run() {
@@ -1028,8 +1029,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    	    		//if (ApplicationManager.isToBeScrolled){
 	    	    		if (FormScreen.this.getFormScreenId().equals(ApplicationManager.selectedViewsBacktrackList.get(ApplicationManager.selectedViewsBacktrackList.size()-1).getFormScreenId())
 	    	    				||
-	    	    				ApplicationManager.selectedViewsBacktrackList.get(ApplicationManager.selectedViewsBacktrackList.size()-1).getFormScreenId()==null){
-	    	    			//Log.e("SCROLLTO",ApplicationManager.selectedViewsBacktrackList.size()+"=="+ApplicationManager.selectedViewsBacktrackList.get(ApplicationManager.selectedViewsBacktrackList.size()-1).getClass());
+	    	    			ApplicationManager.selectedViewsBacktrackList.get(ApplicationManager.selectedViewsBacktrackList.size()-1).getFormScreenId()==null){
+	    	    			Log.e("SCROLLTO",ApplicationManager.selectedViewsBacktrackList.size()+"=="+ApplicationManager.selectedViewsBacktrackList.get(ApplicationManager.selectedViewsBacktrackList.size()-1).getView().getTop());
 	    	    			sv.scrollTo(0, ApplicationManager.selectedViewsBacktrackList.remove(ApplicationManager.selectedViewsBacktrackList.size()-1).getView().getTop());
 	    	            	//ApplicationManager.isToBeScrolled = false;	
 	    	    		}	    	    			
@@ -1081,15 +1082,23 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		if (arg0 instanceof Button){
 			Button btn = (Button)arg0;
 			if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleAttribute)){
+				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
 				refreshMultipleAttributeScreen(0);
+				ApplicationManager.pd.dismiss();
 			} else if (btn.getId()==getResources().getInteger(R.integer.rightButtonMultipleAttribute)){
-				refreshMultipleAttributeScreen(1);				
+				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
+				refreshMultipleAttributeScreen(1);
+				ApplicationManager.pd.dismiss();
 			} else if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleEntity)){
+				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherEntity));
 				refreshEntityScreen(0);
+				ApplicationManager.pd.dismiss();
 			} else if (btn.getId()==getResources().getInteger(R.integer.rightButtonMultipleEntity)){
+				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherEntity));
 				refreshEntityScreen(1);
+				ApplicationManager.pd.dismiss();
 			} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleAttribute)){
-				Log.e("DELETING","ATTRIBUTE");
+				//Log.e("DELETING","ATTRIBUTE");
 				AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.deleteAttributeTitle), getResources().getString(R.string.deleteAttribute),
 	 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
@@ -1097,11 +1106,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 						@Override
 	 						public void onClick(DialogInterface dialog, int which) {
 	 							NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
-	 							Log.e("nodeDef","=="+nodeDef.getName());
+	 							//Log.e("nodeDef","=="+nodeDef.getName());
 	 							Node<?> foundNode = FormScreen.this.parentEntityMultipleAttribute.get(nodeDef.getName(), FormScreen.this.currInstanceNo);
-	 							Log.e("foundNode!=null","=="+(foundNode!=null));
+	 							//Log.e("foundNode!=null","=="+(foundNode!=null));
 	 							if (foundNode!=null){
-	 								Log.e("not null", nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
+	 								//Log.e("not null", nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
 	 								ServiceFactory.getRecordManager().deleteNode(foundNode);
 	 								/*if (parentEntity!=null)
 	 									Log.e("44","=="+parentEntity.getName());
@@ -1126,7 +1135,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 					},
 	 					null).show();			
 			} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleEntity)){
-				Log.e("DELETING1","ENTITY");
+				//Log.e("DELETING1","ENTITY");
 				AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
 	 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
@@ -1139,15 +1148,15 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		 							Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(parentNodeDefinition.getName(), FormScreen.this.currInstanceNo);
 		 							
 		 							if (foundNode!=null){
-		 								Log.e("not null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
+		 								//Log.e("not null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
 		 								ServiceFactory.getRecordManager().deleteNode(foundNode);	 	
 		 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());		 								
 		 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
-		 								Log.e("tempNode==null","=="+(tempNode==null));
+		 								//Log.e("tempNode==null","=="+(tempNode==null));
 		 								if (tempNode==null)
 		 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
 		 							} else {
-		 								Log.e("null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
+		 								//Log.e("null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
 		 							}		 							
 	 							/*} catch (Exception e){
 	 								e.printStackTrace();
@@ -1166,10 +1175,10 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 					},
 	 					null).show();				
 			} else if (btn.getId()==getResources().getInteger(R.integer.addButtonMultipleAttribute)){
-				Log.e("ADDING","ATTRIBUTE");
+				//Log.e("ADDING","ATTRIBUTE");
 				refreshMultipleAttributeScreen(3);
 			} else if (btn.getId()==getResources().getInteger(R.integer.addButtonMultipleEntity)){
-				Log.e("ADDING","ENTITY");
+				//Log.e("ADDING","ENTITY");
 				refreshEntityScreen(3);
 			}
 		} else if (arg0 instanceof TextView){
@@ -1190,7 +1199,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			}
 			
 		} else  if (arg0 instanceof EntityLink){
-			Log.e("onClick","entityLink");
+			//Log.e("onClick","entityLink");
+			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
 			this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)arg0));
 		}
 	}
@@ -1245,7 +1255,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			counter++;
         }*/
 		intent.putExtra(getResources().getString(R.string.intentType), getResources().getInteger(R.integer.multipleEntityIntent));
-		Log.e("idmlIdPassedToEntity","=="+entityLink.getId());
+		//Log.e("idmlIdPassedToEntity","=="+entityLink.getId());
 		intent.putExtra(getResources().getString(R.string.idmlId), entityLink.getId());
 		//intent.putExtra(getResources().getString(R.string.instanceNo), entityLink.getInstanceNo());
 		intent.putExtra(getResources().getString(R.string.parentFormScreenId), this.getFormScreenId());
@@ -1376,9 +1386,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			}  else if (tempView instanceof RelativeLayout){
 				RelativeLayout rLayout = (RelativeLayout)tempView;
 				Button leftBtn = (Button)rLayout.getChildAt(0);
-				Log.e("getclass","=="+rLayout.getChildAt(0).getClass());
+				//Log.e("getclass","=="+rLayout.getChildAt(0).getClass());
 				leftBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_left_black:R.drawable.arrow_left_white);
-				Log.e("getclass","=="+rLayout.getChildAt(1).getClass());
+				//Log.e("getclass","=="+rLayout.getChildAt(1).getClass());
 				LinearLayout lLayout = (LinearLayout)rLayout.getChildAt(1);				
 				Button addBtn = (Button)lLayout.getChildAt(0);
 				addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
@@ -1474,7 +1484,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		ll.addView(btnAdd);
 		//btnAdd.setVisibility(View.GONE);
 		ll.addView(btnDelete);
-		Log.e("ll.getChildCount()","=="+ll.getChildCount());
 
 		//ll.setLayoutParams(lpBtnAddDelete);
 		relativeButtonsLayout.addView(ll);
@@ -1601,7 +1610,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					this.currInstanceNo++;	
 					refreshEntityScreenFields();
 				} else {
-					AlertMessage.createPositiveNegativeDialog(FormScreen.this, true, null,
+					/*AlertMessage.createPositiveNegativeDialog(FormScreen.this, true, null,
 							getResources().getString(R.string.addNewEntityTitle), 
 							getResources().getString(R.string.addNewEntityMessage),
 								getResources().getString(R.string.yes),
@@ -1619,7 +1628,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 										
 									}
 								},
-								null).show();
+								null).show();*/
 				}
 			} else {
 				//Log.e("parentMULTIPLE","=="+this.parentEntityMultipleAttribute.getName());
@@ -1665,11 +1674,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				    		new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									Log.e("getFormScreenId()","=="+FormScreen.this.getFormScreenId());
+									/*Log.e("getFormScreenId()","=="+FormScreen.this.getFormScreenId());
 									Log.e("parentEntity==null","=="+(FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())==null));
 									if (FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())!=null){
 										Log.e("parentEntity.getName()","=="+FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId()).getName());
-									}
+									}*/
 									Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo+1);
 									while (foundNode!=null){
 										FormScreen.this.currInstanceNo++;
@@ -1712,8 +1721,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 							},
 							null).show();
 			}
-		}		
-		
+		}
 	}
 	
 	private void refreshEntityScreenFields(){
@@ -1752,31 +1760,30 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		this.breadcrumb = this.breadcrumb.substring(0, this.breadcrumb.lastIndexOf(" "))+" "+(this.currInstanceNo+1);
 		
 		//enabling/disabling buttons
-		if (FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())!=null){
-			
-			Log.e("disabling","BUTTONS");
+		if (FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())!=null){			
+			//Log.e("disabling","BUTTONS");
 			RelativeLayout buttonsBar = (RelativeLayout)this.mainLayout.getChildAt(4);
 			Button leftBtn = (Button)buttonsBar.getChildAt(0);
-			Log.e("isFirst","=="+(FormScreen.this.currInstanceNo==0));
+			//Log.e("isFirst","=="+(FormScreen.this.currInstanceNo==0));
 			if (FormScreen.this.currInstanceNo==0){	
-				Log.e("disabling","LEFT");
+				//Log.e("disabling","LEFT");
 				//leftBtn.setClickable(false);
 				//leftBtn.setEnabled(false);
 				ApplicationManager.setImageButtonEnabled(this, false, leftBtn, R.drawable.arrow_left_black);
 			} else {
-				Log.e("enabling","LEFT");
+				//Log.e("enabling","LEFT");
 				leftBtn.setClickable(true);
 				leftBtn.setEnabled(true);
 			}
 			Button rightBtn = (Button)buttonsBar.getChildAt(2);
 			Node<?> foundNode = this.parentEntityMultipleAttribute.getParent().get(this.parentEntityMultipleAttribute.getName(), this.currInstanceNo+1);
-			Log.e("isLast","=="+(foundNode!=null));
+			//Log.e("isLast","=="+(foundNode!=null));
 			if (foundNode!=null){
-				Log.e("disabling","RIGHT");
+				//Log.e("disabling","RIGHT");
 				rightBtn.setClickable(false);
 				rightBtn.setEnabled(false);
 			} else {
-				Log.e("enabling","RIGHT");
+				//Log.e("enabling","RIGHT");
 				rightBtn.setClickable(true);
 				rightBtn.setEnabled(true);
 			}
@@ -1827,15 +1834,15 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			//Log.e("newParentEntity","=="+parentEntity.getName());
 		}
 		
-		Log.e("refreshEntityScreen","this.getFormScreenId()=="+this.getFormScreenId());
-		Log.e("refreshEntityScreen","this.parentFormScreenId=="+this.parentFormScreenId);
+		//Log.e("refreshEntityScreen","this.getFormScreenId()=="+this.getFormScreenId());
+		//Log.e("refreshEntityScreen","this.parentFormScreenId=="+this.parentFormScreenId);
 		this.parentEntitySingleAttribute = this.findParentEntity(this.getFormScreenId());
 		this.parentEntityMultipleAttribute = this.findParentEntity(this.parentFormScreenId);
-		if (parentEntitySingleAttribute!=null)
+		/*if (parentEntitySingleAttribute!=null)
 			Log.e("refreshEntityScreen","parentEntitySingleAttribute=="+parentEntitySingleAttribute.getName()+"=="+parentEntitySingleAttribute.getIndex());
 		if (parentEntityMultipleAttribute!=null)
 			Log.e("refreshEntityScreen","parentEntityMultipleAttribute=="+parentEntityMultipleAttribute.getName()+"=="+parentEntityMultipleAttribute.getIndex());
-		
+		*/
 		String loadedValue = "";
 		ArrayList<String> tableColHeaders = new ArrayList<String>();
 		tableColHeaders.add("Value");
@@ -2753,6 +2760,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	
 	private void refreshMultipleAttributeScreen(int actionCode){
 		//0 - previous, 1 - next, 2 - delete, 3 - add
+		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
 		if (actionCode==0){
 			if (this.currInstanceNo>0){
 				this.currInstanceNo--;
@@ -2796,7 +2804,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 								null).show();
 				}
 			} else {
-				Log.e("parentMULTIPLE","=="+this.parentEntityMultipleAttribute.getName());
+				//Log.e("parentMULTIPLE","=="+this.parentEntityMultipleAttribute.getName());
 				Node<?> foundNode = this.parentEntityMultipleAttribute.get(nodeDef.getName(), this.currInstanceNo+1);
 				//Log.e("foundNode1!=null","=="+(foundNode!=null));
 				if (foundNode!=null){
@@ -2886,7 +2894,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 							},
 							null).show();
 			}		
-		}				
+		}
+		ApplicationManager.pd.dismiss();
 	}
 	
 	private void refreshMultipleAttributeScreenField(){

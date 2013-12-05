@@ -23,6 +23,7 @@ import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.EntityBuilder;
 import org.openforis.idm.model.Node;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -257,7 +258,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	    	    } 	
 	    	});*/
 	
-			
+			ApplicationManager.pd.dismiss();
 		} catch (Exception e){
 			RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onResume",
 					Environment.getExternalStorageDirectory().toString()
@@ -320,16 +321,17 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}
 			
 		}*/
-		if (arg0 instanceof Button){
+		if (arg0 instanceof Button){			
 			Button btn = (Button)arg0;
 			//Log.e("ADDING",btn.getId()+"ENTITY"+getResources().getInteger(R.integer.addButtonMultipleEntity));
 			if (btn.getId()==getResources().getInteger(R.integer.addButtonMultipleEntity)){
-				//Log.e("ADDING","ENTITY");
+				//Log.e("ADDING","ENTITY");				
 				addNewEntity();
 			}
 		} else if (arg0 instanceof TextView){
 			Object parentView = arg0.getParent().getParent().getParent();
 			if (parentView instanceof SummaryList){
+				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedEntity));
 				SummaryList temp = (SummaryList)parentView;
 				ViewBacktrack viewBacktrack = new ViewBacktrack(temp,EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
 				ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
@@ -352,6 +354,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			    		new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
+								//ApplicationManager.pd = ProgressDialog.show(EntityInstancesScreen.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingNewEntity));
 								/*Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.getParent().get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo+1);
 								while (foundNode!=null){
 									EntityInstancesScreen.this.currInstanceNo++;
@@ -359,7 +362,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 								}
 								EntityInstancesScreen.this.currInstanceNo++;	
 								refreshEntityScreenFields();*/
-								
 							}
 						},
 						new DialogInterface.OnClickListener() {
@@ -424,7 +426,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 								this.ll.addView(screenTitle,1);*/
 								
 								//refreshing values of fields in the entity
-								
+								ApplicationManager.pd = ProgressDialog.show(EntityInstancesScreen.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingNewEntity));
 								Entity parentEntity = EntityInstancesScreen.this.findParentEntity(EntityInstancesScreen.this.getFormScreenId());
 								
 								//Log.e("parentEntity0",parentEntity.getName()+"=="+EntityInstancesScreen.this.getFormScreenId());
@@ -457,6 +459,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 								EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity(EntityInstancesScreen.this.getFormScreenId());
 								EntityInstancesScreen.this.parentEntityMultipleAttribute = EntityInstancesScreen.this.findParentEntity(EntityInstancesScreen.this.parentFormScreenId);
 								EntityInstancesScreen.this.onResume();
+								ApplicationManager.pd.dismiss();
 							}
 						},
 						new DialogInterface.OnClickListener() {
@@ -617,14 +620,12 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		
     		LinearLayout fieldsLayout= (LinearLayout)this.sv.getChildAt(0);
     		int viewsNo = fieldsLayout.getChildCount();
-    		Log.e("viewsNoSV","=="+viewsNo);
     		//int start = (hasBreadcrumb)?1:0;
     		int start = 0;
     		for (int i=start;i<viewsNo;i++){
     			//View tempView = this.ll.getChildAt(i);
     			//View tempView = this.mainLayout.getChildAt(i);
     			View tempView = fieldsLayout.getChildAt(i);
-    			Log.e("tempView","=="+tempView.getClass());
     			if (tempView instanceof Field){
     				Field field = (Field)tempView;
     				field.setLabelTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
@@ -738,20 +739,20 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     }*/
 	
 	private Entity findParentEntity(String path){
-		Log.e("pathENTITYINSTANCE","=="+path);
+		//Log.e("pathENTITYINSTANCE","=="+path);
 		Entity parentEntity = ApplicationManager.currentRecord.getRootEntity();
 		String screenPath = path;
 		String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
 		try{
-			Log.e("entityPath.length","=="+entityPath.length);
+			/*Log.e("entityPath.length","=="+entityPath.length);
 			for (int i=0;i<entityPath.length-1;i++){
 				Log.e("i"+i,"=="+entityPath[i]);
-			}
+			}*/
 			for (int m=1;m<entityPath.length;m++){
 				String[] instancePath = entityPath[m].split(getResources().getString(R.string.valuesSeparator1));				
 				int id = Integer.valueOf(instancePath[0]);
 				int instanceNo = Integer.valueOf(instancePath[1]);
-				Log.e("id"+id,"instanceNo"+instanceNo);
+				//Log.e("id"+id,"instanceNo"+instanceNo);
 				
 				/*try{
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
@@ -759,43 +760,43 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 					parentEntity = parentEntity.getParent();
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
 				}*/
-				if (parentEntity!=null)
+				/*if (parentEntity!=null)
 					Log.e("1returned parententity"+(m-1),"=="+parentEntity.getName());
 				else
-					Log.e("2returned parententity"+(m-1),"==NULL");
+					Log.e("2returned parententity"+(m-1),"==NULL");*/
 				parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
-				if (parentEntity!=null)
+				/*if (parentEntity!=null)
 					Log.e("3returned parententity"+m,"=="+parentEntity.getName());
 				else
-					Log.e("4returned parententity"+m,"==NULL");
+					Log.e("4returned parententity"+m,"==NULL");*/
 			}			
 		} catch (ClassCastException e){
 			
 		} catch (IllegalArgumentException e){
 			
 		}
-		if (parentEntity!=null)
+		/*if (parentEntity!=null)
 			Log.e("returned parententity","=="+parentEntity.getName());
 		else
-			Log.e("returned parententity","==NULL");
+			Log.e("returned parententity","==NULL");*/
 		return parentEntity;
 	}
 	
 	private Entity findParentEntity2(String path){
-		Log.e("pathENTITYINSTANCE","=="+path);
+		//Log.e("pathENTITYINSTANCE","=="+path);
 		Entity parentEntity = ApplicationManager.currentRecord.getRootEntity();
 		String screenPath = path;
 		String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
 		try{
-			Log.e("entityPath.length","=="+entityPath.length);
+			/*Log.e("entityPath.length","=="+entityPath.length);
 			for (int i=0;i<entityPath.length-1;i++){
 				Log.e("i"+i,"=="+entityPath[i]);
-			}
+			}*/
 			for (int m=0;m<entityPath.length-1;m++){
 				String[] instancePath = entityPath[m].split(getResources().getString(R.string.valuesSeparator1));				
 				int id = Integer.valueOf(instancePath[0]);
 				int instanceNo = Integer.valueOf(instancePath[1]);
-				Log.e("id"+id,"instanceNo"+instanceNo);
+				//Log.e("id"+id,"instanceNo"+instanceNo);
 				
 				/*try{
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
@@ -803,25 +804,25 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 					parentEntity = parentEntity.getParent();
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
 				}*/
-				if (parentEntity!=null)
+				/*if (parentEntity!=null)
 					Log.e("5returned parententity"+(m-1),"=="+parentEntity.getName());
 				else
-					Log.e("6returned parententity"+(m-1),"==NULL");
+					Log.e("6returned parententity"+(m-1),"==NULL");*/
 				parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
-				if (parentEntity!=null)
+				/*if (parentEntity!=null)
 					Log.e("7returned parententity"+m,"=="+parentEntity.getName());
 				else
-					Log.e("8returned parententity"+m,"==NULL");
+					Log.e("8returned parententity"+m,"==NULL");*/
 			}			
 		} catch (ClassCastException e){
 			
 		} catch (IllegalArgumentException e){
 			
 		}
-		if (parentEntity!=null)
+		/*if (parentEntity!=null)
 			Log.e("9returned parententity","=="+parentEntity.getName());
 		else
-			Log.e("10returned parententity","==NULL");
+			Log.e("10returned parententity","==NULL");*/
 		return parentEntity;
 	}
 	
@@ -1896,6 +1897,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
                 public boolean onMenuItemClick(MenuItem item) {
                     //Object parentView = clickedView;//arg0.getParent().getParent().getParent();
         			if (clickedView instanceof SummaryList){
+        				ApplicationManager.pd = ProgressDialog.show(EntityInstancesScreen.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedEntity));
         				SummaryList temp = (SummaryList)clickedView;
         				ViewBacktrack viewBacktrack = new ViewBacktrack(temp,EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
         				ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
@@ -1929,7 +1931,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 		 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
 		 							Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute/*.getParent()*/.get(parentNodeDefinition.getName(), position);		 							
 		 							if (foundNode!=null){
-		 								Log.e("not null",nodeDef.getName()+"=="+position);
+		 								//Log.e("not null",nodeDef.getName()+"=="+position);
 		 								ServiceFactory.getRecordManager().deleteNode(foundNode);	 	
 		 								Entity tempEntity = findParentEntity2(EntityInstancesScreen.this.getFormScreenId());
 		 								/*Log.e("tempEntity","=="+tempEntity.getName());
@@ -1995,7 +1997,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
                     Toast.LENGTH_LONG).show();
             return true;*/
         case R.id.delete:
-        	Log.e("contextMenu",position+"You have pressed Delete Context Menu for " + selectedName);
+        	//Log.e("contextMenu",position+"You have pressed Delete Context Menu for " + selectedName);
         	/*AlertMessage.createPositiveNegativeDialog(EntityInstancesScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
     				getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
     				getResources().getString(R.string.yes), getResources().getString(R.string.no),

@@ -57,7 +57,7 @@
     <string name="noInternetMessage">No hay conexión disponible. Asegúrese de que está conectado a una red e intente cargar los datos de nuevo.</string>
     <string name="maxCountTitle">Demasiadas instancias&#8230;</string>
     <string name="maxCountMessage">El número de instancias para este elmento ha alcanzado su máximo.</string>
- <string name="addNewEntityTitle">Añadiendo nueva instancia de la entidad&#8230;</string>
+	<string name="addNewEntityTitle">Añadiendo nueva instancia de la entidad&#8230;</string>
     <string name="addNewEntityMessage">¿Quiere añadir una nueva instancia de la entidad?</string>
     <string name="addNewAttributeTitle">Añadiendo nueva instancia del atributo&#8230;</string>
     <string name="addNewAttributeMessage">¿Quiere añadir una nueva instancia del atributo?</string>
@@ -89,12 +89,20 @@
     <string name="nextInstanceButton">SIGUIENTE</string>
     <string name="addInstanceButton">AÑADIR</string>
     <string name="deleteInstanceButton">BORRAR</string>	
-    <string name="spatialReferenceSystemLabel">Sistema espacial de referencia</string>
-	
+    <string name="spatialReferenceSystemLabel">Sistema espacial de referencia</string>	
     <string name="internalGpsButton">Obtener del GPS</string>
     <string name="uploadToServerButton">Cargar</string>
     <string name="downloadFromServerButton">Descargar</string>
     <string name="importFromFileButton">Importar</string>
+    <string name="searchButton">Search</string>
+    <string name="taxonCodeLabel">Code</string>
+    <string name="taxonScientificNameLabel">Scientific name</string>
+    <string name="taxonVernacularNameLabel">Vernacular name</string>
+    <string name="taxonVernacularLanguageLabel">Vernacular language</string>
+    <string name="taxonLanguageVariantLabel">Language variant</string>
+    <string name="taxonSearchBy">Search by </string>
+    <string name="taxonSearchButtonLabel">Search</string>
+    <string name="taxonSearchResultsLabel">Search results:</string>
     
     <!-- images -->
     <string name="arbonautlogo">Logo de Arbonaut</string>
@@ -145,6 +153,14 @@
     <string name="backupingData">Preparando backup de los datos&#8230;</string>
     <string name="savingRecordToXml">Guardando el set de datos a un archivo xml&#8230;</string>
     <string name="refreshingScreen">Preparando la pantalla solicitada&#8230;</string>
+    <string name="loadingSavedRecordsList">Loading list of saved records&#8230;</string>
+    <string name="loadingSavedRecord">Loading the selected record&#8230;</string>
+    <string name="loadingNewRecord">Creating new record&#8230;</string>
+    <string name="loadingMultipleEntitiesList">Loading list of entities&#8230;</string>
+   	<string name="loadingSavedEntity">Loading the selected entity instance&#8230;</string>
+    <string name="loadingNewEntity">Creating new entity instance&#8230;</string>
+    <string name="scrollingToOtherEntity">Fetching values&#8230;</string>
+    <string name="scrollingToOtherMultipleAttribute">Fetching values&#8230;</string>
     
     <!-- lists -->
     <string name="clusterChoiceFailedBecauseNoDataSaved">No hay datos guardados en la base de datos local</string>

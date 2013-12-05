@@ -12,6 +12,7 @@ import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectSurvey;
 import org.openforis.idm.metamodel.EntityDefinition;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -53,7 +54,9 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 	
 	//private ScrollView sv;
     private ListView lv;
-    private LinearLayout mainLayout;       
+    private LinearLayout mainLayout;      
+    
+    private static ProgressDialog pd;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,41 +88,51 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
     public void onResume(){
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
-
-		//RecordChoiceActivity.this.sv = new ScrollView(RecordChoiceActivity.this);
-		LayoutParams lp = new LayoutParams(
-	            LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		//RecordChoiceActivity.this.sv.setLayoutParams(lp);
-		RecordChoiceActivity.this.lv = new ListView(RecordChoiceActivity.this);
-		RecordChoiceActivity.this.lv.setLayoutParams(lp);
-		RecordChoiceActivity.this.lv.setId(android.R.id.list);
-		//RecordChoiceActivity.this.sv.addView(lv);
-		registerForContextMenu(lv);
-		
-		RecordChoiceActivity.this.mainLayout = new LinearLayout(RecordChoiceActivity.this);
-		RecordChoiceActivity.this.mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
-		
-		TextView screenTitle = new TextView(RecordChoiceActivity.this);
-		screenTitle.setText(getResources().getString(R.string.clusterChoiceListLabel));
-		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
-		RecordChoiceActivity.this.mainLayout.addView(screenTitle);
-		RecordChoiceActivity.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
-		
-		this.mainLayout.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this));
-		this.mainLayout.addView(ApplicationManager.getDividerLine(this));
-		
-		RecordChoiceActivity.this.mainLayout.addView(lv);	
-		setContentView(RecordChoiceActivity.this.mainLayout);
-		
-		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
-		changeBackgroundColor(backgroundColor);
-		
-		refreshRecordsList();
+		try{
+			//RecordChoiceActivity.this.sv = new ScrollView(RecordChoiceActivity.this);
+			RecordChoiceActivity.pd = ProgressDialog.show(RecordChoiceActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecordsList));
+			LayoutParams lp = new LayoutParams(
+		            LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+			//RecordChoiceActivity.this.sv.setLayoutParams(lp);
+			RecordChoiceActivity.this.lv = new ListView(RecordChoiceActivity.this);
+			RecordChoiceActivity.this.lv.setLayoutParams(lp);
+			RecordChoiceActivity.this.lv.setId(android.R.id.list);
+			//RecordChoiceActivity.this.sv.addView(lv);
+			registerForContextMenu(lv);
+			
+			RecordChoiceActivity.this.mainLayout = new LinearLayout(RecordChoiceActivity.this);
+			RecordChoiceActivity.this.mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
+			
+			TextView screenTitle = new TextView(RecordChoiceActivity.this);
+			screenTitle.setText(getResources().getString(R.string.clusterChoiceListLabel));
+			screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
+			RecordChoiceActivity.this.mainLayout.addView(screenTitle);
+			RecordChoiceActivity.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
+			
+			this.mainLayout.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this));
+			this.mainLayout.addView(ApplicationManager.getDividerLine(this));
+			
+			RecordChoiceActivity.this.mainLayout.addView(lv);	
+			setContentView(RecordChoiceActivity.this.mainLayout);
+			
+			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
+			changeBackgroundColor(backgroundColor);
+			
+			refreshRecordsList();	
+		} catch (Exception e){
+			RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":on",
+    				Environment.getExternalStorageDirectory().toString()
+    				+getResources().getString(R.string.logs_folder)
+    				+getResources().getString(R.string.logs_file_name)
+    				+System.currentTimeMillis()
+    				+getResources().getString(R.string.log_file_extension));
+		}		
     }
     
     @Override
 	public void onClick(View arg0) {
 		if (arg0 instanceof Button){
+			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingNewRecord));
 			ApplicationManager.isRecordListUpToDate = false;
 			Intent resultHolder = new Intent();
 			resultHolder.putExtra(getResources().getString(R.string.recordId), -1);			
@@ -161,12 +174,14 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
         switch (item.getItemId()) {
         case R.id.view:
         	if (this.recordsList.size()==0){
+        		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingNewRecord));
     			Intent resultHolder = new Intent();
     			resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
     			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
     			RecordChoiceActivity.this.finish();		
     		} else {
-    			if (position!=recordsList.size()){
+    			//if (position!=recordsList.size()){
+    			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecord));
     				Intent resultHolder = new Intent();
     				if (position<recordsList.size()){
     					resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
@@ -175,19 +190,9 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
     				}			
     				setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
     				RecordChoiceActivity.this.finish();	
-    			}
+    			//}
     		}
             return true;
-        /*case R.id.save:
-            Toast.makeText(RecordChoiceActivity.this,
-            		position+"You have pressed Save Context Menu for " + selectedName,
-                    Toast.LENGTH_LONG).show();
-            return true;
-        case R.id.edit:
-            Toast.makeText(RecordChoiceActivity.this,
-            		position+"You have pressed Edit Context Menu for " + selectedName,
-                    Toast.LENGTH_LONG).show();
-            return true;*/
         case R.id.delete:
         	AlertMessage.createPositiveNegativeDialog(RecordChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
     				getResources().getString(R.string.deleteRecordTitle), getResources().getString(R.string.deleteRecord),
@@ -216,6 +221,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Log.i(getResources().getString(R.string.app_name),TAG+":onListItemClick");
+		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecord));
 		if (this.recordsList.size()==0){
 			ApplicationManager.isRecordListUpToDate = false;
 			Intent resultHolder = new Intent();
@@ -223,7 +229,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
 			RecordChoiceActivity.this.finish();					
 		} else {
-			if (position!=recordsList.size()){
+			//if (position!=recordsList.size()){
 				ApplicationManager.isRecordListUpToDate = false;
 				Intent resultHolder = new Intent();
 				if (position<recordsList.size()){
@@ -233,7 +239,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 				}			
 				setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
 				RecordChoiceActivity.this.finish();	
-			}
+			//}
 		}		
 	}
     
@@ -311,11 +317,11 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 					RecordChoiceActivity.this.adapter = new ArrayAdapter<String>(RecordChoiceActivity.this, layout, R.id.plotlabel, clusterList);
 				    RecordChoiceActivity.this.lv.setAdapter(RecordChoiceActivity.this.adapter);
 					//RecordChoiceActivity.this.setListAdapter(RecordChoiceActivity.this.adapter);
+				    RecordChoiceActivity.pd.dismiss();
 			    }};
 		  new Thread(new Runnable() {
-			    public void run() {
-			    	RecordChoiceActivity.this.rootEntityDef = ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(getIntent().getIntExtra(getResources().getString(R.string.rootEntityId),1));
-					
+			    public void run() {			    	
+			    	RecordChoiceActivity.this.rootEntityDef = ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(getIntent().getIntExtra(getResources().getString(R.string.rootEntityId),1));					
 					CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			    	DataManager dataManager = new DataManager(collectSurvey,RecordChoiceActivity.this.rootEntityDef.getName(),ApplicationManager.getLoggedInUser());
 			    	if (!ApplicationManager.isRecordListUpToDate){

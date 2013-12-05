@@ -73,7 +73,7 @@ public class TaxonField extends InputField {
 		//Label "Code"
 		//Create label "Scientific name"
 		this.codeLabel = new TextView(context);
-		this.codeLabel.setText("Code");
+		this.codeLabel.setText(getResources().getString(R.string.taxonCodeLabel));
 		this.codeLabel.setTextColor(Color.BLACK);
 
 		//this.codeLabel.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 1));
@@ -127,7 +127,7 @@ public class TaxonField extends InputField {
 		});
 		//Button "Search By Code"
 		this.btnSearchByCode = new Button(context);
-		this.btnSearchByCode.setText("Search");
+		this.btnSearchByCode.setText(getResources().getString(R.string.searchButton));
 		this.btnSearchByCode.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 4));
 		this.btnSearchByCode.setOnClickListener(new OnClickListener(){
 			@Override
@@ -159,7 +159,7 @@ public class TaxonField extends InputField {
 		this.sciNameLabel = new TextView(context);
 		this.sciNameLabel.setMaxLines(1);
 		this.sciNameLabel.setTextColor(Color.BLACK);
-		this.sciNameLabel.setText("Scientific names");
+		this.sciNameLabel.setText(getResources().getString(R.string.taxonScientificNameLabel));
 		//this.sciNameLabel.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 1));
 		//Add text box for scientific names
 		this.txtSciName = new EditText(context);
@@ -211,7 +211,7 @@ public class TaxonField extends InputField {
 		});
 		//Button "Search By Scientific names"
 		this.btnSearchBySciName = new Button(context);
-		this.btnSearchBySciName.setText("Search");
+		this.btnSearchBySciName.setText(getResources().getString(R.string.searchButton));
 		this.btnSearchBySciName.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 4));
 		this.btnSearchBySciName.setOnClickListener(new OnClickListener(){
 			@Override
@@ -250,7 +250,7 @@ public class TaxonField extends InputField {
 		this.venacNamesLabel = new TextView(context);
 		this.venacNamesLabel.setMaxLines(1);
 		this.venacNamesLabel.setTextColor(Color.BLACK);
-		this.venacNamesLabel.setText("Vernacular name");
+		this.venacNamesLabel.setText(getResources().getString(R.string.taxonVernacularNameLabel));
 		//this.venacNamesLabel.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 1));
 		//Add textbox for vernacular names
 		this.txtVernacularName = new EditText(context);
@@ -303,7 +303,7 @@ public class TaxonField extends InputField {
 		});
 		//Button "Search By Vernacular names"
 		this.btnSearchByVernName = new Button(context);
-		this.btnSearchByVernName.setText("Search");
+		this.btnSearchByVernName.setText(getResources().getString(R.string.searchButton));
 		this.btnSearchByVernName.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 4));
 		this.btnSearchByVernName.setOnClickListener(new OnClickListener(){
 			@Override
@@ -334,7 +334,7 @@ public class TaxonField extends InputField {
 		this.venacLangLabel = new TextView(context);
 		this.venacLangLabel.setMaxLines(1);
 		this.venacLangLabel.setTextColor(Color.BLACK);
-		this.venacLangLabel.setText("Vernacular language");
+		this.venacLangLabel.setText(getResources().getString(R.string.taxonVernacularLanguageLabel));
 		
 		this.spinner = new Spinner(context);
 		this.spinner.setPrompt(nodeDef.getName());
@@ -453,7 +453,7 @@ public class TaxonField extends InputField {
 		this.langVariantLabel = new TextView(context);
 		this.langVariantLabel.setMaxLines(1);
 		this.langVariantLabel.setTextColor(Color.BLACK);
-		this.langVariantLabel.setText("Language variant");	
+		this.langVariantLabel.setText(getResources().getString(R.string.taxonVernacularLanguageLabel));	
 		//this.langVariantLabel.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 2));
 		//Add textbox for language variants
 		this.txtLangVariant = new EditText(context);

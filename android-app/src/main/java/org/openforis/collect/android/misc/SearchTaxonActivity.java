@@ -95,7 +95,7 @@ public class SearchTaxonActivity extends Activity {
 		this.backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
 		changeBackgroundColor(this.backgroundColor);
 		
-		this.lblSearch.setText("Search by " + this.criteria);
+		this.lblSearch.setText(getResources().getString(R.string.taxonSearchBy) + this.criteria);
 		// Set value to search text box
 		this.txtSearch.setText(this.content);
 		// Set onFocus listener for Search texbox
@@ -145,7 +145,7 @@ public class SearchTaxonActivity extends Activity {
 			}			
 		});		
 		
-		this.btnSearch.setText("Search");
+		this.btnSearch.setText(getResources().getString(R.string.taxonSearchButtonLabel));
 		// Add click listener for button Search
 		this.btnSearch.setOnClickListener(new OnClickListener(){
 			@Override
@@ -255,7 +255,7 @@ public class SearchTaxonActivity extends Activity {
     		int layout = (backgroundColor!=Color.WHITE)?R.layout.localclusterrow_white:R.layout.localclusterrow_black;	
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchTaxonActivity.this.getApplicationContext(), layout, R.id.plotlabel, arrResults);
             SearchTaxonActivity.this.lstResult.setAdapter(adapter);
-            SearchTaxonActivity.this.lblSearch.setText("Search results: ");
+            SearchTaxonActivity.this.lblSearch.setText(getResources().getString(R.string.taxonSearchResultsLabel));
     		changeBackgroundColor(SearchTaxonActivity.this.backgroundColor);
         	//Set item click listener 
     		SearchTaxonActivity.this.lstResult.setOnItemClickListener(new OnItemClickListener(){
