@@ -94,6 +94,8 @@ public class ApplicationManager extends BaseActivity {
 	public static List<CollectRecord> recordsList;
 	public static boolean isRecordListUpToDate;
 	
+	public static float dpiScale;
+	
 	private Thread creationThread = new Thread() {
 		@Override
 		public void run() {
@@ -717,6 +719,8 @@ public class ApplicationManager extends BaseActivity {
     	ApplicationManager.addNewEntity = false;
     	ApplicationManager.recordsList = null;
     	ApplicationManager.isRecordListUpToDate = false;
+    	ApplicationManager.dpiScale = getBaseContext().getResources().getDisplayMetrics().density;
+    	Log.e("dpiScale","scale=="+ApplicationManager.dpiScale);
 	}
     
 	/*private boolean userExists(User user){

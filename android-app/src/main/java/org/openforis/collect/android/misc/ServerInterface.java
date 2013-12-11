@@ -39,9 +39,7 @@ public class ServerInterface {
         	        HttpClient client = new DefaultHttpClient();
         	        HttpGet request = new HttpGet();
         	        Log.e("serverPath","=="+serverPath);
-        	        URI downloadFolder = new URI(serverPath);//new URI("http://ar5.arbonaut.com/awfdatademo/planned/");
-        	        //URI downloadFolder = new URI("http://cs.uef.fi/paikka/karol/doktorat/");
-        	        //new URI("http://cs.uef.fi/paikka/karol/listfiles.php?request_type='get_files_list'")
+        	        URI downloadFolder = new URI(serverPath);//new URI("http://ar5.arbonaut.com/awfdatademo/planned/");        
         	        request.setURI(downloadFolder);
         	        response = client.execute(request);
         	        BufferedReader r = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));

@@ -105,7 +105,9 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 			
 			TextView screenTitle = new TextView(RecordChoiceActivity.this);
 			screenTitle.setText(getResources().getString(R.string.clusterChoiceListLabel));
-			screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
+			
+			int pixels = (int) (getResources().getInteger(R.integer.screenTitleFontSize) * ApplicationManager.dpiScale + 0.5f);
+			screenTitle.setTextSize(pixels/*getResources().getInteger(R.integer.screenTitleFontSize)*/);
 			RecordChoiceActivity.this.mainLayout.addView(screenTitle);
 			RecordChoiceActivity.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 			

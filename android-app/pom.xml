@@ -62,7 +62,8 @@
 			<artifactId>collect-core</artifactId>
 			<!--<version>3.0-Alpha5-SNAPSHOT</version> -->
 			<!--<version>3.0-CR1-SNAPSHOT</version>-->
-			<version>3.0-Alpha7</version>
+			<!--<version>3.0-Alpha7</version>-->
+			<version>3.0-Alpha8-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>jooq</artifactId>
@@ -153,7 +154,8 @@
 			<groupId>org.openforis.android</groupId>
 			<artifactId>android-liquibase-core</artifactId>
 			<!--<version>2.0.6-SNAPSHOT</version>-->
-			<version>2.0.6-Alpha1</version>
+			<!--<version>2.0.6-Alpha1</version>-->
+			<version>2.0.6-Alpha2</version>		
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

@@ -1,9 +1,11 @@
 package org.openforis.collect.android.service;
 
+import org.openforis.collect.android.R;
 import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.database.SQLDroidDataSource;
 import org.openforis.collect.android.management.TaxonManager;
+import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.manager.RecordFileManager;
 import org.openforis.collect.manager.RecordManager;
 import org.openforis.collect.manager.SurveyManager;
@@ -19,6 +21,8 @@ import org.openforis.collect.persistence.UserDao;
 import org.openforis.collect.service.CollectCodeListService;
 import org.openforis.idm.metamodel.validation.Validator;
 import org.openforis.idm.model.expression.ExpressionFactory;
+
+import android.os.Environment;
 
 /**
  * 
@@ -97,9 +101,9 @@ public class ServiceFactory {
 	    	taxonManager.setTaxonVernacularNameDao(taxonVernNameDao);
 	    	
 			surveyManager.init();
-		}/* catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}*/ finally {
+		} finally {
 			DatabaseHelper.closeConnection();
 		}
 	}

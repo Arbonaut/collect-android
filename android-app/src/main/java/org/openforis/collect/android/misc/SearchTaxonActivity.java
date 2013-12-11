@@ -276,7 +276,8 @@ public class SearchTaxonActivity extends Activity {
     				TaxonField parentTaxonField = (TaxonField)ApplicationManager.getUIElement(parentTaxonFieldId);
     				try{
     					if(parentTaxonField != null){
-        					parentTaxonField.setValue(SearchTaxonActivity.this.currentInstanceNo/*0*/, arrItemValues[0].trim(), arrItemValues[1].trim(), arrItemValues[2].trim(), arrItemValues[3].trim(), arrItemValues[4].trim(), SearchTaxonActivity.this.path,false);
+    						Log.e("taxonField","SearchTaxonActivity");
+        					parentTaxonField.setValue(/*SearchTaxonActivity.this.currentInstanceNo*/0, arrItemValues[0].trim(), arrItemValues[1].trim(), arrItemValues[2].trim(), arrItemValues[3].trim(), arrItemValues[4].trim(), SearchTaxonActivity.this.path,false);
         				}
         				else{
         					Log.i(getResources().getString(R.string.app_name), "Parent taxon field is: NULL");

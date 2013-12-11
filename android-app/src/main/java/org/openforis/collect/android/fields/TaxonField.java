@@ -6,12 +6,17 @@ import org.openforis.collect.android.R;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.misc.SearchTaxonActivity;
 import org.openforis.collect.android.screens.FormScreen;
+import org.openforis.collect.android.service.ServiceFactory;
+import org.openforis.collect.model.NodeChangeSet;
 import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.metamodel.TaxonAttributeDefinition;
+import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.EntityBuilder;
 import org.openforis.idm.model.Node;
 import org.openforis.idm.model.TaxonAttribute;
 import org.openforis.idm.model.TaxonOccurrence;
+import org.openforis.idm.model.TextAttribute;
+import org.openforis.idm.model.TextValue;
 
 import android.content.Context;
 import android.content.Intent;
@@ -117,7 +122,8 @@ public class TaxonField extends InputField {
 				} else {
 					TaxonField.this.btnSearchByCode.setEnabled(false);
 				}
-				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, s.toString(), 
+				Log.e("taxonField","txtcodes");
+				TaxonField.this.setValue(/*TaxonField.this.form.currInstanceNo*/0, s.toString(), 
 						TaxonField.this.txtSciName.getText().toString(), 
 						TaxonField.this.txtVernacularName.getText().toString(), 
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
@@ -201,7 +207,8 @@ public class TaxonField extends InputField {
 				} else {
 					TaxonField.this.btnSearchBySciName.setEnabled(false);
 				}
-				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, TaxonField.this.txtCodes.getText().toString(), 
+				Log.e("taxonField","txtSciName");
+				TaxonField.this.setValue(/*TaxonField.this.form.currInstanceNo*/0, TaxonField.this.txtCodes.getText().toString(), 
 						s.toString(), 
 						TaxonField.this.txtVernacularName.getText().toString(), 
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
@@ -293,6 +300,7 @@ public class TaxonField extends InputField {
 				} else {
 					TaxonField.this.btnSearchByVernName.setEnabled(false);
 				}
+				Log.e("taxonField","txtVernacularName");
 				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, TaxonField.this.txtCodes.getText().toString(), 
 						TaxonField.this.txtSciName.getText().toString(), 
 						s.toString(), 
@@ -355,6 +363,7 @@ public class TaxonField extends InputField {
 		    @Override
 		    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 		    	if (TaxonField.this.nodeDefinition.isMultiple()){
+		    		Log.e("taxonField","spinnerMULTIPLE");
 		    		TaxonField.this.setValue(TaxonField.form.currInstanceNo, 
 		    		TaxonField.this.txtCodes.getText().toString(), 
 		    		TaxonField.this.txtSciName.getText().toString(),
@@ -363,7 +372,8 @@ public class TaxonField extends InputField {
 					TaxonField.this.txtLangVariant.getText().toString(),
 					TaxonField.form.getFormScreenId(),true);
 		    	} else {
-		    		TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, 
+		    		Log.e("taxonField","spinnerSINGLE");
+		    		TaxonField.this.setValue(/*TaxonField.form.currInstanceNo*/0, 
 				    		TaxonField.this.txtCodes.getText().toString(), 
 				    		TaxonField.this.txtSciName.getText().toString(),
 							TaxonField.this.txtVernacularName.getText().toString(), 
@@ -489,7 +499,8 @@ public class TaxonField extends InputField {
 			public void afterTextChanged(Editable s) {}
 			public void beforeTextChanged(CharSequence s, int start,  int count, int after) {}				 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, TaxonField.this.txtCodes.getText().toString(), 
+				Log.e("taxonField","txtLangVariant");
+				TaxonField.this.setValue(/*TaxonField.this.form.currInstanceNo*/0, TaxonField.this.txtCodes.getText().toString(), 
 						TaxonField.this.txtSciName.getText().toString(), 
 						TaxonField.this.txtVernacularName.getText().toString(), 
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
@@ -538,9 +549,13 @@ public class TaxonField extends InputField {
 	}
 	
 	public void setValue(int position, String code, String sciName, String vernName, String vernLang, String langVariant, String path, boolean isTextChanged){
-		Log.e("setValue","=="+position);
-		Log.e("setValue","=="+code);
-		Log.e("setValue","=="+path);
+		Log.e("setValue","position=="+position);
+		Log.e("setValue","code=="+code);
+		Log.e("setValue","sci=="+sciName);
+		Log.e("setValue","vern=="+vernName);
+		Log.e("setValue","lang=="+vernLang);
+		Log.e("setValue","langVar=="+langVariant);
+		Log.e("setValue","path=="+path);
 		if (!isTextChanged){
 			this.txtCodes.setText(code);
 			this.txtSciName.setText(sciName);
@@ -560,23 +575,31 @@ public class TaxonField extends InputField {
 			if (langVariant.trim().equals("")){
 				langVariant = null;
 			}
-		Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
+		/*Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
 		if (node!=null){
 			TaxonAttribute taxonAttr= (TaxonAttribute)node;
-			/*if (vernLang.equals("")){
-				vernLang = null;
-			}*/
+			Log.e("setValue"+path,this.findParentEntity(path).getName()+"value SET");
 			taxonAttr.setValue(new TaxonOccurrence(code, sciName, vernName, vernLang, langVariant));
 		} else {
-			/*if (vernLang.equals("")){
-				vernLang = null;
-			}*/
 			try {
-				Log.e("setValue",this.findParentEntity(path).getName()+"value added"+position);
+				Log.e("setValue"+path,this.findParentEntity(path).getName()+"value added"+position);
 				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new TaxonOccurrence(code, sciName, vernName, vernLang, langVariant), position);
 			} catch (Exception e){
 				e.printStackTrace();
 			}
+		}*/
+		Entity parentEntity = this.findParentEntity(path);
+		Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
+		NodeChangeSet nodeChangeSet = null;
+		if (node!=null){
+			//Log.e("Text field with Id: ",node.getDefinition().getId() + " is updating. Node name is: " + node.getName() + " Node ID is: " + node.getInternalId());
+			Log.e("setValue"+path,this.findParentEntity(path).getName()+"value SET");
+			nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((TaxonAttribute)node, new TaxonOccurrence(code, sciName, vernName, vernLang, langVariant));
+//			ApplicationManager.updateUIElementsWithValidationResults(nodeChangeSet);
+		} else {
+			//Log.e("Text field","is adding attribute. Node is NULL ");
+			Log.e("setValue"+path,this.findParentEntity(path).getName()+"value added"+position);
+			nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new TaxonOccurrence(code, sciName, vernName, vernLang, langVariant), null, null);
 		}
 	}
 

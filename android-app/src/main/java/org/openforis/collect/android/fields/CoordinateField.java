@@ -155,19 +155,25 @@ public class CoordinateField extends InputField implements OnClickListener {
 			public void afterTextChanged(Editable s) {}
 			public void beforeTextChanged(CharSequence s, int start,  int count, int after) {}				 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (s.length() > 0){
-					if(!isNumeric(s.toString())){
-						String strReplace = "";
-						if (before==0){//inputting characters
-							strReplace = s.toString().substring(0, start+count-1);
-							strReplace += s.toString().substring(start+count);
-						} else {//deleting characters
-							//do nothing - number with deleted digit is still a number
+				try {
+					if (s.length() > 0){
+						if(!isNumeric(s.toString())){
+							String strReplace = "";
+							if (before==0){//inputting characters
+								strReplace = s.toString().substring(0, start+count-1);
+								strReplace += s.toString().substring(start+count);
+							} else {//deleting characters
+								//do nothing - number with deleted digit is still a number
+							}
+							Log.e("CoordinateField",start+"=="+count+"=="+strReplace);
+							CoordinateField.this.txtLongitude.setText(strReplace);
+							CoordinateField.this.txtLongitude.setSelection(start);
 						}
-						CoordinateField.this.txtLongitude.setText(strReplace);
-						CoordinateField.this.txtLongitude.setSelection(start);
 					}
+				} catch (Exception e){
+					e.printStackTrace();
 				}
+				
 			}
 		});	
 

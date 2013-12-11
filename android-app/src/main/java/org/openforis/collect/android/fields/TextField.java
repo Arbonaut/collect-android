@@ -89,7 +89,7 @@ public class TextField extends InputField {
 			textAtr.setValue(new TextValue(value));
 		} else {
 			EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), value, position);	
-		}*/		
+		}*/
 		Entity parentEntity = this.findParentEntity(path);
 		Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
 		NodeChangeSet nodeChangeSet = null;
