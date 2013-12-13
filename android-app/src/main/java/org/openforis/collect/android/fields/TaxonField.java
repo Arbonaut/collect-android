@@ -114,8 +114,8 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				if (s.length()>5)
-					TaxonField.this.startSearchScreen(s.toString(), "Code");
+				/*if (s.length()>5)
+					TaxonField.this.startSearchScreen(s.toString(), "Code");*/
 			}	
 		});
 
@@ -189,8 +189,8 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				if (s.length()>5)
-					TaxonField.this.startSearchScreen(s.toString(), "SciName");
+				/*if (s.length()>5)
+					TaxonField.this.startSearchScreen(s.toString(), "SciName");*/
 			}	
 		});
 
@@ -265,14 +265,14 @@ public class TaxonField extends InputField {
 				} else {
 					TaxonField.this.btnSearchByVernName.setEnabled(false);
 				}
-				TaxonField.this.setValue(TaxonField.this.form.currInstanceNo/*0*/, TaxonField.this.txtCodes.getText().toString(), 
+				TaxonField.this.setValue(TaxonField.form.currInstanceNo, TaxonField.this.txtCodes.getText().toString(), 
 						TaxonField.this.txtSciName.getText().toString(), 
 						s.toString(), 
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				if (s.length()>5)
-					TaxonField.this.startSearchScreen(s.toString(), "VernacularName");
+				/*if (s.length()>5)
+					TaxonField.this.startSearchScreen(s.toString(), "VernacularName");*/
 			}	
 		});
 		//Button "Search By Vernacular names"
