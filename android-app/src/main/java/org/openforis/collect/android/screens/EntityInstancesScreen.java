@@ -131,7 +131,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				}
 				else
 					breadcrumb.setText(EntityInstancesScreen.this.breadcrumb);
-	    		breadcrumb.setTextSize(getResources().getInteger(R.integer.breadcrumbFontSize));
+				int pixels = (int) (getResources().getInteger(R.integer.breadcrumbFontSize) * ApplicationManager.dpiScale + 0.5f);
+	    		breadcrumb.setTextSize(pixels/*getResources().getInteger(R.integer.breadcrumbFontSize)*/);
 	    		breadcrumb.setSingleLine();
 	    		HorizontalScrollView scroller = new HorizontalScrollView(EntityInstancesScreen.this);
 	    		scroller.addView(breadcrumb);
@@ -142,7 +143,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	    		
 	    		TextView screenTitle = new TextView(EntityInstancesScreen.this);
 	    		screenTitle.setText(EntityInstancesScreen.this.screenTitle);
-	    		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
+	    		pixels = (int) (getResources().getInteger(R.integer.screenTitleFontSize) * ApplicationManager.dpiScale + 0.5f);
+	    		screenTitle.setTextSize(pixels/*getResources().getInteger(R.integer.screenTitleFontSize)*/);
 	    		//EntityInstancesScreen.this.ll.addView(screenTitle);
 	    		EntityInstancesScreen.this.mainLayout.addView(screenTitle);
 	    		//EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(this));

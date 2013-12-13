@@ -246,7 +246,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				}
 				else
 					breadcrumb.setText(FormScreen.this.breadcrumb);
-	    		breadcrumb.setTextSize(getResources().getInteger(R.integer.breadcrumbFontSize));
+				int pixels = (int) (getResources().getInteger(R.integer.breadcrumbFontSize) * ApplicationManager.dpiScale + 0.5f);
+	    		breadcrumb.setTextSize(pixels/*getResources().getInteger(R.integer.breadcrumbFontSize)*/);
 	    		breadcrumb.setSingleLine();
 	    		HorizontalScrollView scroller = new HorizontalScrollView(FormScreen.this);
 	    		scroller.addView(breadcrumb);
@@ -258,7 +259,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    		
 	    		TextView screenTitle = new TextView(FormScreen.this);
 	    		screenTitle.setText(FormScreen.this.screenTitle);
-	    		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
+				pixels = (int) (getResources().getInteger(R.integer.screenTitleFontSize) * ApplicationManager.dpiScale + 0.5f);
+	    		screenTitle.setTextSize(pixels/*getResources().getInteger(R.integer.screenTitleFontSize)*/);
 	    		//FormScreen.this.ll.addView(screenTitle);
 	    		FormScreen.this.mainLayout.addView(screenTitle);
 	    		//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
@@ -1763,7 +1765,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			ViewGroup scrollbarView = ((ViewGroup)this.mainLayout.getChildAt(0));
 			TextView breadcrumb = (TextView)scrollbarView.getChildAt(0);
 			breadcrumb.setText(this.breadcrumb.substring(0, this.breadcrumb.lastIndexOf(" "))+" "+(this.currInstanceNo+1));
-			breadcrumb.setTextSize(getResources().getInteger(R.integer.breadcrumbFontSize));
+			int pixels = (int) (getResources().getInteger(R.integer.breadcrumbFontSize) * ApplicationManager.dpiScale + 0.5f);
+			breadcrumb.setTextSize(pixels/*getResources().getInteger(R.integer.breadcrumbFontSize)*/);
 			breadcrumb.setSingleLine();
 			/*HorizontalScrollView scroller = new HorizontalScrollView(FormScreen.this);
 			scroller.addView(breadcrumb);*/
@@ -1802,7 +1805,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 
 		TextView screenTitle = new TextView(FormScreen.this);
 		screenTitle.setText(FormScreen.this.screenTitle);
-		screenTitle.setTextSize(getResources().getInteger(R.integer.screenTitleFontSize));
+		int pixels = (int) (getResources().getInteger(R.integer.screenTitleFontSize) * ApplicationManager.dpiScale + 0.5f);
+		screenTitle.setTextSize(pixels/*getResources().getInteger(R.integer.screenTitleFontSize)*/);
 		//FormScreen.this.ll.addView(screenTitle);
 		//FormScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
 		

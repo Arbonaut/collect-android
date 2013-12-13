@@ -13,12 +13,15 @@ import org.openforis.idm.model.TaxonOccurrence;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.text.method.QwertyKeyListener;
 import android.text.method.TextKeyListener;
 import android.util.Log;
@@ -101,6 +104,15 @@ public class SearchTaxonActivity extends Activity {
 		this.lblSearch.setText(getResources().getString(R.string.taxonSearchBy) + this.criteria);
 		// Set value to search text box
 		this.txtSearch.setText(this.content);
+        this.txtSearch.addTextChangedListener(new TextWatcher(){
+	        public void afterTextChanged(Editable s) {        			            
+				if (s.length()>5){
+					doSearch(s.toString(), taxonFieldId);
+				}
+	        }
+	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	    });
 		// Set onFocus listener for Search texbox
 		this.txtSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
 		    @Override
