@@ -115,8 +115,8 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				/*if (s.length()>5)
-					TaxonField.this.startSearchScreen(s.toString(), "Code");*/
+				if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
+					TaxonField.this.startSearchScreen(s.toString(), "Code");
 			}	
 		});
 
@@ -190,8 +190,8 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				/*if (s.length()>5)
-					TaxonField.this.startSearchScreen(s.toString(), "SciName");*/
+				if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
+					TaxonField.this.startSearchScreen(s.toString(), "SciName");
 			}	
 		});
 
@@ -272,7 +272,6 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				Log.e("1isBackFromTaxonSearch","=="+ApplicationManager.isBackFromTaxonSearch);
 				if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
 					TaxonField.this.startSearchScreen(s.toString(), "VernacularName");
 			}	

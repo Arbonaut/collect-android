@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.jooq.TableField;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.manager.dataexport.BackupProcess;
@@ -240,7 +241,7 @@ public class DataManager {
 		//prepare results
 		TaxonVernacularName entity;
 		if (cursor.moveToFirst()){
-			do{
+			do {
 				entity = new TaxonVernacularName();
 				entity.setId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.ID.getName())));
 				entity.setLanguageCode(cursor.getString(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.LANGUAGE_CODE.getName())));
@@ -294,5 +295,46 @@ public class DataManager {
 		cursor.close();
 		db.close();
 		return taxon;
+	}
+	
+	public List<Taxon> findByCode(int taxonomyId, String searchString, int maxResults) {
+		return findStartingWith(OFC_TAXON.CODE, taxonomyId, searchString, maxResults);
+	}
+	
+	public List<Taxon> findByScientificName(int taxonomyId, String searchString, int maxResults) {
+		return findStartingWith(OFC_TAXON.SCIENTIFIC_NAME, taxonomyId, searchString, maxResults);
+	}
+	
+	public List<Taxon> findStartingWith(TableField<?,String> field, int taxonomyId, String searchString, int maxResults) {
+		searchString = searchString.toUpperCase() + "%";
+		String query = "SELECT *"
+				+ " FROM " + OFC_TAXON
+				+ " WHERE " + OFC_TAXON.TAXONOMY_ID + "=" + taxonomyId
+				+ " AND " + field + " LIKE '" + searchString +"'"
+				+ " LIMIT " + maxResults;
+		
+		SQLiteDatabase db = DatabaseHelper.getDb();
+		Cursor cursor = db.rawQuery(query, null);
+		
+		List<Taxon> entitiesList = new ArrayList<Taxon>();
+		Taxon taxon;
+		if (cursor.moveToFirst()){
+			do {
+				taxon = new Taxon();
+				taxon.setCode(cursor.getString(cursor.getColumnIndex(OFC_TAXON.CODE.getName())));
+				taxon.setParentId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.PARENT_ID.getName())));
+				taxon.setScientificName(cursor.getString(cursor.getColumnIndex(OFC_TAXON.SCIENTIFIC_NAME.getName())));
+				taxon.setStep(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.STEP.getName())));
+				taxon.setSystemId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.ID.getName())));
+				taxon.setTaxonId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.TAXON_ID.getName())));
+				taxon.setTaxonomyId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.TAXONOMY_ID.getName())));
+				taxon.setTaxonRank(TaxonRank.fromName(cursor.getString(cursor.getColumnIndex(OFC_TAXON.TAXON_RANK.getName()))));
+				entitiesList.add(taxon);
+			} while (cursor.moveToNext());
+		}
+		
+		cursor.close();
+		db.close();
+		return entitiesList;
 	}
 }

@@ -1053,9 +1053,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					+System.currentTimeMillis()
 					+getResources().getString(R.string.log_file_extension));
 		}
-		Log.e("3isBackFromTaxonSearch","=="+ApplicationManager.isBackFromTaxonSearch);
 		ApplicationManager.isBackFromTaxonSearch = false;
-		Log.e("4isBackFromTaxonSearch","=="+ApplicationManager.isBackFromTaxonSearch);
 		Log.e("onRESUME time","=="+(System.currentTimeMillis()-startTime));
 	}
     

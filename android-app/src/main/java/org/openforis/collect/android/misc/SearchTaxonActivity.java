@@ -107,7 +107,6 @@ public class SearchTaxonActivity extends Activity {
 		this.txtSearch.setText(this.content);
         this.txtSearch.addTextChangedListener(new TextWatcher(){
 	        public void afterTextChanged(Editable s) {
-	        	Log.e("searchStringLength",s.length()+"=="+searchStringLength);
 				if ((s.length()>2)&&(s.length()>=searchStringLength)){
 					doSearch(s.toString(), taxonFieldId);
 				}
@@ -180,7 +179,8 @@ public class SearchTaxonActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
 	    	Log.i(getResources().getString(R.string.app_name), "Button BACK pressed from SearchTaxon activity");
-		    //Finish activity  	
+		    //Finish activity  
+	    	ApplicationManager.isBackFromTaxonSearch = true;
 		    finish();  	
 	    }
 	    return super.onKeyDown(keyCode, event);
@@ -280,10 +280,8 @@ public class SearchTaxonActivity extends Activity {
     		SearchTaxonActivity.this.lstResult.setOnItemClickListener(new OnItemClickListener(){
     			@Override
     			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-    				// Back to previous screen and pass chosen results there
-    				Log.e("2isBackFromTaxonSearch","=="+ApplicationManager.isBackFromTaxonSearch);
+    				// Back to previous screen and pass the chosen result there
     				ApplicationManager.isBackFromTaxonSearch = true;
-    				Log.e("5isBackFromTaxonSearch","=="+ApplicationManager.isBackFromTaxonSearch);
     				String strItem = lstResult.getAdapter().getItem(position).toString();
     				strItem = strItem.replaceAll("\n", ";");
     				strItem = strItem.replaceAll(";", " ;");

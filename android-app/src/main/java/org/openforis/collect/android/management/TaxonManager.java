@@ -61,10 +61,10 @@ public class TaxonManager {
 	@Transactional
 	public List<TaxonOccurrence> findByCode(String taxonomyName, String searchString, int maxResults) {
 		List<TaxonOccurrence> result = new ArrayList<TaxonOccurrence>();
-		Log.e("taxonomyName",ApplicationManager.getSurvey().getId()+"=="+taxonomyName);
 		Taxonomy taxonomy = taxonomyDao.load(ApplicationManager.getSurvey().getId()/*this.getSurveyId()*/, taxonomyName);
 		if (taxonomy!=null){
-			List<Taxon> list = taxonDao.findByCode(taxonomy.getId(), searchString, maxResults);			
+			//List<Taxon> list = taxonDao.findByCode(taxonomy.getId(), searchString, maxResults);
+			List<Taxon> list = ApplicationManager.dataManager.findByCode(taxonomy.getId(), searchString, maxResults);
 			Log.e("findByCode","==");
 			for (Taxon taxon : list) {
 				TaxonOccurrence o = new TaxonOccurrence(taxon.getCode(), taxon.getScientificName());
@@ -80,7 +80,8 @@ public class TaxonManager {
 		
 		Taxonomy taxonomy = taxonomyDao.load(ApplicationManager.getSurvey().getId()/*this.getSurveyId()*/, taxonomyName);	
 		if (taxonomy!=null){
-			List<Taxon> list = taxonDao.findByScientificName(taxonomy.getId(), searchString, maxResults);			
+			//List<Taxon> list = taxonDao.findByScientificName(taxonomy.getId(), searchString, maxResults);
+			List<Taxon> list = ApplicationManager.dataManager.findByScientificName(taxonomy.getId(), searchString, maxResults);
 			Log.e("findBySCIName","==");
 			for (Taxon taxon : list) {
 				TaxonOccurrence o = new TaxonOccurrence(taxon.getCode(), taxon.getScientificName());
