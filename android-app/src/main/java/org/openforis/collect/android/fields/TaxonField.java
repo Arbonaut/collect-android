@@ -23,7 +23,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.QwertyKeyListener;
 import android.text.method.TextKeyListener;
-//import android.util.Log;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+//import android.util.Log;
 
 public class TaxonField extends InputField {
 	
@@ -271,11 +272,12 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				/*if (s.length()>5)
-					TaxonField.this.startSearchScreen(s.toString(), "VernacularName");*/
+				Log.e("1isBackFromTaxonSearch","=="+ApplicationManager.isBackFromTaxonSearch);
+				if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
+					TaxonField.this.startSearchScreen(s.toString(), "VernacularName");
 			}	
 		});
-		//Button "Search By Vernacular names"
+
 		this.btnSearchByVernName = new Button(context);
 		this.btnSearchByVernName.setText(getResources().getString(R.string.searchButton));
 		this.btnSearchByVernName.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 4));

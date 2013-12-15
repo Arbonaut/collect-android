@@ -235,9 +235,7 @@ public class DataManager {
 				+ " AND " + OFC_TAXON_VERNACULAR_NAME.VERNACULAR_NAME + " LIKE '" + searchString + "'"
 				+ " LIMIT " + maxResults;
 		SQLiteDatabase db = DatabaseHelper.getDb();
-		Cursor cursor = db.rawQuery(query, null);
-		Log.e("cursor","size=="+cursor.getCount());
-		
+		Cursor cursor = db.rawQuery(query, null);		
 		
 		//prepare results
 		TaxonVernacularName entity;
@@ -269,6 +267,7 @@ public class DataManager {
 		}
 		cursor.close();
 		db.close();
+		
 		return entitiesList;
 	}
 	
@@ -282,7 +281,6 @@ public class DataManager {
 		SQLiteDatabase db = DatabaseHelper.getDb();
 		Cursor cursor = db.rawQuery(query, null);
 		
-		Log.e("cursor","size=="+cursor.getCount());
 		if (cursor.moveToFirst()){
 			taxon.setCode(cursor.getString(cursor.getColumnIndex(OFC_TAXON.CODE.getName())));
 			taxon.setParentId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.PARENT_ID.getName())));

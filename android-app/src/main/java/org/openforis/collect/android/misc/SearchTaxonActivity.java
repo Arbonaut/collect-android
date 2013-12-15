@@ -106,8 +106,9 @@ public class SearchTaxonActivity extends Activity {
 		// Set value to search text box
 		this.txtSearch.setText(this.content);
         this.txtSearch.addTextChangedListener(new TextWatcher(){
-	        public void afterTextChanged(Editable s) {        			            
-				if ((s.length()>2)&&(s.length()>searchStringLength)){
+	        public void afterTextChanged(Editable s) {
+	        	Log.e("searchStringLength",s.length()+"=="+searchStringLength);
+				if ((s.length()>2)&&(s.length()>=searchStringLength)){
 					doSearch(s.toString(), taxonFieldId);
 				}
 	        }
@@ -280,6 +281,9 @@ public class SearchTaxonActivity extends Activity {
     			@Override
     			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
     				// Back to previous screen and pass chosen results there
+    				Log.e("2isBackFromTaxonSearch","=="+ApplicationManager.isBackFromTaxonSearch);
+    				ApplicationManager.isBackFromTaxonSearch = true;
+    				Log.e("5isBackFromTaxonSearch","=="+ApplicationManager.isBackFromTaxonSearch);
     				String strItem = lstResult.getAdapter().getItem(position).toString();
     				strItem = strItem.replaceAll("\n", ";");
     				strItem = strItem.replaceAll(";", " ;");

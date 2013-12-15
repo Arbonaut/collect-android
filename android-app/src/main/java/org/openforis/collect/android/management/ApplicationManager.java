@@ -93,6 +93,8 @@ public class ApplicationManager extends BaseActivity {
 	
 	public static float dpiScale;
 	
+	public static boolean isBackFromTaxonSearch;
+	
 	private Thread creationThread = new Thread() {
 		@Override
 		public void run() {
@@ -717,6 +719,7 @@ public class ApplicationManager extends BaseActivity {
     	ApplicationManager.recordsList = null;
     	ApplicationManager.isRecordListUpToDate = false;
     	ApplicationManager.dpiScale = getBaseContext().getResources().getDisplayMetrics().density;
+    	ApplicationManager.isBackFromTaxonSearch = false;
 	}
     
 	/*private boolean userExists(User user){
