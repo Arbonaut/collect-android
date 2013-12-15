@@ -1,8 +1,12 @@
 package org.openforis.collect.android.management;
 
+import static org.openforis.collect.persistence.jooq.tables.OfcTaxon.OFC_TAXON;
+import static org.openforis.collect.persistence.jooq.tables.OfcTaxonVernacularName.OFC_TAXON_VERNACULAR_NAME;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +25,14 @@ import org.openforis.collect.persistence.xml.DataMarshaller;
 import org.openforis.collect.persistence.xml.DataUnmarshaller;
 import org.openforis.collect.persistence.xml.DataUnmarshaller.ParseRecordResult;
 import org.openforis.collect.persistence.xml.DataUnmarshallerException;
+import org.openforis.idm.model.species.Taxon;
+import org.openforis.idm.model.species.Taxon.TaxonRank;
+import org.openforis.idm.model.species.TaxonVernacularName;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class DataManager {
@@ -161,16 +170,6 @@ public class DataManager {
 		try {
 			ParseRecordResult result = this.dataUnmarshaller.parse(filename);
 			loadedRecord = result.getRecord();
-			if (result.getFailures()!=null){
-				Log.e("failuresNo","=="+result.getFailures().size());
-				for (int i=0;i<result.getFailures().size();i++){
-					Log.e("failure"+i,"=="+result.getFailures().get(i).getMessage());
-					Log.e("failure"+i,"=="+result.getFailures().get(i).getPath());
-				}
-			} else {
-				Log.e("failures==null","==true");
-			}
-			Log.e("loadedResult"+(result==null),"LOADED FROM XML IN "+(System.currentTimeMillis()-startTime)/1000+"s");
 			this.saveRecord(loadedRecord);
 		} catch (NullPointerException e){
 			e.printStackTrace();
@@ -223,5 +222,79 @@ public class DataManager {
 		}*/
 		Log.e("record"+recordId,"LOADED IN "+(System.currentTimeMillis()-startTime)+"ms");
 		return loadedRecord;
+	}
+	
+	public List<TaxonVernacularName> findByVernacularName(int taxonomyId, String searchString, int maxResults){
+		List<TaxonVernacularName> entitiesList = new ArrayList<TaxonVernacularName>();
+		searchString = "%" + searchString.toUpperCase() + "%";
+		String query = "SELECT *"
+				+ " FROM " + OFC_TAXON_VERNACULAR_NAME
+				+ " JOIN " + OFC_TAXON
+				+ " ON " + OFC_TAXON.ID + "=" + OFC_TAXON_VERNACULAR_NAME.TAXON_ID
+				+ " WHERE " + OFC_TAXON.TAXONOMY_ID + "=" + taxonomyId
+				+ " AND " + OFC_TAXON_VERNACULAR_NAME.VERNACULAR_NAME + " LIKE '" + searchString + "'"
+				+ " LIMIT " + maxResults;
+		SQLiteDatabase db = DatabaseHelper.getDb();
+		Cursor cursor = db.rawQuery(query, null);
+		Log.e("cursor","size=="+cursor.getCount());
+		
+		
+		//prepare results
+		TaxonVernacularName entity;
+		if (cursor.moveToFirst()){
+			do{
+				entity = new TaxonVernacularName();
+				entity.setId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.ID.getName())));
+				entity.setLanguageCode(cursor.getString(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.LANGUAGE_CODE.getName())));
+				entity.setLanguageVariety(cursor.getString(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.LANGUAGE_VARIETY.getName())));
+				List<String> qualifiers = new ArrayList<String>();
+				String qualifier = cursor.getString(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.QUALIFIER1.getName()));
+				if (qualifier!=null){
+					qualifiers.add(qualifier);	
+				}
+				qualifier = cursor.getString(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.QUALIFIER2.getName()));
+				if (qualifier!=null){
+					qualifiers.add(qualifier);	
+				}
+				qualifier = cursor.getString(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.QUALIFIER3.getName()));
+				if (qualifier!=null){
+					qualifiers.add(qualifier);	
+				}
+				entity.setQualifiers(qualifiers);
+				entity.setStep(cursor.getInt(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.STEP.getName())));
+				entity.setTaxonSystemId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME./*TAXON_*/ID.getName())));
+				entity.setVernacularName(cursor.getString(cursor.getColumnIndex(OFC_TAXON_VERNACULAR_NAME.VERNACULAR_NAME.getName())));	
+				entitiesList.add(entity);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+		return entitiesList;
+	}
+	
+	public Taxon loadById(int id){
+		Taxon taxon = new Taxon();
+		String query = "SELECT *"
+				+ " FROM " + OFC_TAXON
+				+ " WHERE " + OFC_TAXON.ID + "=" + id
+				+ " LIMIT 1";
+		
+		SQLiteDatabase db = DatabaseHelper.getDb();
+		Cursor cursor = db.rawQuery(query, null);
+		
+		Log.e("cursor","size=="+cursor.getCount());
+		if (cursor.moveToFirst()){
+			taxon.setCode(cursor.getString(cursor.getColumnIndex(OFC_TAXON.CODE.getName())));
+			taxon.setParentId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.PARENT_ID.getName())));
+			taxon.setScientificName(cursor.getString(cursor.getColumnIndex(OFC_TAXON.SCIENTIFIC_NAME.getName())));
+			taxon.setStep(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.STEP.getName())));
+			taxon.setSystemId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.ID.getName())));
+			taxon.setTaxonId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.TAXON_ID.getName())));
+			taxon.setTaxonomyId(cursor.getInt(cursor.getColumnIndex(OFC_TAXON.TAXONOMY_ID.getName())));
+			taxon.setTaxonRank(TaxonRank.fromName(cursor.getString(cursor.getColumnIndex(OFC_TAXON.TAXON_RANK.getName()))));
+		}
+		cursor.close();
+		db.close();
+		return taxon;
 	}
 }

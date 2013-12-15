@@ -30,7 +30,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-//import org.openforis.collect.manager.CodeListManager;
 
 
 public class CodeField extends InputField {

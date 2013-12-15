@@ -85,7 +85,7 @@ public class TaxonManager {
 			for (Taxon taxon : list) {
 				TaxonOccurrence o = new TaxonOccurrence(taxon.getCode(), taxon.getScientificName());
 				result.add(o);
-			}			
+			}
 		}
 		
 		return result;
@@ -97,10 +97,12 @@ public class TaxonManager {
 		List<TaxonOccurrence> result = new ArrayList<TaxonOccurrence>();
 		Taxonomy taxonomy = taxonomyDao.load(ApplicationManager.getSurvey().getId()/*this.getSurveyId()*/, taxonomyName);
 		if (taxonomy!=null){
-			List<TaxonVernacularName> list = this.taxonVernacularNameDao.findByVernacularName(taxonomy.getId(), searchString, maxResults);
+			//List<TaxonVernacularName> list = this.taxonVernacularNameDao.findByVernacularName(taxonomy.getId(), searchString, maxResults);
+			List<TaxonVernacularName> list = ApplicationManager.dataManager.findByVernacularName(taxonomy.getId(), searchString, maxResults);
 			for (TaxonVernacularName taxonVernacularName : list) {
 				Integer taxonId = taxonVernacularName.getTaxonSystemId();
-				Taxon taxon = taxonDao.loadById(taxonId);
+				//Taxon taxon = taxonDao.loadById(taxonId);
+				Taxon taxon = ApplicationManager.dataManager.loadById(taxonId);
 				TaxonOccurrence o = new TaxonOccurrence(taxon.getCode(), taxon.getScientificName(), taxonVernacularName.getVernacularName(), taxonVernacularName.getLanguageCode(),
 						taxonVernacularName.getLanguageVariety());
 				result.add(o);

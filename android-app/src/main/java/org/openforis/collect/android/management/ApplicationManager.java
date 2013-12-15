@@ -717,7 +717,6 @@ public class ApplicationManager extends BaseActivity {
     	ApplicationManager.recordsList = null;
     	ApplicationManager.isRecordListUpToDate = false;
     	ApplicationManager.dpiScale = getBaseContext().getResources().getDisplayMetrics().density;
-    	Log.e("dpiScale","scale=="+ApplicationManager.dpiScale);
 	}
     
 	/*private boolean userExists(User user){

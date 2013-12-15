@@ -56,6 +56,8 @@ public class SearchTaxonActivity extends Activity {
 		
 	private ProgressDialog pd;
 	
+	private int searchStringLength;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -68,6 +70,8 @@ public class SearchTaxonActivity extends Activity {
 	    this.txtSearch = (EditText)findViewById(R.id.txtSearch);
 	    this.btnSearch = (Button)findViewById(R.id.btnSearch);
 		this.lstResult = (ListView)findViewById(R.id.lstResult);
+		
+		this.searchStringLength = 0;
 		
 	    if (extras != null) {
 	    	//get extras
@@ -84,9 +88,6 @@ public class SearchTaxonActivity extends Activity {
 			this.taxonManager.setTaxonDao(new TaxonDao());
 			this.taxonManager.setTaxonVernacularNameDao(new TaxonVernacularNameDao());
 			this.taxonManager.setSurveyId(ApplicationManager.getSurvey().getId());*/
-	    }
-	    else{
-	    	Log.i(getResources().getString(R.string.app_name), "Cannot get extras in SearchTaxon activity");
 	    }
 	}
 	
@@ -106,11 +107,13 @@ public class SearchTaxonActivity extends Activity {
 		this.txtSearch.setText(this.content);
         this.txtSearch.addTextChangedListener(new TextWatcher(){
 	        public void afterTextChanged(Editable s) {        			            
-				if (s.length()>5){
+				if ((s.length()>2)&&(s.length()>searchStringLength)){
 					doSearch(s.toString(), taxonFieldId);
 				}
 	        }
-	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        public void beforeTextChanged(CharSequence s, int start, int count, int after){
+	        	searchStringLength = s.length();
+	        }
 	        public void onTextChanged(CharSequence s, int start, int before, int count){}
 	    });
 		// Set onFocus listener for Search texbox
