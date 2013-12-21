@@ -162,6 +162,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	}
 	
 	private Entity findParentEntity2(String path){
+		Log.e("2pathFormScreen","=="+path);
 		Entity parentEntity = ApplicationManager.currentRecord.getRootEntity();
 		String screenPath = path;
 		String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
@@ -212,21 +213,25 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		long startTime = System.currentTimeMillis();
 		try{
 			
-			/*Log.e("getFormScreenId()","=="+FormScreen.this.getFormScreenId());
+			Log.e("getFormScreenId()","=="+FormScreen.this.getFormScreenId());
 			Log.e("parentEntity==null","=="+(FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())==null));
 			if (FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId())!=null){
 				Log.e("parentEntity.getName()","=="+FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId()).getName());
-			}*/
+			}
 			FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId());
-			//Log.e("2FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
+			Log.e("2FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
+			if (FormScreen.this.parentEntitySingleAttribute!=null)
+				Log.e("2parentSingle","=="+FormScreen.this.parentEntitySingleAttribute.getName());
 			FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity(FormScreen.this.parentFormScreenId);
-			//Log.e("parentEntityMultipleAttribute",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
-			/*if (FormScreen.this.parentEntitySingleAttribute==null){
+			Log.e("parentEntityMultipleAttribute",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
+			if (FormScreen.this.parentEntitySingleAttribute==null){
 				FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.getFormScreenId());
+				if (FormScreen.this.parentEntitySingleAttribute!=null)
+					Log.e("3parentSingle","=="+FormScreen.this.parentEntitySingleAttribute.getName());
 				FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.parentFormScreenId);
 				Log.e("3FormScreen.this.parentEntitySingleAttribute==null","==="+(FormScreen.this.parentEntitySingleAttribute==null));
 				Log.e("3parentEntityMultipleAttribute3",FormScreen.this.parentFormScreenId+"=="+(parentEntityMultipleAttribute==null));
-			}*/
+			}
 			String loadedValue = "";
 	
 			ArrayList<String> tableColHeaders = new ArrayList<String>();
@@ -303,6 +308,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+i, -1));
 				if (nodeDef instanceof EntityDefinition){
 					if (ApplicationManager.currentRecord.getRootEntity().getId()!=nodeDef.getId()){
+						Log.e("1parentSingle==null","?=="+(FormScreen.this.parentEntitySingleAttribute==null));
 	    				Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0/*FormScreen.this.currInstanceNo*/);
 	    				if (foundNode==null){
 	    					EntityBuilder.addEntity(FormScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
@@ -424,6 +430,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    			} else if (nodeDef instanceof NumberAttributeDefinition){
 	    				loadedValue = "";
 	    				if (!nodeDef.isMultiple()){
+	    					Log.e("parentSingle==null","?=="+(FormScreen.this.parentEntitySingleAttribute==null));
 	    					Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
 		    				if (foundNode!=null){
 		    					if (((NumberAttributeDefinition) nodeDef).isInteger()){
@@ -1183,7 +1190,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());		 								
 		 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
 		 								//Log.e("tempNode==null","=="+(tempNode==null));
-		 								if (tempNode==null)
+		 								if ((tempNode==null)&&(FormScreen.this.currInstanceNo==0))
 		 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
 		 							} else {
 		 								//Log.e("null",nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
@@ -1193,6 +1200,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 							} finally {*/
 	 								refreshEntityScreen(2);
 	 								Toast.makeText(FormScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
+	 								if (FormScreen.this.currInstanceNo>0){
+	 									FormScreen.this.currInstanceNo--;	
+	 								}	 								
 	 								FormScreen.this.onResume();
 	 							//}
 	 						}
@@ -1589,7 +1599,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     }
 	
 	private Entity findParentEntity(String path){
-		//Log.e("pathFORMSCREEN","=="+path);
+		Log.e("1pathFORMSCREEN","=="+path);
 		Entity parentEntity = ApplicationManager.currentRecord.getRootEntity();
 		String screenPath = path;
 		String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
@@ -1602,8 +1612,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);	
 				} catch (IllegalArgumentException e){
 					parentEntity = (Entity) parentEntity.getParent().get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
-				}			
-			}			
+				}		
+			}
 		} catch (ClassCastException e){
 			
 		}

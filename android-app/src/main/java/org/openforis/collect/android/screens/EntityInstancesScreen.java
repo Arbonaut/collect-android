@@ -1916,7 +1916,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
             deleteItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    Log.e("contextMenuListener","DELETE");
+                    //Log.e("contextMenuListener","DELETE");
                 	AlertMessage.createPositiveNegativeDialog(EntityInstancesScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
             				getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
             				getResources().getString(R.string.yes), getResources().getString(R.string.no),
@@ -1942,13 +1942,13 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 		 								Log.e("formScreenID","=="+EntityInstancesScreen.this.getFormScreenId());
 		 								Log.e("parentEntity","=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());
 		 								Log.e("parentNode","=="+parentNodeDefinition.getName());
-		 								//Node<?> tempNode = tempEntity.get(EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), 0).getName(), position);
-		 								*/Node<?> tempNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), position);
+		 								*///Node<?> tempNode = tempEntity.get(EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), 0).getName(), position);
+		 								Node<?> tempNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), position);
 		 								//Log.e("tempNode==null","=="+(tempNode==null));
-		 								if (tempNode==null)
+		 								if (tempNode==null && (position==0))
 		 									EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute/*tempEntity*/, parentNodeDefinition.getName());		 								
 		 							} else {
-		 								//Log.e("null",nodeDef.getName()+"=="+position);
+		 								Log.e("null",nodeDef.getName()+"=="+position);
 		 							}
 	 								//refreshEntityScreen(2);
 	 								Toast.makeText(EntityInstancesScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();

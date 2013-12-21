@@ -303,7 +303,6 @@ public class ApplicationManager extends BaseActivity {
 	 	    } else if (requestCode==getResources().getInteger(R.integer.formDefinitionSelection)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.formDefinitionChoiceSuccessful)){//form was selected
 	 	    		int formId = data.getIntExtra(getResources().getString(R.string.formId), -1);
-	 	    		Log.e("formId","=="+formId);
 	 	    		if (formId==-1){//new form to be added from file
 	 	    			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingNewFormDefinitionMessage));
 	 	    			new loadingFormDefinition().execute(data.getStringExtra(getResources().getString(R.string.formFileName)));
