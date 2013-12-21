@@ -1,6 +1,12 @@
 package org.openforis.collect.android.filechooser;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class Option implements Comparable<Option>{
+	
 	private String name;
 	private String data;
 	private String path;

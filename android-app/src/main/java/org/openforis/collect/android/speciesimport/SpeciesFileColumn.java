@@ -1,5 +1,10 @@
 package org.openforis.collect.android.speciesimport;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public enum SpeciesFileColumn {
 	NO("no"), CODE("code"), FAMILY("family"), SCIENTIFIC_NAME("scientific_name"), SYNONYMS("synonyms");
 

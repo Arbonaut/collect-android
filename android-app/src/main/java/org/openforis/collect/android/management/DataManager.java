@@ -60,8 +60,6 @@ public class DataManager {
 	public boolean saveRecord(Context ctx) {
 		boolean isSuccess = true;
 		try {
-//			JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
-//			jdbcDao.getConnection();
 			CollectRecord recordToSave = ApplicationManager.currentRecord;
 			
 			if (recordToSave.getId()==null){
@@ -131,10 +129,7 @@ public class DataManager {
 	}
 	
 	public int saveRecordToXml(CollectRecord recordToSave, String folderToSave) {
-		long startTime = System.currentTimeMillis();
 		try {
-			//CollectRecord recordToSave = ApplicationManager.currentRecord;
-			
 			if (recordToSave.getId()==null){
 				recordToSave.setCreatedBy(this.user);
 				recordToSave.setCreationDate(new Date());
@@ -166,7 +161,6 @@ public class DataManager {
 	
 	public CollectRecord loadRecordFromXml(String filename) {
 		//filename = Environment.getExternalStorageDirectory().toString()+"/ofcm/data/imported/"+filename;
-		long startTime = System.currentTimeMillis();
 		CollectRecord loadedRecord = null;
 		try {
 			ParseRecordResult result = this.dataUnmarshaller.parse(filename);

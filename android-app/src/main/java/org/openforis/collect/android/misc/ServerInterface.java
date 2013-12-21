@@ -21,8 +21,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import android.util.Log;
-
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class ServerInterface {
 
         //public static final String SERVER_URL = "http://ar5.arbonaut.com/demo/fao-mobile/save-received-data-file";
@@ -38,7 +41,6 @@ public class ServerInterface {
         			HttpResponse response = null;
         	        HttpClient client = new DefaultHttpClient();
         	        HttpGet request = new HttpGet();
-        	        Log.e("serverPath","=="+serverPath);
         	        URI downloadFolder = new URI(serverPath);//new URI("http://ar5.arbonaut.com/awfdatademo/planned/");        
         	        request.setURI(downloadFolder);
         	        response = client.execute(request);
@@ -55,18 +57,7 @@ public class ServerInterface {
         	    		   filesList.add(line);
         	    	   }        	    	   
         	       }
-        	    } /*catch (URISyntaxException e) {
-        	        e.printStackTrace();
-        	    } catch (ClientProtocolException e) {
-        	        // TODO Auto-generated catch block
-        	        e.printStackTrace();
-        	    } catch (IOException e) {
-        	        // TODO Auto-generated catch block
-        	        e.printStackTrace();
-        	    } catch (IllegalStateException e){
-        	    	e.printStackTrace();
-        	    	filesList = null;
-        	    } */catch (Exception e){
+        	    } catch (Exception e){
         	    	e.printStackTrace();
         	    	filesList = null;
         	    }
@@ -130,15 +121,6 @@ public class ServerInterface {
                 HttpResponse response = (HttpResponse) httpclient .execute(httppost);
                 HttpEntity resEntity = response.getEntity();  
                 String resp = EntityUtils.toString(resEntity);
-                /*try
-                {
-                    final String s = new String(resp.getBytes(), "UTF-8");
-                }
-                catch (UnsupportedEncodingException e)
-                {
-                    Log.e("utf8", "conversion", e);
-                }*/
-                Log.e("responseFromUpload",url+"=="+resp);
                 return resp;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

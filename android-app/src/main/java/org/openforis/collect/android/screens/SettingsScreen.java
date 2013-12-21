@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -27,6 +26,11 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class SettingsScreen extends Activity{
 
 	private static final String TAG = "SettingsScreen";
@@ -65,9 +69,7 @@ public class SettingsScreen extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);       
         setContentView(R.layout.settingstab);
-        try{
-        	Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
-        	        	
+        try{        	        	
         	this.tvScreenTitle = (TextView)findViewById(R.id.lblTitle);
     		this.tvScreenTitle.setTextSize(getResources().getInteger(R.integer.breadcrumbFontSize));
         	
@@ -250,14 +252,12 @@ public class SettingsScreen extends Activity{
 				new RadioGroup.OnCheckedChangeListener() {
 				    public void onCheckedChanged(RadioGroup group,
 				            int checkedId) {
-				        Log.e("Selected", "New radio item selected: " + checkedId);
 				        SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
 						editor = ApplicationManager.appPreferences.edit();
 						try{
 							String orientation = "vertical";
 							if (checkedId == R.id.radioHorizontal) orientation = "horizontal";
 							else if  (checkedId == R.id.radioAutoOrientation) orientation = "auto";
-							Log.e("Selected", "New radio item orientation: " + orientation);
 							editor.putString(getResources().getString(R.string.screenOrientation), orientation);
 						} catch (Exception e){
 							
@@ -279,8 +279,6 @@ public class SettingsScreen extends Activity{
 	public void onResume()
 	{
 		super.onResume();
-		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
-		
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);
 		this.chckWhiteBackground.setChecked((backgroundColor==Color.WHITE)?true:false);		
 		changeBackgroundColor(backgroundColor);

@@ -11,10 +11,14 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class FileChooser extends ListActivity {
 	
     private File currentDir;
@@ -28,7 +32,6 @@ public class FileChooser extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentDir = new File(Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.application_folder));
-        Log.e("currentDir",currentDir.getAbsolutePath()+"=="+currentDir.getName());
         this.selectedFileType = getIntent().getIntExtra(getResources().getString(R.string.fileNameRequestType), -1);
         if (this.selectedFileType==getResources().getInteger(R.integer.chooseFormFile)){
         	this.selectedFile = getResources().getString(R.string.formFileName);
@@ -37,42 +40,39 @@ public class FileChooser extends ListActivity {
         	this.selectedFile = getResources().getString(R.string.databaseFileName);
         	this.fileChosen = getResources().getInteger(R.integer.databaseFileChosen);
         }
-        Log.e("requestType",this.fileChosen+this.selectedFile+"=="+this.selectedFileType);
         fill(currentDir);
     }
     
     private void fill(File f)
     {
-    	File[]dirs = f.listFiles();
-		 this.setTitle("Current Dir: "+f.getName());
-		 List<Option>dir = new ArrayList<Option>();
-		 List<Option>fls = new ArrayList<Option>();
-		 try{
-			 for(File ff: dirs)
-			 {
+		File[]dirs = f.listFiles();
+		this.setTitle("Dir: "+f.getName());
+		List<Option>dir = new ArrayList<Option>();
+		List<Option>fls = new ArrayList<Option>();
+		try{
+			for(File ff: dirs)
+			{
 				if(ff.isDirectory())
 					dir.add(new Option(ff.getName(),"Folder",ff.getAbsolutePath()));
-				else
-				{
+				else {
 					fls.add(new Option(ff.getName(),"File Size: "+ff.length(),ff.getAbsolutePath()));
 				}
-			 }
-		 }catch(Exception e)
-		 {
+			}
+		} catch (Exception e)
+		{
 			 
-		 }
-		 Collections.sort(dir);
-		 Collections.sort(fls);
-		 dir.addAll(fls);
-		 if(!f.getName().equalsIgnoreCase("sdcard"))
-			 dir.add(0,new Option("..","Parent Directory",f.getParent()));
-		 adapter = new FileArrayAdapter(FileChooser.this,R.layout.file_view,dir);
-		 this.setListAdapter(adapter);
-    }
+		}
+		Collections.sort(dir);
+		Collections.sort(fls);
+		dir.addAll(fls);
+		if(!f.getName().equalsIgnoreCase("sdcard"))
+			dir.add(0,new Option("..","Parent Directory",f.getParent()));
+		adapter = new FileArrayAdapter(FileChooser.this,R.layout.file_view,dir);
+		this.setListAdapter(adapter);
+	}
     
     @Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
 		Option o = adapter.getItem(position);
 		if(o.getData().equalsIgnoreCase("folder")||o.getData().equalsIgnoreCase("parent directory")){
@@ -87,9 +87,7 @@ public class FileChooser extends ListActivity {
     
     private void onFileClick(Option o)
     {
-    	Log.e("File Clicked: "+o.getName(), "================"+o.getPath()+"\nDATA"+o.getData());
-		Intent resultHolder = new Intent();	
-		Log.e("selectedFile=="+this.selectedFile, "path=="+o.getPath());
+		Intent resultHolder = new Intent();
 		resultHolder.putExtra(this.selectedFile, o.getPath());		
 		setResult(this.fileChosen,resultHolder);
 		FileChooser.this.finish();	

@@ -4,6 +4,11 @@ import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class SwipeDetector extends SimpleOnGestureListener {
 	private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;

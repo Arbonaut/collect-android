@@ -25,7 +25,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.QwertyKeyListener;
 import android.text.method.TextKeyListener;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,14 +38,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class SearchTaxonActivity extends Activity {
 
 	private String content;
 	private String criteria;
 	private String path;
 	private int taxonFieldId;
-	//private int currentInstanceNo;
-	//private TaxonManager taxonManager;
 	private String taxonomyName;
 	private int backgroundColor;
 	//UI elements
@@ -63,7 +65,6 @@ public class SearchTaxonActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    getWindow().requestFeature(Window.FEATURE_OPTIONS_PANEL);
-	    Log.i(getResources().getString(R.string.app_name), "SearchTaxon activity started");
 	    Bundle extras = getIntent().getExtras(); 
 	    setContentView(R.layout.searchtaxon);
 		//Add UI
@@ -80,26 +81,16 @@ public class SearchTaxonActivity extends Activity {
 	    	this.criteria = extras.getString("criteria");  
 	    	this.taxonFieldId = extras.getInt("taxonId");
 	    	this.path = extras.getString("path");
-	    	String[] splittedPath = path.split(getResources().getString(R.string.valuesSeparator2));
+	    	//String[] splittedPath = path.split(getResources().getString(R.string.valuesSeparator2));
 	    	//this.currentInstanceNo = Integer.valueOf(splittedPath[splittedPath.length-1].split(getResources().getString(R.string.valuesSeparator1))[1]);
 	    	this.taxonomyName = extras.getString("taxonomyName");
-	    	//Set up species manager
-			/*this.taxonManager = new TaxonManager();
-			this.taxonManager.setTaxonomyDao(new TaxonomyDao());
-			this.taxonManager.setTaxonDao(new TaxonDao());
-			this.taxonManager.setTaxonVernacularNameDao(new TaxonVernacularNameDao());
-			this.taxonManager.setSurveyId(ApplicationManager.getSurvey().getId());*/
 	    }
 	}
 	
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(getResources().getString(R.string.app_name), "SearchTaxon activity onResume");
-        // The activity has become visible (it is now "resumed").
-    	Log.i(getResources().getString(R.string.app_name), "Content is: " + this.content);
-    	Log.i(getResources().getString(R.string.app_name), "Criteria is: " + this.criteria);
-    	// Set background color
+
 		this.backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
 		changeBackgroundColor(this.backgroundColor);
 		
@@ -109,10 +100,6 @@ public class SearchTaxonActivity extends Activity {
         this.txtSearch.addTextChangedListener(new TextWatcher(){
         	private Timer timer=new Timer();
 	        public void afterTextChanged(Editable s) {
-				/*if ((s.length()>2)&&(s.length()>=searchStringLength)){
-					doSearch(s.toString(), taxonFieldId);
-				}*/
-	        	Log.e("text changed to","=="+s.toString());
 				final String text = s.toString();
 				timer.cancel();
                 timer = new Timer();
@@ -122,13 +109,11 @@ public class SearchTaxonActivity extends Activity {
                     	
                     	runOnUiThread(new Runnable(){
                     	    public void run() {
-                    	    	Log.e("run","do search started"+System.currentTimeMillis());
                     	    	if ((text.length()>2)&&(text.length()>=searchStringLength)){
                 					doSearch(text, taxonFieldId);
                 				}
                     	    }
                     	 });
-                        // you will probably need to use runOnUiThread(Runnable action) for some specific actions
                     }
 
                 }, 1000);
@@ -153,11 +138,9 @@ public class SearchTaxonActivity extends Activity {
 				    	}
 				    	// Switch on or off Software keyboard depend of settings
 				    	if(valueForText){
-				    		Log.i(getResources().getString(R.string.app_name), "From ClickListener: Setting search field is: " + valueForText);
 				    		txtSearch.setKeyListener(new QwertyKeyListener(TextKeyListener.Capitalize.NONE, false));
 				        }
 				    	else {
-				    		Log.i(getResources().getString(R.string.app_name), "From ClickListener: Setting search field is: " + valueForText);
 				    		txtSearch.setInputType(InputType.TYPE_NULL);
 				    	}
 		    	}
@@ -176,11 +159,9 @@ public class SearchTaxonActivity extends Activity {
 		    	}
 		    	// Switch on or off Software keyboard depend of settings
 		    	if(valueForText){
-		    		Log.i(getResources().getString(R.string.app_name), "From ClickListener: Setting search field is: " + valueForText);
 		    		txtSearch.setKeyListener(new QwertyKeyListener(TextKeyListener.Capitalize.NONE, false));
 		        }
 		    	else {
-		    		Log.i(getResources().getString(R.string.app_name), "From ClickListener: Setting search field is: " + valueForText);
 		    		txtSearch.setInputType(InputType.TYPE_NULL);
 		    	}
 			}			
@@ -191,18 +172,14 @@ public class SearchTaxonActivity extends Activity {
 		this.btnSearch.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				Log.i(getResources().getString(R.string.app_name), "Search started");
 				doSearch(txtSearch.getText().toString(), taxonFieldId);
 				
 			}});
-//		this.doSearch(this.txtSearch.getText().toString(), this.taxonFieldId);	
     }
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-	    	Log.i(getResources().getString(R.string.app_name), "Button BACK pressed from SearchTaxon activity");
-		    //Finish activity  
 	    	ApplicationManager.isBackFromTaxonSearch = true;
 		    finish();  	
 	    }
@@ -244,25 +221,17 @@ public class SearchTaxonActivity extends Activity {
         	//jdbcDao.getConnection();	
         	//Search results
         	this.lstTaxonOccurence = new ArrayList<TaxonOccurrence>();
-        	if(ServiceFactory.getTaxonManager() != null){
-        		Log.i(getResources().getString(R.string.app_name), "Search by: " + SearchTaxonActivity.this.criteria);        		    		
+        	if(ServiceFactory.getTaxonManager() != null){        		    		
         		if(SearchTaxonActivity.this.criteria.equalsIgnoreCase("Code")){
-    				Log.i(getResources().getString(R.string.app_name), "Search by Code");
     				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByCode(SearchTaxonActivity.this.taxonomyName, strSearch, 1000);			
     			}
     			else if (SearchTaxonActivity.this.criteria.equalsIgnoreCase("SciName")){
-    				Log.i(getResources().getString(R.string.app_name), "Search by Scientific name");
     				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByScientificName(SearchTaxonActivity.this.taxonomyName, strSearch, 1000);		
     			}
     			else if (SearchTaxonActivity.this.criteria.equalsIgnoreCase("VernacularName")){
-    				Log.i(getResources().getString(R.string.app_name), "Search by VernacularName");
     				lstTaxonOccurence = ServiceFactory.getTaxonManager().findByVernacularName(SearchTaxonActivity.this.taxonomyName, strSearch, 1000);
-    			} else{
-    				Log.i(getResources().getString(R.string.app_name), "Undefined criteria is: " + SearchTaxonActivity.this.criteria);
     			}
-    		}else{
-    			Log.i(getResources().getString(R.string.app_name), "Species Manager is NULL!");
-    		}   	
+    		}	
     	    	
         	//Close connection
 //        	JdbcDaoSupport.close();
@@ -280,7 +249,6 @@ public class SearchTaxonActivity extends Activity {
         };
         
         private void populateResultList(List<TaxonOccurrence> lstTaxonOccurence, final int parentTaxonFieldId){
-        	Log.i("SearchTaxonActivity", "Size of result list is: " + lstTaxonOccurence.size());
         	String[] arrResults = new String[lstTaxonOccurence.size()];
         	int idx = 0;
     		for (TaxonOccurrence taxonOcc : lstTaxonOccurence) {
@@ -309,18 +277,11 @@ public class SearchTaxonActivity extends Activity {
     				strItem = strItem.replaceAll("\n", ";");
     				strItem = strItem.replaceAll(";", " ;");
     				String[] arrItemValues = strItem.split(";");
-    				for(int i=0; i<arrItemValues.length;i++){
-    					Log.i(getResources().getString(R.string.app_name), "i = " + i + "; Value is: " + arrItemValues[i]);
-    				}
     				// Set textboxes in TaxonField by given values
     				TaxonField parentTaxonField = (TaxonField)ApplicationManager.getUIElement(parentTaxonFieldId);
     				try{
     					if(parentTaxonField != null){
-    						Log.e("taxonField","SearchTaxonActivity");
         					parentTaxonField.setValue(/*SearchTaxonActivity.this.currentInstanceNo*/0, arrItemValues[0].trim(), arrItemValues[1].trim(), arrItemValues[2].trim(), arrItemValues[3].trim(), arrItemValues[4].trim(), SearchTaxonActivity.this.path,false);
-        				}
-        				else{
-        					Log.i(getResources().getString(R.string.app_name), "Parent taxon field is: NULL");
         				}
     				} catch (LanguageCodeNotSupportedException e){
     					e.printStackTrace();

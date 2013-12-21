@@ -5,8 +5,12 @@ import org.openforis.collect.android.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class WelcomeScreen extends Activity {
 
 	private static final String TAG = "WelcomeScreen";
@@ -14,7 +18,6 @@ public class WelcomeScreen extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
 		setContentView(R.layout.welcomescreen);
 		welcomeThread.start();
 	}
@@ -24,7 +27,6 @@ public class WelcomeScreen extends Activity {
 		public void run() {
 			try {
 				super.run();
-				Log.i(getResources().getString(R.string.app_name),TAG+":run");
 				Thread.sleep(getIntent().getIntExtra(getResources().getString(R.string.sleepTime), 5000));
 			} catch (Exception e) {
 				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",

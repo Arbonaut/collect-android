@@ -6,11 +6,11 @@ import org.openforis.collect.android.R;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 
 /**
  * 
  * @author S. Ricci
+ * @author K. Waga
  *
  */
 public class Configuration {
@@ -37,7 +37,6 @@ public class Configuration {
 		String filesDir = ctx.getFilesDir().getAbsolutePath();
 		String rootPath = filesDir.substring(0, filesDir.length() - FILES_FOLDER_NAME.length());
 		String path = rootPath + DATABASES_FOLDER_NAME;
-		//Log.e("database path","=="+path);
 		return path;
 	}
 	
@@ -71,7 +70,5 @@ public class Configuration {
 	
 	public void setDbConnectionUrl(String dbConnectionUrl) {
 		this.dbConnectionUrl = dbConnectionUrl;
-	}
-	
+	}	
 }
-

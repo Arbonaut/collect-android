@@ -83,6 +83,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class FormScreen extends BaseActivity implements OnClickListener {
 	
 	private static final String TAG = "FormScreen";
@@ -921,7 +926,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    				String langVariant = "";
 	    				if (!nodeDef.isMultiple()){
 	    					Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
-	    					Log.e("taxonField",FormScreen.this.parentEntitySingleAttribute.getName()+FormScreen.this.parentEntitySingleAttribute.getIndex()+"foundNode==null"+(foundNode==null));
 		    				if (foundNode!=null){
 		    					TaxonOccurrence taxonValue = (TaxonOccurrence)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 		    					if (taxonValue!=null){

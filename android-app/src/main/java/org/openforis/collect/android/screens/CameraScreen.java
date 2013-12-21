@@ -10,6 +10,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class CameraScreen extends Activity
 {
 	private String photoPath;

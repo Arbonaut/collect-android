@@ -29,7 +29,6 @@ public class TimeSetDialog extends FragmentActivity {
 		private String pathToParentScreen;
 		public TimePickerFragment(TimeField time_field, String path){
 		    activity_edittext = time_field;
-//		    Log.i(getResources().getString(R.string.app_name), "Id of activity_edittext in constructor is: " + activity_edittext.getElementId());
 		    pathToParentScreen = path;
 		}
 		
@@ -47,7 +46,6 @@ public class TimeSetDialog extends FragmentActivity {
 			this.timePicker.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int which) {
 			       if (which == DialogInterface.BUTTON_NEGATIVE) {
-			          //Finish activity
 			    	  finish();
 			       }
 			    }
@@ -58,7 +56,6 @@ public class TimeSetDialog extends FragmentActivity {
 				public boolean onKey( DialogInterface dialog , int keyCode , KeyEvent event ){
 					// disable search button action
 					if (keyCode == KeyEvent.KEYCODE_BACK){
-					    //Finish activity
 					    finish();						
 						return true;
 					}
@@ -75,7 +72,6 @@ public class TimeSetDialog extends FragmentActivity {
 			String strTime = pad(hourOfDay) + ":" + pad(minute);
 			Log.e("onTimeSet","=="+strTime);
 			activity_edittext.setValue(0, strTime, this.pathToParentScreen, false);
-			//Finish activity
 		    finish();
 		}
 		
@@ -86,19 +82,8 @@ public class TimeSetDialog extends FragmentActivity {
 		    else
 		        return "0" + String.valueOf(c);
 		}
-		
-//		public boolean onKeyDown(int keyCode, KeyEvent event) {
-//			Log.i(getResources().getString(R.string.app_name), "Some key pressed from TimeSettingsDialog");
-//			if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-//		    	Log.i(getResources().getString(R.string.app_name), "Button BACK pressed from TimeSettingsDialog");
-//			    //Finish activity
-//			    finish();	    	
-//		    }
-//		    return true;
-//		}		
 	}
 	
-	//Main class
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -123,7 +108,6 @@ public class TimeSetDialog extends FragmentActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-		    //Finish activity
 		    finish();	    	
 	    }
 	    return super.onKeyDown(keyCode, event);

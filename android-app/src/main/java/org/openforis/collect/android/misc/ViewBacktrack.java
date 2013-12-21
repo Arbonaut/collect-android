@@ -2,6 +2,11 @@ package org.openforis.collect.android.misc;
 
 import android.view.View;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class ViewBacktrack {
 	private View v;
 	private String formScreenId;

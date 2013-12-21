@@ -5,6 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class FileSaver {
 	
 	private File file;

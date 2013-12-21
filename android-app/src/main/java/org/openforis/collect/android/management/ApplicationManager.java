@@ -265,7 +265,6 @@ public class ApplicationManager extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {    	
 	    super.onActivityResult(requestCode, resultCode, data);
 	    try{
-	    	Log.e("request="+requestCode,"result="+resultCode+"===========================");
 	 	    if (requestCode==getResources().getInteger(R.integer.clusterSelection)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.clusterChoiceSuccessful)){//record was selected	 	    		
 	 	    		
@@ -284,7 +283,7 @@ public class ApplicationManager extends BaseActivity {
 	    				rootEntity.setId(ApplicationManager.currRootEntityId);
 	 	    		}
 	 	    		showFormRootScreen();
-    	            DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
+    	            //DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
     	            ApplicationManager.pd.dismiss();    	            
 	 	    	} else if (resultCode==getResources().getInteger(R.integer.backButtonPressed)){
 	 	    		if (ApplicationManager.getSurvey().getSchema().getRootEntityDefinitions().size()==1){
@@ -399,10 +398,8 @@ public class ApplicationManager extends BaseActivity {
     	        	
         			long startTimeParsing = System.currentTimeMillis();
      	           	
-        			String sdcardPath = Environment.getExternalStorageDirectory().toString();
-        			Log.e("params[0]","=="+params[0]);
+        			//String sdcardPath = Environment.getExternalStorageDirectory().toString();
     	        	String selectedFormDefinitionFile = params[0];//ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
-    	        	Log.e("loadingForm","=FROM=="+selectedFormDefinitionFile);
  
     	        	SurveyManager surveyManager = ServiceFactory.getSurveyManager();
     	        	File idmlFile = new File(selectedFormDefinitionFile);

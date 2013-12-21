@@ -137,7 +137,6 @@ public abstract class DatabaseHelper {
 
 	
 	public static void copyDataBase(String pathToFileOnSdcard) throws IOException{
-		//Open your local db as the input stream
 		InputStream myInput;
 		if (pathToFileOnSdcard!=null){
 			myInput = new FileInputStream(pathToFileOnSdcard);
@@ -145,34 +144,24 @@ public abstract class DatabaseHelper {
 			myInput = contex.getAssets().open(DB_NAME);
 		}
 		
-		// Path to the just created empty db
-		String outFileName = DB_PATH + DB_NAME;
-		
+		String outFileName = DB_PATH + DB_NAME;		
 		File file = new File(outFileName);
-		//if(!file.exists()){
-			String dirPath = DB_PATH;
-			File projDir = new File(dirPath);
-			if (!projDir.exists()){
-				projDir.mkdirs();
-			}
-			    
-			//Open the empty db as the output stream
-			if (!file.exists())
-				file.createNewFile();
-			OutputStream myOutput = new FileOutputStream(outFileName);
-			
-			//transfer bytes from the inputfile to the outputfile
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = myInput.read(buffer))>0){
-				myOutput.write(buffer, 0, length);
-			}
-			
-			//Close the streams
-			myOutput.flush();
-			myOutput.close();
-		//}
-		 
+		String dirPath = DB_PATH;
+		File projDir = new File(dirPath);
+		if (!projDir.exists()){
+			projDir.mkdirs();
+		}
+
+		if (!file.exists())
+			file.createNewFile();
+		OutputStream myOutput = new FileOutputStream(outFileName);		
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = myInput.read(buffer))>0){
+			myOutput.write(buffer, 0, length);
+		}
+		myOutput.flush();
+		myOutput.close(); 
 
 		myInput.close();
 		 
@@ -182,18 +171,14 @@ public abstract class DatabaseHelper {
 		String dbFileName = DB_PATH + DB_NAME;		
 		File file = new File(dbFileName);
 		if(file.exists()){
-			InputStream databaseFileStream = new FileInputStream(dbFileName);
-			
+			InputStream databaseFileStream = new FileInputStream(dbFileName);			
 			OutputStream destinationFileStream = new FileOutputStream(pathToDestinationFolderOnSdcard+destFileName);
 			
-			//transfer bytes from the inputfile to the outputfile
 			byte[] buffer = new byte[1024];
 			int length;
 			while ((length = databaseFileStream.read(buffer))>0){
 				destinationFileStream.write(buffer, 0, length);
 			}
-			
-			//Close the streams
 			destinationFileStream.flush();
 			destinationFileStream.close();
 			databaseFileStream.close();

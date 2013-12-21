@@ -48,6 +48,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class EntityInstancesScreen extends BaseActivity implements OnClickListener {
 	
 	private static final String TAG = "EntityInstancesScreen";

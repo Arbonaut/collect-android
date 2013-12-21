@@ -6,6 +6,11 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.widget.EditText;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class InputMessage{
 	
 	public static AlertDialog createInputDialog(Context ctx, boolean isCancelable, Drawable icon,

@@ -4,6 +4,11 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class ToastMessage {
 	
 	public static void displayToastMessage(Context ctx, String message, int time){

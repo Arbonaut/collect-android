@@ -5,16 +5,20 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class ScrollViewSwipeDetector implements View.OnTouchListener {
 
- private Activity activity;
- static final int MIN_DISTANCE = 100;
- private float downX, downY, upX, upY;
+	private Activity activity;
+	static final int MIN_DISTANCE = 100;
+	private float downX, downY, upX, upY;
 
- public ScrollViewSwipeDetector(final Activity activity) { 
-	 Log.e("hkjhjkhjkhk","=========================");
-  this.activity = activity;
- }
+	public ScrollViewSwipeDetector(final Activity activity) {
+		this.activity = activity;
+	}
 
  public final void onRightToLeftSwipe() {
   Log.i("RightToLeftSwipe!","RightToLeftSwipe!");

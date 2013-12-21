@@ -6,6 +6,11 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class AlertMessage{
 
 	public static AlertDialog createPositiveDialog(Context ctx, boolean isCancelable, Drawable icon,
