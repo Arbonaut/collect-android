@@ -222,6 +222,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				SummaryList summaryListView = new SummaryList(EntityInstancesScreen.this, entityDef, 45, EntityInstancesScreen.this,e);
 				summaryListView.setOnClickListener(EntityInstancesScreen.this);
 				summaryListView.setId(nodeDef.getId());
+				//summaryListView.setId(e);
 				EntityInstancesScreen.this.ll.addView(summaryListView);
 				EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(EntityInstancesScreen.this));
 				registerForContextMenu(summaryListView);
@@ -328,6 +329,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}
 			
 		}*/
+		Log.e("EntityInstancesScreen","clickedViewClaass=="+arg0.getClass());
 		if (arg0 instanceof Button){			
 			Button btn = (Button)arg0;
 			//Log.e("ADDING",btn.getId()+"ENTITY"+getResources().getInteger(R.integer.addButtonMultipleEntity));
@@ -342,16 +344,18 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				SummaryList temp = (SummaryList)parentView;
 				ViewBacktrack viewBacktrack = new ViewBacktrack(temp,EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
 				ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
-				//Log.e("clickedON",temp.getInstanceNo()+"=="+EntityInstancesScreen.this.getFormScreenId(temp.getInstanceNo()));
-				//ApplicationManager.isToBeScrolled = false;				
 				this.startActivity(this.prepareIntentForNewScreen(temp));
 			}	
+		} else if (arg0 instanceof SummaryList){
+			SummaryList tempList = (SummaryList)arg0;
+			ViewBacktrack viewBacktrack = new ViewBacktrack(tempList,EntityInstancesScreen.this.getFormScreenId(tempList.getInstanceNo()));
+			ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);				
+			this.startActivity(this.prepareIntentForNewScreen(tempList));
 		}
 	}
 	
 	private void addNewEntity(){
 		NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+0, -1)).getParentDefinition();
-		//Log.e("nodeDefEntityInstancesScreen",nodeDef.isMultiple()+"=="+nodeDef.getName());
 		if (!nodeDef.isMultiple()){	
 			AlertMessage.createPositiveNegativeDialog(EntityInstancesScreen.this, true, null,
 					getResources().getString(R.string.addNewEntityTitle), 
