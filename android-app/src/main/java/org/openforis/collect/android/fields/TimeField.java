@@ -24,6 +24,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class TimeField extends InputField implements TextWatcher {
 	
 	public TimeField(Context context, NodeDefinition nodeDef) {

@@ -35,8 +35,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-//import android.util.Log;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class TaxonField extends InputField {
 	
 	private TextView codeLabel;

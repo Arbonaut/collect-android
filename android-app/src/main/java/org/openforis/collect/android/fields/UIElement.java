@@ -15,6 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class UIElement extends TableLayout{
 	
 	protected LinearLayout container;

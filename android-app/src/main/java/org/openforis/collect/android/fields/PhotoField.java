@@ -15,6 +15,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class PhotoField extends FileField implements OnClickListener{
 	
 	ImageView image;

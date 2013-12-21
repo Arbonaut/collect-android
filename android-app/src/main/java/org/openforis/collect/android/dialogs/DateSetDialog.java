@@ -20,6 +20,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class DateSetDialog extends FragmentActivity {
 	private String path;
 	//Subclass which creates DatePicker

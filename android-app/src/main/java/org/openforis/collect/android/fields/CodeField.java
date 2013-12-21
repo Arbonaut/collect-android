@@ -30,7 +30,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class CodeField extends InputField {
 	
 	private ArrayAdapter<String> aa;

@@ -20,6 +20,11 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class MemoField extends InputField {
 	
 	public MemoField(Context context, NodeDefinition nodeDef) {

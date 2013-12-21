@@ -31,6 +31,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class BooleanField extends Field {
 	
 	private TextView label1;

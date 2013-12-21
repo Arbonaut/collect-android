@@ -12,6 +12,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class EntityLink extends UIElement {
 	
 	//private TableLayout tableLayout;

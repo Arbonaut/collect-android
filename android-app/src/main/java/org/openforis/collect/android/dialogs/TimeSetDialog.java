@@ -20,6 +20,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TimePicker;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class TimeSetDialog extends FragmentActivity {
 	private String path;
 	public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {

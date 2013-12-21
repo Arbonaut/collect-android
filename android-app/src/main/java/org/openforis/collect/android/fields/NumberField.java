@@ -23,6 +23,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class NumberField extends InputField {
 	
 	private NumberAttributeDefinition numberNodeDef;

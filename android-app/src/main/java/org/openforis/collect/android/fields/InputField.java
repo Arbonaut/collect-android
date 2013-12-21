@@ -23,6 +23,11 @@ import android.text.method.KeyListener;
 import android.view.View;
 import android.widget.EditText;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class InputField extends Field implements TextWatcher {
 	
 	public EditText txtBox;

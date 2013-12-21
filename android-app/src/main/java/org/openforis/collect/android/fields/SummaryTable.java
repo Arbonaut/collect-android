@@ -47,6 +47,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class SummaryTable extends UIElement {
 	
 	private TableLayout tableLayout;

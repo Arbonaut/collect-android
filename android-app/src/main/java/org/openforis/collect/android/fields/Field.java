@@ -4,6 +4,11 @@ import org.openforis.idm.metamodel.NodeDefinition;
 
 import android.content.Context;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public abstract class Field extends UIElement {
 	
 	public boolean isMultiple;
