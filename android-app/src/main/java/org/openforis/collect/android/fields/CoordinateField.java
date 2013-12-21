@@ -23,7 +23,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.text.method.KeyListener;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -35,6 +34,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class CoordinateField extends InputField implements OnClickListener {
 	
 	private EditText txtLatitude;
@@ -79,19 +83,13 @@ public class CoordinateField extends InputField implements OnClickListener {
 	    });
 		
 		this.txtLongitude = new EditText(context);
-		//this.txtLongitude.setLayoutParams(new LayoutParams(0,ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-		//this.txtLongitude.setText(initialTextLon);
-		//this.txtLongitude.setHint("LONGITUDEx");
 		this.txtLongitude.addTextChangedListener(this);
-		//this.addView(txtLongitude);
 		
 		this.txtLongitude.setOnFocusChangeListener(new OnFocusChangeListener(){
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 		    	//Get current settings about software keyboard for numeric fields
 		    	if(hasFocus){
-			    	//Map<String, ?> settings = ApplicationManager.appPreferences.getAll();
-			    	//Boolean valueForNum = (Boolean)settings.get(getResources().getString(R.string.showSoftKeyboardOnNumericField));
 			    	boolean valueForNum = ApplicationManager.appPreferences.getBoolean(getResources().getString(R.string.showSoftKeyboardOnNumericField), false);
 			    	//Switch on or off Software keyboard depend of settings
 			    	if(valueForNum){	
@@ -99,26 +97,19 @@ public class CoordinateField extends InputField implements OnClickListener {
 			        }
 			    	else {
 			    		txtLongitude.setInputType(InputType.TYPE_NULL);
-//			    		CoordinateField.this.setKeyboardType(null);
 			    	}
 		    	}	    	
 			}
 		});
 
 		this.txtLatitude = new EditText(context);
-		//this.txtLatitude.setLayoutParams(new LayoutParams(0,ViewGroup.LayoutParams.WRAP_CONTENT,3f));
-		//this.txtLatitude.setText(initialTextLat);
-		//this.txtLatitude.setHint("LATITUDEy");
 		this.txtLatitude.addTextChangedListener(this);
-		//this.addView(txtLatitude);
 
 		this.txtLatitude.setOnFocusChangeListener(new OnFocusChangeListener(){
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {					    	
 		    	//Get current settings about software keyboard for numeric fields
 		    	if(hasFocus){
-			    	//Map<String, ?> settings = ApplicationManager.appPreferences.getAll();
-			    	//Boolean valueForNum = (Boolean)settings.get(getResources().getString(R.string.showSoftKeyboardOnNumericField));
 		    		boolean valueForNum = false;				   
 			    	if (ApplicationManager.appPreferences!=null){
 			    		valueForNum = ApplicationManager.appPreferences.getBoolean(getResources().getString(R.string.showSoftKeyboardOnNumericField), false);
@@ -129,7 +120,6 @@ public class CoordinateField extends InputField implements OnClickListener {
 			        }
 			    	else {
 			    		txtLatitude.setInputType(InputType.TYPE_NULL);
-//			    		CoordinateField.this.setKeyboardType(null);
 			    	}
 		    	}		    	
 			}
@@ -169,7 +159,6 @@ public class CoordinateField extends InputField implements OnClickListener {
 							} else {//deleting characters
 								//do nothing - number with deleted digit is still a number
 							}
-							Log.e("CoordinateField",start+"=="+count+"=="+strReplace);
 							CoordinateField.this.txtLongitude.setText(strReplace);
 							CoordinateField.this.txtLongitude.setSelection(start);
 						}
@@ -200,7 +189,6 @@ public class CoordinateField extends InputField implements OnClickListener {
 			this.aa = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, this.options);
 			this.aa.setDropDownViewResource(R.layout.codelistitem);
 			this.spinner.setAdapter(aa);
-			//this.spinner.setLayoutParams(new LayoutParams(0,ViewGroup.LayoutParams.WRAP_CONTENT,(float) 3));
 			this.spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			    @Override
 			    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -264,38 +252,26 @@ public class CoordinateField extends InputField implements OnClickListener {
 		Entity parentEntity = this.findParentEntity(path);
 
 		if (node!=null){
-//			CoordinateAttribute coordAtr = (CoordinateAttribute)node;
-			//Log.e("Coordinate field with Id: ",node.getDefinition().getId() + " is updating. Node name is: " + node.getName() + " Node ID is: " + node.getInternalId());
-			if ((lat.equals("")&&lon.equals(""))){
-//				coordAtr.setValue(new Coordinate(null, null, null));	
+			if ((lat.equals("")&&lon.equals(""))){	
 				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((CoordinateAttribute)node, new Coordinate(null, null, srsId));
 			} else if (lat.equals("")){
-//				coordAtr.setValue(new Coordinate(Double.valueOf(lon), null, null));
 				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((CoordinateAttribute)node, new Coordinate(Double.valueOf(lon), null, srsId));
 			} else if (lon.equals("")){
-//				coordAtr.setValue(new Coordinate(null, Double.valueOf(lat), null));
 				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((CoordinateAttribute)node, new Coordinate(null,  Double.valueOf(lat), srsId));
 			} else {
-//				coordAtr.setValue(new Coordinate(Double.valueOf(lon), Double.valueOf(lat), null));
 				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((CoordinateAttribute)node, new Coordinate(Double.valueOf(lon),  Double.valueOf(lat), srsId));
 			}
 		} else {
-			//Log.e("Coordinate field","is adding attribute.");
 			if ((lat.equals("")&&lon.equals(""))){
-//				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Coordinate(null, null, null), position);
 				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Coordinate(null, null, srsId), null, null);
 			} else if (lat.equals("")){
-//				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Coordinate(Double.valueOf(lon), null, null), position);
 				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Coordinate(Double.valueOf(lon), null, srsId), null, null);
 			} else if (lon.equals("")){
-//				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Coordinate(null, Double.valueOf(lat), null), position);
 				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Coordinate(null, Double.valueOf(lat), srsId), null, null);
 			} else {
-//				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Coordinate(Double.valueOf(lon), Double.valueOf(lat), null), position);
 				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Coordinate(Double.valueOf(lon), Double.valueOf(lat), srsId), null, null);
 			}	
-		}		
-//		ApplicationManager.updateUIElementsWithValidationResults(nodeChangeSet);
+		}
 		validateField(nodeChangeSet);
 	}
 	
@@ -325,7 +301,7 @@ public class CoordinateField extends InputField implements OnClickListener {
 		
 	}
 	
-	//Check is given value a number
+	//Check if given value is a number
 	private Boolean isNumeric(String strValue){
 		Boolean result = false;
 		try{
@@ -339,7 +315,6 @@ public class CoordinateField extends InputField implements OnClickListener {
 	
 	@Override
 	public void onClick(View arg0) {
-		Log.e("1CoordinateField.form.currentCoordinateField","=="+this.getLabelText());
 		CoordinateField.form.currentCoordinateField = this;
 		CoordinateField.form.startInternalGps(this);
 	}

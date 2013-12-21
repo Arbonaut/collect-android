@@ -14,7 +14,7 @@ import org.openforis.collect.android.lists.FormChoiceActivity;
 import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.lists.RootEntityChoiceActivity;
 import org.openforis.collect.android.messages.AlertMessage;
-import org.openforis.collect.android.misc.ItemsStorage;
+import org.openforis.collect.android.misc.CodeListItemsStorage;
 import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.screens.FormScreen;
@@ -84,7 +84,7 @@ public class ApplicationManager extends BaseActivity {
 	public static List<Activity> formScreenActivityList;
 	public static Activity formSelectionActivity;
 	
-	public static List<ItemsStorage> storedItemsList;
+	public static List<CodeListItemsStorage> storedItemsList;
 	
 	public static boolean addNewEntity;
 	
@@ -117,7 +117,7 @@ public class ApplicationManager extends BaseActivity {
 	            ApplicationManager.selectedViewsBacktrackList = new ArrayList<ViewBacktrack>();
 	            //ApplicationManager.isToBeScrolled = false;
 	            
-	            ApplicationManager.storedItemsList = new ArrayList<ItemsStorage>();	            	
+	            ApplicationManager.storedItemsList = new ArrayList<CodeListItemsStorage>();	            	
 				
 				//creating file structure used by the application
 	        	String sdcardPath = Environment.getExternalStorageDirectory().toString();
@@ -895,9 +895,9 @@ public class ApplicationManager extends BaseActivity {
 //		return alertDialog;
 //	}
 
-	public static ItemsStorage getStoredItems(Integer definitionId, Integer selectedPosition){
-		ItemsStorage foundItemsStorage = null;
-		for (ItemsStorage storage : ApplicationManager.storedItemsList){
+	public static CodeListItemsStorage getStoredItems(Integer definitionId, Integer selectedPosition){
+		CodeListItemsStorage foundItemsStorage = null;
+		for (CodeListItemsStorage storage : ApplicationManager.storedItemsList){
 			if (storage.definitionId.equals(definitionId)){
 				if (storage.selectedPositionInParent.equals(selectedPosition)){
 					foundItemsStorage = storage;

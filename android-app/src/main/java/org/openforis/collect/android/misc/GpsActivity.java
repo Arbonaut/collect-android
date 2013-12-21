@@ -195,7 +195,7 @@ public class GpsActivity extends Activity {
 		int zone = (int) (31 + (lngdeg/6)); // Calculating UTM zone using Longetude in dd.dd form as supplied by the GPS
 		double pi = 6* zone -183; // Central meridian of zone
 		double pii = (lngdeg-pi)*Math.PI/180; //Differance between Longitude and central meridian of zone
-		double rho = a * (1-e*e)/ Math.pow((1-(e*e) * (Math.sin(lat)*( Math.sin(lat)))), (3/2)); // The radius of the curvature of the earth in meridian plane
+		//double rho = a * (1-e*e)/ Math.pow((1-(e*e) * (Math.sin(lat)*( Math.sin(lat)))), (3/2)); // The radius of the curvature of the earth in meridian plane
 		double nu = a/(Math.pow((1-(e*e *(Math.sin(lat))*(Math.sin(lat)))), (1/2))); //The radius of the curvature of the earth perpendicular to the meridian plane
 		
 		//* A0 - E0 is used for calclulating the Meridinol arc through the given point (lat long) 

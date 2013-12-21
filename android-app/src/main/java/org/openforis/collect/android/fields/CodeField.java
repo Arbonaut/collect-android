@@ -7,7 +7,7 @@ import org.openforis.collect.android.R;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.MobileCodeListManager;
 import org.openforis.collect.android.messages.ToastMessage;
-import org.openforis.collect.android.misc.ItemsStorage;
+import org.openforis.collect.android.misc.CodeListItemsStorage;
 import org.openforis.collect.android.screens.FormScreen;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.idm.metamodel.CodeAttributeDefinition;
@@ -100,7 +100,7 @@ public class CodeField extends InputField {
 				this.spinner = new Spinner(context);
 				this.spinner.setPrompt(this.label.getText());
 				
-				ItemsStorage foundItemsStorage = ApplicationManager.getStoredItems(this.nodeDefinition.getId(),0);			
+				CodeListItemsStorage foundItemsStorage = ApplicationManager.getStoredItems(this.nodeDefinition.getId(),0);			
 				List<CodeListItem> parentItems = null;
 				if (foundItemsStorage!=null){
 					parentItems = foundItemsStorage.items;
@@ -113,7 +113,7 @@ public class CodeField extends InputField {
 //					org.openforis.collect.android.management.CodeListManager codeListManager = new org.openforis.collect.android.management.CodeListManager();
 //					codeListManager.setCodeListItemDao(codeListItemDao);
 					parentItems = codeListManager.loadValidItems(this.parentEntity, this.codeAttrDef);
-					ItemsStorage storage = new ItemsStorage();
+					CodeListItemsStorage storage = new CodeListItemsStorage();
 					storage.setDefinitionId(this.codeAttrDef.getId());
 					storage.setItems(parentItems);
 					storage.addSelectedPositionInParent(0);
@@ -158,7 +158,7 @@ public class CodeField extends InputField {
 						int selectedPositionInParent = parentCodeField.spinner.getSelectedItemPosition();
 						if (selectedPositionInParent>0){
 							selectedPositionInParent--;
-							ItemsStorage foundItemsStorage = ApplicationManager.getStoredItems(this.codeAttrDef.getId(),selectedPositionInParent);			
+							CodeListItemsStorage foundItemsStorage = ApplicationManager.getStoredItems(this.codeAttrDef.getId(),selectedPositionInParent);			
 							List<CodeListItem> parentItems = null;
 							if (foundItemsStorage!=null){
 								parentItems = foundItemsStorage.items;
@@ -168,7 +168,7 @@ public class CodeField extends InputField {
 							} else {
 								MobileCodeListManager codeListManager = ServiceFactory.getCodeListManager();
 								parentItems = codeListManager.loadValidItems(this.parentEntity, this.codeAttrDef);
-								ItemsStorage storage = new ItemsStorage();
+								CodeListItemsStorage storage = new CodeListItemsStorage();
 								storage.setDefinitionId(this.codeAttrDef.getId());
 								storage.setItems(parentItems);
 								storage.addSelectedPositionInParent(selectedPositionInParent);
@@ -220,7 +220,7 @@ public class CodeField extends InputField {
 					this.spinner = new Spinner(context);
 					this.spinner.setPrompt(this.label.getText());
 					
-					ItemsStorage foundItemsStorage = ApplicationManager.getStoredItems(this.codeAttrDef.getId(),0);			
+					CodeListItemsStorage foundItemsStorage = ApplicationManager.getStoredItems(this.codeAttrDef.getId(),0);			
 					List<CodeListItem> parentItems = null;
 					if (foundItemsStorage!=null){
 						parentItems = foundItemsStorage.items;
@@ -230,7 +230,7 @@ public class CodeField extends InputField {
 					} else {
 						MobileCodeListManager codeListManager = ServiceFactory.getCodeListManager();
 						parentItems = codeListManager.loadValidItems(this.parentEntity, this.codeAttrDef);
-						ItemsStorage storage = new ItemsStorage();
+						CodeListItemsStorage storage = new CodeListItemsStorage();
 						storage.setDefinitionId(this.codeAttrDef.getId());
 						storage.setItems(parentItems);
 						storage.addSelectedPositionInParent(0);
@@ -370,7 +370,7 @@ public class CodeField extends InputField {
     			int selectedPositionInParent = spinner.getSelectedItemPosition();
 				if (selectedPositionInParent>0){
 					selectedPositionInParent--;
-					ItemsStorage foundItemsStorage = ApplicationManager.getStoredItems(currentChild.nodeDefinition.getId(),selectedPositionInParent);			
+					CodeListItemsStorage foundItemsStorage = ApplicationManager.getStoredItems(currentChild.nodeDefinition.getId(),selectedPositionInParent);			
 					List<CodeListItem> parentItems = null;
 					if (foundItemsStorage!=null){
 						parentItems = foundItemsStorage.items;
@@ -380,7 +380,7 @@ public class CodeField extends InputField {
 					} else {
 						MobileCodeListManager codeListManager = ServiceFactory.getCodeListManager();
 						parentItems = codeListManager.loadValidItems(currentChild.parentEntity, currentChild.codeAttrDef);
-						ItemsStorage storage = new ItemsStorage();
+						CodeListItemsStorage storage = new CodeListItemsStorage();
 						storage.setDefinitionId(currentChild.codeAttrDef.getId());
 						storage.setItems(parentItems);
 						storage.addSelectedPositionInParent(selectedPositionInParent);

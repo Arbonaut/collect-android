@@ -96,7 +96,7 @@ public class SearchTaxonActivity extends Activity {
 		
 		this.lblSearch.setText(getResources().getString(R.string.taxonSearchBy) + this.criteria);
 		this.txtSearch.setText(this.content);
-		this.txtSearch.setSelection(this.txtSearch.getText().length());
+		this.txtSearch.setHint(getResources().getString(R.string.taxonSearchByHint));
         this.txtSearch.addTextChangedListener(new TextWatcher(){
         	private Timer timer=new Timer();
 	        public void afterTextChanged(Editable s) {
@@ -128,10 +128,7 @@ public class SearchTaxonActivity extends Activity {
 		this.txtSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
 		    @Override
 		    public void onFocusChange(View v, boolean hasFocus) {
-		    	// Get current settings about software keyboard for text fields
 		    	if(hasFocus){
-				    	//Map<String, ?> settings = ApplicationManager.appPreferences.getAll();
-				    	//Boolean valueForText = (Boolean)settings.get(getResources().getString(R.string.showSoftKeyboardOnTextField));
 				    	boolean valueForText = false;				   
 				    	if (ApplicationManager.appPreferences!=null){
 				    		valueForText = ApplicationManager.appPreferences.getBoolean(getResources().getString(R.string.showSoftKeyboardOnTextField), false);
@@ -189,10 +186,7 @@ public class SearchTaxonActivity extends Activity {
     private void changeBackgroundColor(int backgroundColor){
 		getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
 		int color = (backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK;
-		//Set text color
 		this.lblSearch.setTextColor(color);
-		//this.txtSearch.setTextColor(color);
-		//this.btnSearch.setTextColor(color);
     }	
     
     private void doSearch(String strSearch, int parentTaxonFieldId){
