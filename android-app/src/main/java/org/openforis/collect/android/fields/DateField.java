@@ -18,7 +18,6 @@ import org.openforis.idm.model.Node;
 import android.content.Context;
 import android.content.Intent;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -33,7 +32,11 @@ public class DateField extends InputField {
 		this.label.setOnLongClickListener(new OnLongClickListener() {
 	        @Override
 	        public boolean onLongClick(View v) {
-	        	ToastMessage.displayToastMessage(DateField.this.getContext(), DateField.this.getLabelText(), Toast.LENGTH_LONG);
+	        	String descr = DateField.this.nodeDefinition.getDescription(ApplicationManager.selectedLanguage);
+	        	if (descr==null){
+	        		descr="";
+	        	}
+	        	ToastMessage.displayToastMessage(DateField.this.getContext(), DateField.this.getLabelText()+descr, Toast.LENGTH_LONG);
 	            return true;
 	        }
 	    });

@@ -74,7 +74,6 @@ public class DateSetDialog extends FragmentActivity {
 			Calendar cal = new GregorianCalendar(year, month, day);
 			//String strDate = DateFormat.getDateFormat(getActivity()).format(cal.getTime());
 			String strDate = (String) DateFormat.format("yyyy"+getResources().getString(R.string.dateSeparator)+"MM"+getResources().getString(R.string.dateSeparator)+"dd", cal);
-			Log.e("strDate","=="+strDate);
 //			String strDate = cal.get(Calendar.YEAR)+getResources().getString(R.string.dateSeparator)+(cal.get(Calendar.MONTH)+1)+getResources().getString(R.string.dateSeparator)+cal.get(Calendar.DAY_OF_MONTH);
 			//!!! BECAUSE IN FORM SCREEN FORMAT IS "mm-dd-yyy" 
 			//String strDate = cal.get(Calendar.YEAR) + getResources().getString(R.string.dateSeparator) + (cal.get(Calendar.MONTH)+1) + getResources().getString(R.string.dateSeparator)+cal.get(Calendar.DAY_OF_MONTH);

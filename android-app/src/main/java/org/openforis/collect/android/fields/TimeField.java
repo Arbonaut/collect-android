@@ -5,28 +5,20 @@ import java.util.Random;
 import org.openforis.collect.android.R;
 import org.openforis.collect.android.dialogs.TimeSetDialog;
 import org.openforis.collect.android.management.ApplicationManager;
-import org.openforis.collect.android.management.ValidationManager;
 import org.openforis.collect.android.messages.ToastMessage;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.model.NodeChangeSet;
 import org.openforis.idm.metamodel.NodeDefinition;
-import org.openforis.idm.metamodel.validation.ValidationResults;
-import org.openforis.idm.model.Date;
-import org.openforis.idm.model.DateAttribute;
 import org.openforis.idm.model.Entity;
-import org.openforis.idm.model.EntityBuilder;
 import org.openforis.idm.model.Node;
 import org.openforis.idm.model.Time;
 import org.openforis.idm.model.TimeAttribute;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -41,7 +33,11 @@ public class TimeField extends InputField implements TextWatcher {
 		this.label.setOnLongClickListener(new OnLongClickListener() {
 	        @Override
 	        public boolean onLongClick(View v) {
-	        	ToastMessage.displayToastMessage(TimeField.this.getContext(), TimeField.this.getLabelText(), Toast.LENGTH_LONG);
+	        	String descr = TimeField.this.nodeDefinition.getDescription(ApplicationManager.selectedLanguage);
+	        	if (descr==null){
+	        		descr="";
+	        	}
+	        	ToastMessage.displayToastMessage(TimeField.this.getContext(), TimeField.this.getLabelText()+descr, Toast.LENGTH_LONG);
 	            return true;
 	        }
 	    });

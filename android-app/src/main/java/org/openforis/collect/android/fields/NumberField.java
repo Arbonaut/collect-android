@@ -36,22 +36,20 @@ public class NumberField extends InputField {
 		this.label.setOnLongClickListener(new OnLongClickListener() {
 	        @Override
 	        public boolean onLongClick(View v) {
-	        	ToastMessage.displayToastMessage(NumberField.this.getContext(), NumberField.this.getLabelText(), Toast.LENGTH_LONG);
+	        	String descr = NumberField.this.nodeDefinition.getDescription(ApplicationManager.selectedLanguage);
+	        	if (descr==null){
+	        		descr="";
+	        	}
+	        	ToastMessage.displayToastMessage(NumberField.this.getContext(), NumberField.this.getLabelText()+descr, Toast.LENGTH_LONG);
 	            return true;
 	        }
 	    });
+		
 		this.txtBox = new EditText(context);
 		//this.setHint(hintText);
 		this.txtBox.setLayoutParams(new LayoutParams(0,ViewGroup.LayoutParams.WRAP_CONTENT,(float) 2));
 		this.numberNodeDef = (NumberAttributeDefinition)nodeDef;
 		this.type = numberNodeDef.getType().toString();
-		/*if (!this.numberNodeDef.isMultiple()){
-			this.parentEntity =  NumberField.this.form.parentEntitySingleAttribute;
-		}
-		else{
-			this.parentEntity =  NumberField.this.form.parentEntityMultipleAttribute;
-		}*/
-		
 		
 		this.addView(this.txtBox);	
 		

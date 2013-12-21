@@ -23,7 +23,6 @@ import org.openforis.idm.model.Node;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -50,7 +49,11 @@ public class BooleanField extends Field {
 		this.label.setOnLongClickListener(new OnLongClickListener() {
 	        @Override
 	        public boolean onLongClick(View v) {
-	        	ToastMessage.displayToastMessage(BooleanField.this.getContext(), BooleanField.this.getLabelText(), Toast.LENGTH_LONG);
+	        	String descr = BooleanField.this.nodeDefinition.getDescription(ApplicationManager.selectedLanguage);
+	        	if (descr==null){
+	        		descr="";
+	        	}
+	        	ToastMessage.displayToastMessage(BooleanField.this.getContext(), BooleanField.this.getLabelText()+descr, Toast.LENGTH_LONG);
 	            return true;
 	        }
 	    });

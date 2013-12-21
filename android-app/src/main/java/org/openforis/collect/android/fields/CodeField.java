@@ -21,7 +21,6 @@ import org.openforis.idm.model.Node;
 
 import android.content.Context;
 import android.text.Editable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -75,7 +74,11 @@ public class CodeField extends InputField {
 		this.label.setOnLongClickListener(new OnLongClickListener() {
 	        @Override
 	        public boolean onLongClick(View v) {
-	        	ToastMessage.displayToastMessage(CodeField.this.getContext(), CodeField.this.getLabelText(), Toast.LENGTH_LONG);
+	        	String descr = CodeField.this.nodeDefinition.getDescription(ApplicationManager.selectedLanguage);
+	        	if (descr==null){
+	        		descr="";
+	        	}
+	        	ToastMessage.displayToastMessage(CodeField.this.getContext(), CodeField.this.getLabelText()+descr, Toast.LENGTH_LONG);
 	            return true;
 	        }
 	    });

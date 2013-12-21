@@ -23,6 +23,7 @@ import org.openforis.collect.android.fields.UIElement;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;
+import org.openforis.collect.android.messages.ToastMessage;
 import org.openforis.collect.android.misc.GpsActivity;
 import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.misc.ViewBacktrack;
@@ -72,6 +73,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -259,6 +261,17 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    		
 	    		TextView screenTitle = new TextView(FormScreen.this);
 	    		screenTitle.setText(FormScreen.this.screenTitle);
+	    		screenTitle.setOnLongClickListener(new OnLongClickListener() {
+	    	        @Override
+	    	        public boolean onLongClick(View v) {
+	    	        	String descr = ApplicationManager.getNodeDefinition(FormScreen.this.idmlId).getDescription(ApplicationManager.selectedLanguage);
+	    	        	if (descr==null){
+	    	        		descr="";
+	    	        	}
+	    	        	ToastMessage.displayToastMessage(FormScreen.this.getApplicationContext(), FormScreen.this.screenTitle+descr, Toast.LENGTH_LONG);
+	    	            return true;
+	    	        }
+	    	    });
 				pixels = (int) (getResources().getInteger(R.integer.screenTitleFontSize) * ApplicationManager.dpiScale + 0.5f);
 	    		screenTitle.setTextSize(pixels/*getResources().getInteger(R.integer.screenTitleFontSize)*/);
 	    		//FormScreen.this.ll.addView(screenTitle);
@@ -1035,7 +1048,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    	    		if (FormScreen.this.getFormScreenId().equals(ApplicationManager.selectedViewsBacktrackList.get(ApplicationManager.selectedViewsBacktrackList.size()-1).getFormScreenId())
 	    	    				||
 	    	    			ApplicationManager.selectedViewsBacktrackList.get(ApplicationManager.selectedViewsBacktrackList.size()-1).getFormScreenId()==null){
-	    	    			Log.e("SCROLLTO",ApplicationManager.selectedViewsBacktrackList.size()+"=="+ApplicationManager.selectedViewsBacktrackList.get(ApplicationManager.selectedViewsBacktrackList.size()-1).getView().getTop());
 	    	    			sv.scrollTo(0, ApplicationManager.selectedViewsBacktrackList.remove(ApplicationManager.selectedViewsBacktrackList.size()-1).getView().getTop());
 	    	            	//ApplicationManager.isToBeScrolled = false;	
 	    	    		}	    	    			

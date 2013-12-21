@@ -2,6 +2,7 @@ package org.openforis.collect.android.fields;
 
 import java.util.List;
 
+import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.messages.ToastMessage;
 import org.openforis.idm.metamodel.FileAttributeDefinition;
 import org.openforis.idm.metamodel.NodeDefinition;
@@ -26,7 +27,7 @@ public class FileField extends Field {
 		this.label.setOnLongClickListener(new OnLongClickListener() {
 	        @Override
 	        public boolean onLongClick(View v) {
-	        	ToastMessage.displayToastMessage(FileField.this.getContext(), FileField.this.getLabelText(), Toast.LENGTH_LONG);
+	        	ToastMessage.displayToastMessage(FileField.this.getContext(), FileField.this.getLabelText()+FileField.this.nodeDefinition.getDescription(ApplicationManager.selectedLanguage), Toast.LENGTH_LONG);
 	            return true;
 	        }
 	    });

@@ -2,6 +2,7 @@ package org.openforis.collect.android.fields;
 
 import java.util.List;
 
+import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.model.AttributeChange;
 import org.openforis.collect.model.NodeChange;
 import org.openforis.collect.model.NodeChangeSet;
@@ -30,6 +31,7 @@ public class InputField extends Field implements TextWatcher {
 		super(context, nodeDef);
 		this.txtBox = new EditText(context);
 		this.txtBox.addTextChangedListener(this);
+		this.txtBox.setHint(nodeDef.getDescription(ApplicationManager.selectedLanguage));
 	}
 	
 	public void setKeyboardType(KeyListener keyListener){

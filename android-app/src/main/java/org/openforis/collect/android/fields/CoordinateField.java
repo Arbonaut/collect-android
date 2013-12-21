@@ -63,7 +63,11 @@ public class CoordinateField extends InputField implements OnClickListener {
 		this.label.setOnLongClickListener(new OnLongClickListener() {
 	        @Override
 	        public boolean onLongClick(View v) {
-	        	ToastMessage.displayToastMessage(CoordinateField.this.getContext(), CoordinateField.this.getLabelText(), Toast.LENGTH_LONG);
+	        	String descr = CoordinateField.this.nodeDefinition.getDescription(ApplicationManager.selectedLanguage);
+	        	if (descr==null){
+	        		descr="";
+	        	}
+	        	ToastMessage.displayToastMessage(CoordinateField.this.getContext(), CoordinateField.this.getLabelText()+descr, Toast.LENGTH_LONG);
 	            return true;
 	        }
 	    });
@@ -177,9 +181,6 @@ public class CoordinateField extends InputField implements OnClickListener {
 			}
 		});	
 
-		this.addView(this.txtLongitude);
-		this.addView(this.txtLatitude);
-		
 		this.srsList = ApplicationManager.getSurvey().getSpatialReferenceSystems();
 		if (this.srsList.size()>0){
 			this.coordLabel = new TextView(context);
@@ -229,6 +230,11 @@ public class CoordinateField extends InputField implements OnClickListener {
 			
 			this.addView(this.coordLabel);
 			this.addView(this.spinner);
+		
+		this.addView(this.txtLongitude);
+		this.addView(this.txtLatitude);
+		
+
 		}	
 		
 		this.btnGetCoordinates = new Button(context);
@@ -288,7 +294,7 @@ public class CoordinateField extends InputField implements OnClickListener {
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Coordinate(Double.valueOf(lon), Double.valueOf(lat), null), position);
 				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Coordinate(Double.valueOf(lon), Double.valueOf(lat), srsId), null, null);
 			}	
-		}
+		}		
 //		ApplicationManager.updateUIElementsWithValidationResults(nodeChangeSet);
 		validateField(nodeChangeSet);
 	}

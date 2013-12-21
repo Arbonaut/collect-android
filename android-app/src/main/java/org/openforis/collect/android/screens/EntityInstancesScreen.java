@@ -500,9 +500,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 		}		
 		intent.putExtra(getResources().getString(R.string.idmlId), summaryList.getId());
 		intent.putExtra(getResources().getString(R.string.instanceNo), summaryList.getInstanceNo());
-		Log.e("1summaryList.getId()","=="+summaryList.getId());
-		Log.e("1summaryList.getInstanceNo()","=="+summaryList.getInstanceNo());
-		Log.e("1this.getFormScreenId()","=="+this.getFormScreenId(summaryList.getInstanceNo()));
 		intent.putExtra(getResources().getString(R.string.parentFormScreenId), this.getFormScreenId(summaryList.getInstanceNo()));
         List<NodeDefinition> entityAttributes = summaryList.getEntityDefinition().getChildDefinitions();
         int counter = 0;

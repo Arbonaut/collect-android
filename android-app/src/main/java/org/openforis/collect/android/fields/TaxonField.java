@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.openforis.collect.android.R;
 import org.openforis.collect.android.management.ApplicationManager;
+import org.openforis.collect.android.messages.ToastMessage;
 import org.openforis.collect.android.misc.SearchTaxonActivity;
 import org.openforis.collect.android.screens.FormScreen;
 import org.openforis.collect.android.service.ServiceFactory;
@@ -23,7 +24,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.QwertyKeyListener;
 import android.text.method.TextKeyListener;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 //import android.util.Log;
 
 public class TaxonField extends InputField {
@@ -70,6 +71,18 @@ public class TaxonField extends InputField {
 		super(context, nodeDef);
 
 		TaxonField.form = (FormScreen)context;
+		
+		this.label.setOnLongClickListener(new OnLongClickListener() {
+	        @Override
+	        public boolean onLongClick(View v) {
+	        	String descr = TaxonField.this.nodeDefinition.getDescription(ApplicationManager.selectedLanguage);
+	        	if (descr==null){
+	        		descr="";
+	        	}
+	        	ToastMessage.displayToastMessage(TaxonField.this.getContext(), TaxonField.this.getLabelText()+descr, Toast.LENGTH_LONG);
+	            return true;
+	        }
+	    });
 
 		this.codeLabel = new TextView(context);
 		this.codeLabel.setText(getResources().getString(R.string.taxonCodeLabel));
@@ -115,8 +128,8 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
-					TaxonField.this.startSearchScreen(s.toString(), "Code");
+				/*if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
+					TaxonField.this.startSearchScreen(s.toString(), "Code");*/
 			}	
 		});
 
@@ -190,8 +203,8 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
-					TaxonField.this.startSearchScreen(s.toString(), "SciName");
+				/*if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
+					TaxonField.this.startSearchScreen(s.toString(), "SciName");*/
 			}	
 		});
 
@@ -272,8 +285,8 @@ public class TaxonField extends InputField {
 						TaxonField.this.languageCodes[getVernacularLanguageCodeIndex(TaxonField.this.spinner.getSelectedItemPosition())-1]/*TaxonField.this.txtVernacularLang.getText().toString()*/, 
 						TaxonField.this.txtLangVariant.getText().toString(),
 						TaxonField.form.getFormScreenId(),true);
-				if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
-					TaxonField.this.startSearchScreen(s.toString(), "VernacularName");
+				/*if ((s.length()>2)&&(!ApplicationManager.isBackFromTaxonSearch))
+					TaxonField.this.startSearchScreen(s.toString(), "VernacularName");*/
 			}	
 		});
 
@@ -349,13 +362,16 @@ public class TaxonField extends InputField {
 		
 		boolean isFound = false;
 		int position = 0;
-		if (selectedItem!=null){
+		if (selectedItem!=null && !selectedItem.equals("")){
 			while (!isFound&&position<this.codes.size()){
 				if (this.codes.get(position).equals(selectedItem)){
 					isFound = true;
 				}
 				position++;
-			}	
+			}
+		} else {
+			position = findLanguageCodeOnList(ApplicationManager.selectedLanguage, TaxonField.this.languageCodes);
+			isFound = true;
 		}
 		if (isFound)
 			this.spinner.setSelection(position-1);
@@ -433,6 +449,23 @@ public class TaxonField extends InputField {
 	{
 //		this.txtBox.setHint(value);
 	}*/
+	
+	private int findLanguageCodeOnList(String languageCode, String[] languageCodesList){
+		int codeIndex = 0;
+		int listLength = languageCodesList.length;
+		if (languageCode.equals("es")){
+			languageCode = "spa";
+		} else if (languageCode.equals("en")){
+			languageCode = "eng";
+		}
+		for (int i=0;i<listLength;i++){
+			if (languageCode.equals(languageCodesList[i])){
+				codeIndex = i/2+1;
+				break;
+			}
+		}
+		return codeIndex;
+	}
 	
 	public void setValue(int position, String code, String sciName, String vernName, String vernLang, String langVariant, String path, boolean isTextChanged){
 		if (!isTextChanged){

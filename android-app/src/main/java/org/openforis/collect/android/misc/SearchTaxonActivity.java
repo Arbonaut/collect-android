@@ -2,6 +2,8 @@ package org.openforis.collect.android.misc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.openforis.collect.android.R;
 import org.openforis.collect.android.database.DatabaseHelper;
@@ -13,7 +15,6 @@ import org.openforis.idm.model.TaxonOccurrence;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ public class SearchTaxonActivity extends Activity {
 	private String criteria;
 	private String path;
 	private int taxonFieldId;
-	private int currentInstanceNo;
+	//private int currentInstanceNo;
 	//private TaxonManager taxonManager;
 	private String taxonomyName;
 	private int backgroundColor;
@@ -80,7 +81,7 @@ public class SearchTaxonActivity extends Activity {
 	    	this.taxonFieldId = extras.getInt("taxonId");
 	    	this.path = extras.getString("path");
 	    	String[] splittedPath = path.split(getResources().getString(R.string.valuesSeparator2));
-	    	this.currentInstanceNo = Integer.valueOf(splittedPath[splittedPath.length-1].split(getResources().getString(R.string.valuesSeparator1))[1]);
+	    	//this.currentInstanceNo = Integer.valueOf(splittedPath[splittedPath.length-1].split(getResources().getString(R.string.valuesSeparator1))[1]);
 	    	this.taxonomyName = extras.getString("taxonomyName");
 	    	//Set up species manager
 			/*this.taxonManager = new TaxonManager();
@@ -103,13 +104,35 @@ public class SearchTaxonActivity extends Activity {
 		changeBackgroundColor(this.backgroundColor);
 		
 		this.lblSearch.setText(getResources().getString(R.string.taxonSearchBy) + this.criteria);
-		// Set value to search text box
 		this.txtSearch.setText(this.content);
+		this.txtSearch.setSelection(this.txtSearch.getText().length());
         this.txtSearch.addTextChangedListener(new TextWatcher(){
+        	private Timer timer=new Timer();
 	        public void afterTextChanged(Editable s) {
-				if ((s.length()>2)&&(s.length()>=searchStringLength)){
+				/*if ((s.length()>2)&&(s.length()>=searchStringLength)){
 					doSearch(s.toString(), taxonFieldId);
-				}
+				}*/
+	        	Log.e("text changed to","=="+s.toString());
+				final String text = s.toString();
+				timer.cancel();
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                    	
+                    	runOnUiThread(new Runnable(){
+                    	    public void run() {
+                    	    	Log.e("run","do search started"+System.currentTimeMillis());
+                    	    	if ((text.length()>2)&&(text.length()>=searchStringLength)){
+                					doSearch(text, taxonFieldId);
+                				}
+                    	    }
+                    	 });
+                        // you will probably need to use runOnUiThread(Runnable action) for some specific actions
+                    }
+
+                }, 1000);
+                
 	        }
 	        public void beforeTextChanged(CharSequence s, int start, int count, int after){
 	        	searchStringLength = s.length();
