@@ -215,10 +215,7 @@ public class SearchTaxonActivity extends Activity {
         }
 
         @Override
-        public void run() {         
-        	//Open connection with database
-        	//JdbcDaoSupport jdbcDao  = new JdbcDaoSupport();
-        	//jdbcDao.getConnection();	
+        public void run() {	
         	//Search results
         	this.lstTaxonOccurence = new ArrayList<TaxonOccurrence>();
         	if(ServiceFactory.getTaxonManager() != null){        		    		
@@ -234,7 +231,6 @@ public class SearchTaxonActivity extends Activity {
     		}	
     	    	
         	//Close connection
-//        	JdbcDaoSupport.close();
         	DatabaseHelper.closeConnection();
             handler.sendEmptyMessage(0);
         }

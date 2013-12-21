@@ -46,7 +46,7 @@ public class FileChooser extends ListActivity {
     private void fill(File f)
     {
 		File[]dirs = f.listFiles();
-		this.setTitle("Dir: "+f.getName());
+		this.setTitle(getResources().getString(R.string.currentDirectory)+f.getName());
 		List<Option>dir = new ArrayList<Option>();
 		List<Option>fls = new ArrayList<Option>();
 		try{
