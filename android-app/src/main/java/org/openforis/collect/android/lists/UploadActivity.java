@@ -34,6 +34,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class UploadActivity extends Activity{
 	
 	private static final String TAG = "UploadActivity";
@@ -43,9 +48,9 @@ public class UploadActivity extends Activity{
 	
 	//private ArrayAdapter<String> adapter;
 	
-	private Boolean[] selections;
+	//private Boolean[] selections;
 	
-	private String[] filesList;
+	//private String[] filesList;
 	
 	private ListView lv;
 	

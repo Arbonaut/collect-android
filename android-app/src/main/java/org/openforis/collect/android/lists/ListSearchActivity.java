@@ -1,10 +1,8 @@
 package org.openforis.collect.android.lists;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.openforis.collect.android.R;
-import org.openforis.idm.metamodel.CodeListItem;
 
 import android.app.ListActivity;
 import android.os.Bundle;
@@ -15,15 +13,20 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class ListSearchActivity extends ListActivity implements TextWatcher{
 
 	private EditText txtSearchByName;
 	private ArrayList<String> treeData;
 	private ArrayAdapter<String> adapter;
-	private ArrayList<String> codes;
-	private String listName;
+	//private ArrayList<String> codes;
+	//private String listName;
 	
-	private List<CodeListItem> itemsList;
+	//private List<CodeListItem> itemsList;
 	
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -31,7 +34,7 @@ public class ListSearchActivity extends ListActivity implements TextWatcher{
 		this.txtSearchByName = (EditText)this.findViewById(R.id.txtSearchByName);
 		this.txtSearchByName.addTextChangedListener(this);
 		
-		this.listName = this.getIntent().getStringExtra("listName");	
+		//this.listName = this.getIntent().getStringExtra("listName");	
 	}
 
 	@Override

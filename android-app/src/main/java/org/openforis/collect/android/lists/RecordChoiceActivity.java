@@ -39,11 +39,16 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class RecordChoiceActivity extends BaseListActivity implements OnClickListener/*implements OnItemLongClickListener*/{
 	
 	private static final String TAG = "RecordChoiceActivity";
 
-	private TextView activityLabel;
+	//private TextView activityLabel;
 	
 	private List<CollectRecord> recordsList;
 	private ArrayAdapter<String> adapter;
@@ -67,14 +72,6 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
         //setContentView(R.layout.clusterchoiceactivity);
         try{
         	ApplicationManager.recordSelectionActivity = this;
-        	
-        	//this.activityLabel = (TextView)findViewById(R.id.lblList);
-        	//this.activityLabel.setText(getResources().getString(R.string.clusterChoiceListLabel));
-        	
-        	//this.getListView().setLongClickable(true);
-        	//this.getListView().setOnItemLongClickListener(this);
-        	
-        	//registerForContextMenu(getListView());
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()

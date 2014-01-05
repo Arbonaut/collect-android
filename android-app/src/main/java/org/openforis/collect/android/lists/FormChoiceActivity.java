@@ -21,19 +21,21 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class FormChoiceActivity extends BaseListActivity {
 	
 	private static final String TAG = "FormChoiceActivity";
 
-	private TextView activityLabel;
+	//private TextView activityLabel;
 	
 	private List<CollectSurvey> surveysList;
 	private ArrayAdapter<String> adapter;
@@ -94,7 +96,7 @@ public class FormChoiceActivity extends BaseListActivity {
 		
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 		changeBackgroundColor(backgroundColor);
-		String selectedFormDefinitionFile = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
+		//String selectedFormDefinitionFile = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
 		ServiceFactory.getSurveyManager().init();
 		this.surveysList = ServiceFactory.getSurveyManager().getAll();
 		String[] formsList;

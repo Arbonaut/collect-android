@@ -27,6 +27,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class FileImportActivity extends Activity{
 	
 	private static final String TAG = "FileImportActivity";

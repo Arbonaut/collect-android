@@ -5,12 +5,10 @@ import java.util.List;
 import org.openforis.collect.android.R;
 import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
-import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.screens.BaseListActivity;
 import org.openforis.collect.model.CollectSurvey;
 import org.openforis.idm.metamodel.EntityDefinition;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -23,6 +21,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class RootEntityChoiceActivity extends BaseListActivity{
 	
 	private static final String TAG = "RootEntityChoiceActivity";

@@ -41,6 +41,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class DownloadActivity extends Activity{
 	
 	private static final String TAG = "DownloadActivity";

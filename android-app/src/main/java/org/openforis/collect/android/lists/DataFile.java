@@ -1,5 +1,10 @@
 package org.openforis.collect.android.lists;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class DataFile {
 
 	public DataFile(String name, String image) {

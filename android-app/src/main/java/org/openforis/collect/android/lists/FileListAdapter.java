@@ -15,21 +15,26 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class FileListAdapter extends ArrayAdapter<DataFile> {
 
 	private int				resource;
 	private LayoutInflater	inflater;
-	private Context 		context;
+	//private Context 		context;
 	private String type;
 	
 	public List<Boolean[]> checkList;
 	
 	public FileListAdapter (Context ctx, int resourceId, List<DataFile> objects, String type) {
 		
-		super( ctx, resourceId, objects );
+		super(ctx, resourceId, objects);
 		resource = resourceId;
 		inflater = LayoutInflater.from( ctx );
-		context=ctx;
+		//context=ctx;
 		checkList = new ArrayList<Boolean[]>();
 		int itemsNo = objects.size();
 		for (int i=0;i<itemsNo;i++){
@@ -92,8 +97,8 @@ public class FileListAdapter extends ArrayAdapter<DataFile> {
 		    if (checkList.get(position)[0]){
 		    	chckOverwrite.setChecked(true);
 		    }
-		    final int pos2 = position;
-		    final String fileName2 = dataFile.getName();
+		    //final int pos2 = position;
+		    //final String fileName2 = dataFile.getName();
 		    chckOverwrite.setOnClickListener(new OnClickListener() {
 
 		  	  @Override
