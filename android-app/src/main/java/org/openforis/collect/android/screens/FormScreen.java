@@ -2485,27 +2485,27 @@ public class FormScreen extends BaseActivity implements OnClickListener {
         				this.ll.addView(summaryTableView);
     				}
     			} else if (nodeDef instanceof TaxonAttributeDefinition){
-    				TaxonAttributeDefinition taxonAttrDef = (TaxonAttributeDefinition)nodeDef;
+    				//TaxonAttributeDefinition taxonAttrDef = (TaxonAttributeDefinition)nodeDef;
     				ArrayList<String> options = new ArrayList<String>();
     				ArrayList<String> codes = new ArrayList<String>();
     				options.add("");
     				codes.add("null");
     				
-    				String code = "";
-    				String sciName = "";
-    				String vernName = "";
+    				//String code = "";
+    				//String sciName = "";
+    				//String vernName = "";
     				String vernLang = "";
-    				String langVariant = "";
+    				//String langVariant = "";
     				if (!nodeDef.isMultiple()){
     					Node<?> foundNode = this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
 	    				if (foundNode!=null){
 	    					TaxonOccurrence taxonValue = (TaxonOccurrence)this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 	    					if (taxonValue!=null){
-	    						code = taxonValue.getCode();
-	    	    				sciName = taxonValue.getScientificName();
-	    	    				vernName = taxonValue.getVernacularName();
+	    						//code = taxonValue.getCode();
+	    	    				//sciName = taxonValue.getScientificName();
+	    	    				//vernName = taxonValue.getVernacularName();
 	    	    				vernLang = taxonValue.getLanguageCode();
-	    	    				langVariant = taxonValue.getLanguageVariety();
+	    	    				//langVariant = taxonValue.getLanguageVariety();
 	    					}	    				
 	    				}
         				final TaxonField taxonField= new TaxonField(this, nodeDef, codes, options, vernLang);
@@ -2519,11 +2519,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    				if (foundNode!=null){
 	    					TaxonOccurrence taxonValue = (TaxonOccurrence)this.parentEntityMultipleAttribute.getValue(nodeDef.getName(), this.currInstanceNo);
 	    					if (taxonValue!=null){
-	    						code = taxonValue.getCode();
-	    	    				sciName = taxonValue.getScientificName();
-	    	    				vernName = taxonValue.getVernacularName();
+	    						//code = taxonValue.getCode();
+	    	    				//sciName = taxonValue.getScientificName();
+	    	    				//vernName = taxonValue.getVernacularName();
 	    	    				vernLang = taxonValue.getLanguageCode();
-	    	    				langVariant = taxonValue.getLanguageVariety();	    						
+	    	    				//langVariant = taxonValue.getLanguageVariety();	    						
 	    					}	   				
 	    				}
 	    				final TaxonField taxonField= new TaxonField(this, nodeDef, codes, options, vernLang);
@@ -2712,9 +2712,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					if (rangeField!=null)
 						rangeField.setValue(0, from+getResources().getString(R.string.rangeSeparator)+to, this.getFormScreenId(), false);
 				} else if (nodeDef instanceof DateAttributeDefinition){
-					String day = "";
-					String month = "";
-					String year = "";
+					//String day = "";
+					//String month = "";
+					//String year = "";
 					Date dateValue = (Date)parentEntity.getValue(nodeDef.getName(), 0);
 					if (dateValue!=null){
 						loadedValue = formatDate(dateValue);
@@ -3060,9 +3060,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					if (rangeField!=null)
 						rangeField.setValue(this.currInstanceNo, from+getResources().getString(R.string.rangeSeparator)+to, this.getFormScreenId(), false);
 				} else if (nodeDef instanceof DateAttributeDefinition){
-					String day = "";
-					String month = "";
-					String year = "";
+					//String day = "";
+					//String month = "";
+					//String year = "";
 					Date dateValue = (Date)parentEntity.getValue(nodeDef.getName(), this.currInstanceNo);
 					String loadedValue = "";
 					if (dateValue!=null){
