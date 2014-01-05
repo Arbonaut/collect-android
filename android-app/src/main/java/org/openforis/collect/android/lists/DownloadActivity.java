@@ -1,24 +1,20 @@
 package org.openforis.collect.android.lists;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.openforis.collect.android.R;
+import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.DataManager;
 import org.openforis.collect.android.messages.AlertMessage;
-import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.misc.ServerInterface;
 import org.openforis.collect.model.CollectSurvey;
 
@@ -31,7 +27,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -53,14 +48,11 @@ public class DownloadActivity extends Activity{
 	private TextView activityLabel;
 	private TextView columnLabel;
 	
-	//private ArrayAdapter<String> adapter;
-	
-	
-	private String[] filesList;
+	//private String[] filesList;
 	
 	private ListView lv;
 	
-	private String path;
+	//private String path;
 	
 	private ProgressDialog pd;
 	
@@ -97,7 +89,7 @@ public class DownloadActivity extends Activity{
             	
             	this.lv = (ListView)findViewById(R.id.file_list);
             	
-            	path = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder);            
+            	//path = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder);            
             	
             	Button btn =(Button) findViewById(R.id.btnUpload);
             	btn.setText(getResources().getString(R.string.downloadFromServerButton));
@@ -301,7 +293,7 @@ public class DownloadActivity extends Activity{
         }
     }*/
     
-    private static String convertStreamToString(InputStream is) throws Exception {
+    /*private static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line = null;
@@ -314,15 +306,15 @@ public class DownloadActivity extends Activity{
         	sb.append(line).append("\n");
         }
         return sb.toString();
-    }
+    }*/
 
-    private static String getStringFromFile (String filePath) throws Exception {
+    /*private static String getStringFromFile (String filePath) throws Exception {
         File fl = new File(filePath);
         FileInputStream fin = new FileInputStream(fl);
         String ret = convertStreamToString(fin);
         fin.close();        
         return ret;
-    }
+    }*/
     
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager 
@@ -331,11 +323,7 @@ public class DownloadActivity extends Activity{
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     
-    private class SendData extends AsyncTask {
-    	 
-        /**
-         * Let's make the http request and return the result as a String.
-         */
+    /*private class SendData extends AsyncTask {
         protected String doInBackground(Object... args) {
             try {            
             	String survey_id = ApplicationManager.appPreferences.getString(getResources().getString(R.string.surveyId), "99");
@@ -347,10 +335,6 @@ public class DownloadActivity extends Activity{
 			}
         }
      
-        /**
-         * Parse the String result, and create a new array adapter for the list
-         * view.
-         */
         protected void onPostExecute(Object objResult) {
         	Log.e("onPostExecute","=="+objResult);
         	filesCount--;
@@ -385,7 +369,7 @@ public class DownloadActivity extends Activity{
             }            	
         }
      
-    }
+    }*/
     
     void downloadFile(String fileName){
         

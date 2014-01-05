@@ -3,10 +3,10 @@ package org.openforis.collect.android.lists;
 import java.util.List;
 
 import org.openforis.collect.android.R;
+import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
-import org.openforis.collect.android.management.BaseListActivity;
 import org.openforis.collect.android.messages.AlertMessage;
-import org.openforis.collect.android.misc.RunnableHandler;
+import org.openforis.collect.android.screens.BaseListActivity;
 import org.openforis.collect.model.CollectSurvey;
 import org.openforis.idm.metamodel.EntityDefinition;
 

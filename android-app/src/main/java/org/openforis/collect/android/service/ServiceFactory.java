@@ -23,7 +23,7 @@ import org.openforis.idm.model.expression.ExpressionFactory;
 /**
  * 
  * @author S. Ricci
- * @author Karol Waga
+ * @author K. Waga
  *
  */
 public class ServiceFactory {

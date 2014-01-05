@@ -3,8 +3,8 @@ package org.openforis.collect.android.screens;
 import java.util.List;
 
 import org.openforis.collect.android.R;
+import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
-import org.openforis.collect.android.misc.RunnableHandler;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openforis.collect.android.R;
+import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.DataManager;
-import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.model.CollectSurvey;
 
 import android.app.Activity;

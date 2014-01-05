@@ -13,10 +13,11 @@ import org.openforis.collect.android.fields.UIElement;
 import org.openforis.collect.android.lists.FormChoiceActivity;
 import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.lists.RootEntityChoiceActivity;
+import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.CodeListItemsStorage;
-import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.misc.ViewBacktrack;
+import org.openforis.collect.android.screens.BaseActivity;
 import org.openforis.collect.android.screens.FormScreen;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.manager.SurveyManager;
@@ -49,8 +50,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-//import org.openforis.collect.manager.codelistimport.CodeListImportProcess;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class ApplicationManager extends BaseActivity {
 	
 	private static final String TAG = "ApplicationManager";

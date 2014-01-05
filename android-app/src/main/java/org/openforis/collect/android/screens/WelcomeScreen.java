@@ -1,7 +1,7 @@
 package org.openforis.collect.android.screens;
 
 import org.openforis.collect.android.R;
-import org.openforis.collect.android.misc.RunnableHandler;
+import org.openforis.collect.android.logs.RunnableHandler;
 
 import android.app.Activity;
 import android.os.Bundle;

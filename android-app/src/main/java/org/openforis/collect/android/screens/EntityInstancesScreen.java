@@ -10,10 +10,9 @@ import org.openforis.collect.android.fields.SummaryList;
 import org.openforis.collect.android.fields.SummaryTable;
 import org.openforis.collect.android.fields.TaxonField;
 import org.openforis.collect.android.fields.UIElement;
+import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
-import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;
-import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.idm.metamodel.EntityDefinition;
@@ -27,7 +26,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -1869,7 +1867,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 		 							if (foundNode!=null){
 		 								//Log.e("not null",nodeDef.getName()+"=="+position);
 		 								ServiceFactory.getRecordManager().deleteNode(foundNode);	 	
-		 								Entity tempEntity = findParentEntity2(EntityInstancesScreen.this.getFormScreenId());
+		 								//Entity tempEntity = findParentEntity2(EntityInstancesScreen.this.getFormScreenId());
 		 								/*Log.e("tempEntity","=="+tempEntity.getName());
 		 								Log.e("formScreenID","=="+EntityInstancesScreen.this.getFormScreenId());
 		 								Log.e("parentEntity","=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getName());

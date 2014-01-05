@@ -20,12 +20,12 @@ import org.openforis.collect.android.fields.TaxonField;
 import org.openforis.collect.android.fields.TextField;
 import org.openforis.collect.android.fields.TimeField;
 import org.openforis.collect.android.fields.UIElement;
-import org.openforis.collect.android.gps.GpsActivity;
+import org.openforis.collect.android.hardware.CameraActivity;
+import org.openforis.collect.android.hardware.GpsActivity;
+import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
-import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.messages.ToastMessage;
-import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.manager.CodeListManager;
@@ -3113,7 +3113,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	}
 	
     public void startCamera(PhotoField photoField){
-		Intent cameraIntent = new Intent(this, CameraScreen.class); 
+		Intent cameraIntent = new Intent(this, CameraActivity.class); 
 		this.startActivityForResult(cameraIntent,getResources().getInteger(R.integer.cameraStarted));
 	}
     
