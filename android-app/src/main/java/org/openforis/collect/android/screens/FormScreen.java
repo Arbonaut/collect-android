@@ -918,7 +918,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        				FormScreen.this.ll.addView(summaryTableView);
 	    				}
 	    			} else if (nodeDef instanceof TaxonAttributeDefinition){
-	    				TaxonAttributeDefinition taxonAttrDef = (TaxonAttributeDefinition)nodeDef;
+	    				//TaxonAttributeDefinition taxonAttrDef = (TaxonAttributeDefinition)nodeDef;
 	    				ArrayList<String> options = new ArrayList<String>();
 	    				ArrayList<String> codes = new ArrayList<String>();
 	    				options.add("");
@@ -1990,7 +1990,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     			} else if (nodeDef instanceof NumberAttributeDefinition){
     				loadedValue = "";
     				if (!nodeDef.isMultiple()){
-    					Node<?> foundNode = this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
+    					//Node<?> foundNode = this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
     					if (((NumberAttributeDefinition) nodeDef).isInteger()){
     						IntegerValue intValue = (IntegerValue)FormScreen.this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
     						if (intValue!=null)
@@ -2170,8 +2170,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
         				this.ll.addView(summaryTableView);
     				}
     			} else if (nodeDef instanceof CoordinateAttributeDefinition){
-    				String loadedValueLon = "";
-    				String loadedValueLat = "";
+    				//String loadedValueLon = "";
+    				//String loadedValueLat = "";
     				if (!nodeDef.isMultiple()){
         				final CoordinateField coordField= new CoordinateField(this, nodeDef);
         				if (this.currentCoordinateField!=null){
@@ -2188,7 +2188,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     		    			this.longitude = null;
     		    			this.latitude = null;
     		    		}
-    					Node<?> foundNode = this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
+    					/*Node<?> foundNode = this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
 	    				if (foundNode!=null){
 	    					Coordinate coordValue = (Coordinate)this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
 	    					if (coordValue!=null){
@@ -2197,7 +2197,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    						if (coordValue.getY()!=null)
 	    							loadedValueLat = coordValue.getY().toString();
 	    					}	    				
-	    				}
+	    				}*/
 	    				//coordField = new CoordinateField(this, nodeDef);
         				coordField.setOnClickListener(this);
         				coordField.setId(nodeDef.getId());
@@ -2220,7 +2220,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     		    			this.longitude = null;
     		    			this.latitude = null;
     		    		}
-    					Node<?> foundNode = this.parentEntityMultipleAttribute.get(nodeDef.getName(), this.currInstanceNo);
+    					/*Node<?> foundNode = this.parentEntityMultipleAttribute.get(nodeDef.getName(), this.currInstanceNo);
 	    				if (foundNode!=null){
 	    					Coordinate coordValue = (Coordinate)this.parentEntityMultipleAttribute.getValue(nodeDef.getName(), this.currInstanceNo);
 	    					if (coordValue!=null){
@@ -2229,7 +2229,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    						if (coordValue.getY()!=null)
 	    							loadedValueLat = coordValue.getY().toString();
 	    					}   				
-	    				}
+	    				}*/
         				//coordField= new CoordinateField(this, nodeDef);
         				coordField.setOnClickListener(this);
         				coordField.setId(nodeDef.getId());
