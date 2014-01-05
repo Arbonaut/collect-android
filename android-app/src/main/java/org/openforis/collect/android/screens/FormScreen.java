@@ -113,8 +113,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	private String latitude;
 	private String longitude;
 	
-	//private ScrollViewSwipeDetector onTouchListener;
-	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try{
@@ -330,7 +328,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					if (nodeDef instanceof TextAttributeDefinition){
 	    				loadedValue = "";	    				
 	
-	    				if (((TextAttributeDefinition) nodeDef).getType().toString().toLowerCase().equals("short")){
+	    				if (((TextAttributeDefinition) nodeDef).getType().toString().toUpperCase().equals(getResources().getString(R.string.shortTextField))){
 		    				if (!nodeDef.isMultiple()){
 		    					Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
 			    				if (foundNode!=null){
@@ -783,6 +781,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		    						loadedValue = formatDate(dateValue);
 		    					}
 		    				}
+		    				if (loadedValue.equals("")){
+		    					//TODO: get date from device
+		    				}
 	
 	        				final DateField dateField= new DateField(FormScreen.this, nodeDef);
 	        				dateField.setOnClickListener(FormScreen.this);
@@ -851,6 +852,10 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		    						}		    						
 		    					}	    				
 		    				}
+		    				if (loadedValue.equals("")){
+		    					//TODO: get time from device
+		    				}
+		    				
 	        				final TimeField timeField= new TimeField(FormScreen.this, nodeDef);
 	        				timeField.setOnClickListener(FormScreen.this);
 	        				timeField.setId(nodeDef.getId());
@@ -1122,17 +1127,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 							Node<?> foundNode = FormScreen.this.parentEntityMultipleAttribute.get(nodeDef.getName(), FormScreen.this.currInstanceNo);
 	 							//Log.e("foundNode!=null","=="+(foundNode!=null));
 	 							if (foundNode!=null){
-	 								//Log.e("not null", nodeDef.getName()+"=="+FormScreen.this.currInstanceNo);
 	 								ServiceFactory.getRecordManager().deleteNode(foundNode);
-	 								/*if (parentEntity!=null)
-	 									Log.e("44","=="+parentEntity.getName());
-	 								Log.e("screeenID","=="+FormScreen.this.getFormScreenId());		 	
-	 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());
-	 								if (tempEntity!=null)
-	 									Log.e("55tempEntity","=="+tempEntity.getName());
-	 								Log.e("nodeToadd",ApplicationManager.getSurvey().getSchema().getDefinitionById(FormScreen.this.idmlId).getName()+"=="+nodeDef.getName());*/
-	 								//codeField.setValue(FormScreen.this.currInstanceNo, loadedValue, FormScreen.this.parentFormScreenId,false);
-	 								//EntityBuilder.addValue(tempEntity, nodeDef.getName(),new Code(null));	
 	 								refreshMultipleAttributeScreen(2);
 	 								Toast.makeText(FormScreen.this, getResources().getString(R.string.attributeDeletedToast), Toast.LENGTH_SHORT).show();
 	 								FormScreen.this.onResume();
@@ -1891,7 +1886,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				if (nodeDef instanceof TextAttributeDefinition){
     				loadedValue = "";	    				
 
-    				if (((TextAttributeDefinition) nodeDef).getType().toString().toLowerCase().equals("short")){
+    				if (((TextAttributeDefinition) nodeDef).getType().toString().toUpperCase().equals(getResources().getString(R.string.shortTextField))){
 	    				if (!nodeDef.isMultiple()){
 	    					Node<?> foundNode = this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
 		    				if (foundNode!=null){
@@ -2366,6 +2361,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    						}
 	    					}
 	    				}
+	    				if (loadedValue.equals("")){
+	    					//TODO: get date from device
+	    				}
 
         				final DateField dateField= new DateField(this, nodeDef);
         				dateField.setOnClickListener(this);
@@ -2436,6 +2434,10 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    						}		    						
 	    					}	    				
 	    				}
+	    				if (loadedValue.equals("")){
+	    					//TODO: get timee from device
+	    				}
+	    				
         				final TimeField timeField= new TimeField(this, nodeDef);
         				timeField.setOnClickListener(this);
         				timeField.setId(nodeDef.getId());
@@ -2608,7 +2610,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			if (nodeDef!=null){
 				if (nodeDef instanceof TextAttributeDefinition){
 					loadedValue = "";
-					if (((TextAttributeDefinition) nodeDef).getType().toString().toLowerCase().equals("short")){
+					if (((TextAttributeDefinition) nodeDef).getType().toString().toUpperCase().equals(getResources().getString(R.string.shortTextField))){
 						TextValue textValue = (TextValue)parentEntity.getValue(nodeDef.getName(), 0);							
 						if (textValue!=null)
 							if (textValue.getValue()!=null)
@@ -2954,7 +2956,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			if (nodeDef!=null){
 				if (nodeDef instanceof TextAttributeDefinition){
 					String loadedValue = "";
-					if (((TextAttributeDefinition) nodeDef).getType().toString().toLowerCase().equals("short")){
+					if (((TextAttributeDefinition) nodeDef).getType().toString().toUpperCase().equals(getResources().getString(R.string.shortTextField))){
 						TextValue textValue = (TextValue)parentEntity.getValue(nodeDef.getName(), this.currInstanceNo);						
 						if (textValue!=null)
 							loadedValue = textValue.getValue();

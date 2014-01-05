@@ -156,4 +156,7 @@
     <color name="greenStart">#00ff00</color>
     <color name="greenMid">#00ff00</color>
     <color name="greenEnd">#00ff00</color>
+    
+    <!-- COLLECT constants -->
+    <string name="shortTextField">SHORT</string>
 </resources>

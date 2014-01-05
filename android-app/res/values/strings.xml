@@ -101,6 +101,7 @@
     <string name="taxonVernacularLanguageLabel">Vernacular language</string>
     <string name="taxonLanguageVariantLabel">Language variant</string>
     <string name="taxonSearchBy">Search by\u0020</string>
+    <string name="taxonSearchByHint">type species to search</string>
     <string name="taxonSearchButtonLabel">Search</string>
     <string name="taxonSearchResultsLabel">Search results:\u0020</string>
     
