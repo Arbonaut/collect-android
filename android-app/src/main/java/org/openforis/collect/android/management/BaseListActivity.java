@@ -41,10 +41,7 @@ public class BaseListActivity extends ListActivity {
         super.onCreate(savedInstanceState);   
         Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");    
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //setContentView(R.layout.welcomescreen);
-        this.setScreenOrientation();
+        //this.setScreenOrientation();
 	}
 	
     @Override
@@ -60,6 +57,7 @@ public class BaseListActivity extends ListActivity {
 					ActivityCompat.invalidateOptionsMenu(BaseListActivity.this);
 				}
 			}
+			this.setScreenOrientation();
 		}		
 		catch (Exception e){
 			e.printStackTrace();

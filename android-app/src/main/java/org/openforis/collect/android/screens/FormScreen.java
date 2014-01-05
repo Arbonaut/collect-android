@@ -20,11 +20,11 @@ import org.openforis.collect.android.fields.TaxonField;
 import org.openforis.collect.android.fields.TextField;
 import org.openforis.collect.android.fields.TimeField;
 import org.openforis.collect.android.fields.UIElement;
+import org.openforis.collect.android.gps.GpsActivity;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.BaseActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.messages.ToastMessage;
-import org.openforis.collect.android.misc.GpsActivity;
 import org.openforis.collect.android.misc.RunnableHandler;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.service.ServiceFactory;
@@ -64,7 +64,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -1339,11 +1338,12 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		return intent;
 	}
 	
-    private void changeBackgroundColor(int backgroundColor){
-		getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
+	@Override
+    public void changeBackgroundColor(int backgroundColor){
+		super.changeBackgroundColor(backgroundColor);
+		//getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
 		boolean hasBreadcrumb = !this.breadcrumb.equals("");
 		if (hasBreadcrumb){
-			//ViewGroup scrollbarViews = ((ViewGroup)this.ll.getChildAt(0));
 			ViewGroup scrollbarViews = (ViewGroup)this.mainLayout.getChildAt(0);
 			TextView breadcrumb = (TextView)scrollbarViews.getChildAt(0);
 			breadcrumb.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	

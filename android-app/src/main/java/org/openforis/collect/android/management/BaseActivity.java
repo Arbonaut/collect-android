@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -26,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
-import android.view.WindowManager;
-//import org.openforis.collect.manager.codelistimport.CodeListImportProcess;
 
 
 public class BaseActivity extends Activity {
@@ -41,10 +40,7 @@ public class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);       
         Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        this.setScreenOrientation();
-       // setContentView(R.layout.base_activity);
+        //this.setScreenOrientation();
 	}
 	
     @Override
@@ -53,7 +49,8 @@ public class BaseActivity extends Activity {
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
 		try{
-			this.backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
+			this.backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);
+			this.setScreenOrientation();
 		}		
 		catch (Exception e){
 			e.printStackTrace();
@@ -278,7 +275,6 @@ public class BaseActivity extends Activity {
 				}
 			    return true;*/
 			case R.id.menu_import_species_from_file:
-				//TODO: Create separate activity to uploading and processing csv file with species
 				startActivity(new Intent(BaseActivity.this, ImportSpeciesFromCsvActivity.class));
 				return true;
 			case R.id.menu_settings:
@@ -335,5 +331,18 @@ public class BaseActivity extends Activity {
     	} else {
     		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     	}
+	}
+	
+	protected void changeBackgroundColor (int backgroundColor){
+		try{
+			getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
+		} catch (Exception e){
+    		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":changeBackgroundColor",
+    				Environment.getExternalStorageDirectory().toString()
+    				+getResources().getString(R.string.logs_folder)
+    				+getResources().getString(R.string.logs_file_name)
+    				+System.currentTimeMillis()
+    				+getResources().getString(R.string.log_file_extension));
+		}
 	}
 }

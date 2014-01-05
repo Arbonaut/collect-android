@@ -5,7 +5,6 @@ import java.util.List;
 import org.openforis.collect.android.R;
 import org.openforis.collect.android.fields.BooleanField;
 import org.openforis.collect.android.fields.CoordinateField;
-import org.openforis.collect.android.fields.EntityLink;
 import org.openforis.collect.android.fields.Field;
 import org.openforis.collect.android.fields.SummaryList;
 import org.openforis.collect.android.fields.SummaryTable;
@@ -518,83 +517,12 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
         }
 		return intent;
 	}
-	
-	private Intent prepareIntentForEntityInstancesList(EntityLink entityLink){
-		Intent intent = new Intent(this,EntityInstancesScreen.class);
-		Log.e("========","prepareIntentForEntityInstancesList");
-		/*if (!this.breadcrumb.equals("")){
-			String title = "";
-			String entityTitle = "";
-			if (summaryList.getEntityDefinition().isMultiple()){
-				title = this.breadcrumb+getResources().getString(R.string.breadcrumbSeparator)+summaryList.getTitle()+" "+(this.currInstanceNo+1);
-				entityTitle = summaryList.getTitle()+" "+(this.currInstanceNo+1);
-			} else {
-				title = this.breadcrumb+getResources().getString(R.string.breadcrumbSeparator)+summaryList.getTitle();
-				entityTitle = summaryList.getTitle();
-			}
-			intent.putExtra(getResources().getString(R.string.breadcrumb), title);
-			intent.putExtra(getResources().getString(R.string.screenTitle), entityTitle);
-		} else {
-			intent.putExtra(getResources().getString(R.string.breadcrumb), summaryList.getTitle());
-			intent.putExtra(getResources().getString(R.string.screenTitle), summaryList.getTitle());
-		}
-		
-		if (summaryList.getEntityDefinition().isMultiple()){
-			intent.putExtra(getResources().getString(R.string.intentType), getResources().getInteger(R.integer.multipleEntityIntent));	
-		} else {
-			intent.putExtra(getResources().getString(R.string.intentType), getResources().getInteger(R.integer.singleEntityIntent));
-		}		
-		intent.putExtra(getResources().getString(R.string.idmlId), summaryList.getId());
-		intent.putExtra(getResources().getString(R.string.instanceNo), summaryList.getInstanceNo());
-		intent.putExtra(getResources().getString(R.string.parentFormScreenId), this.getFormScreenId());
-        List<NodeDefinition> entityAttributes = summaryList.getEntityDefinition().getChildDefinitions();
-        int counter = 0;
-        for (NodeDefinition formField : entityAttributes){
-			intent.putExtra(getResources().getString(R.string.attributeId)+counter, formField.getId());
-			counter++;
-        }*/
-		return intent;
-	}
-	
-	/*private Intent prepareIntentForNewScreen(SummaryList summaryList){
-		Intent intent = new Intent(this,EntityInstancesScreen.class);
-		if (!this.breadcrumb.equals("")){
-			String title = "";
-			String entityTitle = "";
-			if (summaryList.getEntityDefinition().isMultiple()){
-				title = this.breadcrumb+getResources().getString(R.string.breadcrumbSeparator)+summaryList.getTitle()+" "+(this.currInstanceNo+1);
-				entityTitle = summaryList.getTitle();//+" "+(this.currInstanceNo+1);
-			} else {
-				title = this.breadcrumb+getResources().getString(R.string.breadcrumbSeparator)+summaryList.getTitle();
-				entityTitle = summaryList.getTitle();
-			}
-			intent.putExtra(getResources().getString(R.string.breadcrumb), title);
-			intent.putExtra(getResources().getString(R.string.screenTitle), entityTitle);
-		} else {
-			intent.putExtra(getResources().getString(R.string.breadcrumb), summaryList.getTitle());
-			intent.putExtra(getResources().getString(R.string.screenTitle), summaryList.getTitle());
-		}
-		
-		if (summaryList.getEntityDefinition().isMultiple()){
-			intent.putExtra(getResources().getString(R.string.intentType), getResources().getInteger(R.integer.multipleEntityIntent));	
-		} else {
-			intent.putExtra(getResources().getString(R.string.intentType), getResources().getInteger(R.integer.singleEntityIntent));
-		}		
-		intent.putExtra(getResources().getString(R.string.idmlId), summaryList.getId());
-		intent.putExtra(getResources().getString(R.string.instanceNo), summaryList.getInstanceNo());
-		intent.putExtra(getResources().getString(R.string.parentFormScreenId), this.getFormScreenId());
-        List<NodeDefinition> entityAttributes = summaryList.getEntityDefinition().getChildDefinitions();
-        int counter = 0;
-        for (NodeDefinition formField : entityAttributes){
-			intent.putExtra(getResources().getString(R.string.attributeId)+counter, formField.getId());
-			counter++;
-        }
-		return intent;
-	}*/
-	
-    private void changeBackgroundColor(int backgroundColor){
+
+	@Override
+    protected void changeBackgroundColor(int backgroundColor){
     	try{
-    		getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
+    		super.changeBackgroundColor(backgroundColor);
+    		//getWindow().setBackgroundDrawable(new ColorDrawable(backgroundColor));
 
     		boolean hasBreadcrumb = !this.breadcrumb.equals("");
     		if (hasBreadcrumb){
