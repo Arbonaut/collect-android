@@ -159,4 +159,5 @@
     
     <!-- COLLECT constants -->
     <string name="shortTextField">SHORT</string>
+    <string name="memoTextField">MEMO</string>
 </resources>

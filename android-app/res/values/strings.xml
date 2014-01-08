@@ -94,16 +94,16 @@
     <string name="uploadToServerButton">Cargar</string>
     <string name="downloadFromServerButton">Descargar</string>
     <string name="importFromFileButton">Importar</string>
-    <string name="searchButton">Search</string>
-    <string name="taxonCodeLabel">Code</string>
-    <string name="taxonScientificNameLabel">Scientific name</string>
-    <string name="taxonVernacularNameLabel">Vernacular name</string>
-    <string name="taxonVernacularLanguageLabel">Vernacular language</string>
-    <string name="taxonLanguageVariantLabel">Language variant</string>
-    <string name="taxonSearchBy">Search by\u0020</string>
-    <string name="taxonSearchByHint">type species to search</string>
-    <string name="taxonSearchButtonLabel">Search</string>
-    <string name="taxonSearchResultsLabel">Search results:\u0020</string>
+	<string name="searchButton">Buscar</string>
+    <string name="taxonCodeLabel">Código</string>
+    <string name="taxonScientificNameLabel">Nombre científico</string>
+    <string name="taxonVernacularNameLabel">Nombre común</string>
+    <string name="taxonVernacularLanguageLabel">Lengua vernácula</string>
+    <string name="taxonLanguageVariantLabel">Langua variante</string>
+	<string name="taxonSearchBy">Buscar por\u0020</string>
+    <string name="taxonSearchButtonLabel">Buscar</string>
+    <string name="taxonSearchResultsLabel">Buscar resultados:\u0020</string>
+    <string name="taxonSearchByHint">Enter species name</string>
     
     <!-- images -->
     <string name="arbonautlogo">Logo de Arbonaut</string>
@@ -137,8 +137,7 @@
     <string name="whiteBackground">Usar fondo blanco</string>
     
     <string name="plotListPrompt">Elegir entidad </string>
-    <string name="plotListTitle">Insertar nombre </string>
-    
+    <string name="plotListTitle">Insertar nombre </string>    
     
     <!-- progress -->
     <string name="workInProgress">Procesando&#8230;</string>
@@ -154,14 +153,14 @@
     <string name="backupingData">Preparando backup de los datos&#8230;</string>
     <string name="savingRecordToXml">Guardando el set de datos a un archivo xml&#8230;</string>
     <string name="refreshingScreen">Preparando la pantalla solicitada&#8230;</string>
-    <string name="loadingSavedRecordsList">Loading list of saved records&#8230;</string>
-    <string name="loadingSavedRecord">Loading the selected record&#8230;</string>
-    <string name="loadingNewRecord">Creating new record&#8230;</string>
-    <string name="loadingMultipleEntitiesList">Loading list of entities&#8230;</string>
-   	<string name="loadingSavedEntity">Loading the selected entity instance&#8230;</string>
-    <string name="loadingNewEntity">Creating new entity instance&#8230;</string>
-    <string name="scrollingToOtherEntity">Fetching values&#8230;</string>
-    <string name="scrollingToOtherMultipleAttribute">Fetching values&#8230;</string>
+	<string name="loadingSavedRecordsList">Cargando lista de los sets de datos&#8230;</string>
+    <string name="loadingSavedRecord">Cargando los sets de datos seleccionados&#8230;</string>
+    <string name="loadingNewRecord">Creando nuevos sets de datos&#8230;</string>
+    <string name="loadingMultipleEntitiesList">Cargando lista de entidades&#8230;</string>
+   	<string name="loadingSavedEntity">Cargando la entidad instancia seleccionada&#8230;</string>
+    <string name="loadingNewEntity">Creando una nueva entidad instancia&#8230;</string>
+	<string name="scrollingToOtherEntity">Buscando valores&#8230;</string>
+    <string name="scrollingToOtherMultipleAttribute">Buscando valores&#8230;</string>
     
     <!-- lists -->
     <string name="clusterChoiceFailedBecauseNoDataSaved">No hay datos guardados en la base de datos local</string>
@@ -169,7 +168,7 @@
     <string name="rootEntityChoiceListLabel">Seleccione la entidad raiz</string>
     <string name="formChoiceListLabel">Seleccione la definición de forma</string>
     <string name="dataToUpload">Seleccione los archivos para cargar</string>
-    <string name="noDataToUpload">No existen archivos XML en la carpeta de la aplicación:\u0020</string>
+    <string name="noDataToUpload">No existen archivos XML en la carpeta de la aplicación: </string>
     <string name="dataToDownload">Seleccione los archivos para descargar</string>
     <string name="dataToImport">Seleccione los archivos para importar</string>
     <string name="noDataToDownload">No existen archivos XML en el servidor. </string>
@@ -177,9 +176,8 @@
     <string name="noDataToImport">No existen archivos XML en la carpeta de exportación. </string>
     <string name="dataToUplaodColumnHeaders">Cargar  sobrescribir </string>
     <string name="dataToDownlaodColumnHeaders">Descargar</string>
-    <string name="dataToImportColumnHeaders">Importar</string>
-    <string name="currentDirectory">Current directory:\u0020</string>
-    
-    <!-- other -->
+    <string name="dataToImportColumnHeaders">Importar</string>      	
+
+    <!-- others -->
     <string name="entityMarker">[]</string>    
 </resources>
