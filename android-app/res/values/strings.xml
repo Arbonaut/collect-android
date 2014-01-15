@@ -25,6 +25,8 @@
     <string name="exitAppMessage">¿Quiere salir de la aplicación?</string>
     <string name="selectFormDefinitionTitle">Volver a seleccionar la definición de forma&#8230;</string> 
     <string name="selectFormDefinitionMessage">¿Quiere ir a la pantalla de selección de la definición de forma?</string>
+    <string name="selectFormDefinitionFromDatabaseErrorTitle">Loading form definitions from database&#8230;</string> 
+    <string name="selectFormDefinitionFromDatabaseErrorMessage">Error has occured while loading form definitions from database file. Please make sure the form definitions in the database are correct.</string>
     <string name="loadFormDefinitionTitle">Cargando definición de forma&#8230;</string>
     <string name="loadFormDefinitionMessage">La definición de forma no ha podido cargarse. Por favor asegúrese de que el archivo existe y contiene la definición de forma correcta.</string>
     <string name="selectRootEntityTitle"> Volver a la pantalla principal de selección de entidades&#8230;</string>    
@@ -176,7 +178,8 @@
     <string name="noDataToImport">No existen archivos XML en la carpeta de exportación. </string>
     <string name="dataToUplaodColumnHeaders">Cargar  sobrescribir </string>
     <string name="dataToDownlaodColumnHeaders">Descargar</string>
-    <string name="dataToImportColumnHeaders">Importar</string>      	
+    <string name="dataToImportColumnHeaders">Importar</string>
+    <string name="currentDirectory">Current directory:\u0020</string>      	
 
     <!-- others -->
     <string name="entityMarker">[]</string>    
