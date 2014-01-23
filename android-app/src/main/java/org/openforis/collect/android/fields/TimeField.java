@@ -1,5 +1,6 @@
 package org.openforis.collect.android.fields;
 
+import java.util.Calendar;
 import java.util.Random;
 
 import org.openforis.collect.android.R;
@@ -163,6 +164,17 @@ public class TimeField extends InputField implements TextWatcher {
 	{
 		if (!isTextChanged)
 			this.txtBox.setText(value);
+		
+		Calendar today = null;
+		if (value==null){
+			today = Calendar.getInstance();
+		} else if (value.equals("")){
+			today = Calendar.getInstance();
+		}
+		
+		if (today!=null){
+			value = String.valueOf(today.get(Calendar.HOUR))+getResources().getString(R.string.timeSeparator)+String.valueOf(today.get(Calendar.MINUTE));
+		}
 		
 		String hour = "";
 		String minute = "";

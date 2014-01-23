@@ -1,5 +1,6 @@
 package org.openforis.collect.android.fields;
 
+import java.util.Calendar;
 import java.util.Random;
 
 import org.openforis.collect.android.R;
@@ -127,7 +128,18 @@ public class DateField extends InputField {
 	{
 		if (!isTextChanged)
 			this.txtBox.setText(value);
-
+		
+		Calendar today = null;
+		if (value==null){
+			today = Calendar.getInstance();
+		} else if (value.equals("")){
+			today = Calendar.getInstance();
+		}
+		
+		if (today!=null){
+			value = String.valueOf(today.get(Calendar.YEAR))+getResources().getString(R.string.dateSeparator)+String.valueOf(today.get(Calendar.MONTH)+1)+getResources().getString(R.string.dateSeparator)+String.valueOf(today.get(Calendar.DAY_OF_MONTH));
+		}
+		
 		String day = "";
 		String month = "";
 		String year = "";

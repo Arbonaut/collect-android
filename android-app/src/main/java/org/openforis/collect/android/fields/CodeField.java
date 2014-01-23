@@ -126,7 +126,7 @@ public class CodeField extends InputField {
 				for (int j=0;j<parentItems.size();j++){
 					CodeListItem item = parentItems.get(j);
 					this.codes.add(item.getCode().toString());
-					this.options.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
+					this.options.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 					//currentChild.aa.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 				}
 
@@ -181,7 +181,7 @@ public class CodeField extends InputField {
 							for (int j=0;j<parentItems.size();j++){
 								CodeListItem item = parentItems.get(j);
 								this.codes.add(item.getCode().toString());
-								this.options.add(item.getLabel(ApplicationManager.selectedLanguage));
+								this.options.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage));
 								//currentChild.aa.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 							}
 						}							
@@ -243,7 +243,7 @@ public class CodeField extends InputField {
 					for (int j=0;j<parentItems.size();j++){
 						CodeListItem item = parentItems.get(j);
 						this.codes.add(item.getCode().toString());
-						this.options.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
+						this.options.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 						//currentChild.aa.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 					}
 					
@@ -393,7 +393,7 @@ public class CodeField extends InputField {
 					for (int j=0;j<parentItems.size();j++){
 						CodeListItem item = parentItems.get(j);
 						currentChild.codes.add(item.getCode().toString());
-						currentChild.options.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
+						currentChild.options.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 						currentChild.aa.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 					}
 				}

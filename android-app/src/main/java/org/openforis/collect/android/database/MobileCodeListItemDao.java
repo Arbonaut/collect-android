@@ -26,15 +26,19 @@ import android.util.Log;
 
 public class MobileCodeListItemDao extends org.openforis.collect.persistence.CodeListItemDao {
 
+	private ArrayList<Object> queriesList;
+	
 	public MobileCodeListItemDao() {
 		super();
+		this.queriesList = new ArrayList<Object>();
 	}
 	
 	@Override
 	protected List<PersistedCodeListItem> loadChildItems(CodeList codeList, Integer parentItemId, ModelVersion version) {
 		List<PersistedCodeListItem> result = new ArrayList<PersistedCodeListItem>();
 		long startTime = System.currentTimeMillis();
-		Log.e("Mobile DAO", "Starts loading child item: " + startTime);	
+		Log.e("Mobile DAO", "Starts loading child item: " + startTime);
+	
 		//Prepare query
 		CollectSurvey survey = (CollectSurvey) codeList.getSurvey();
 		TableField<OfcCodeListRecord, Integer> surveyIdField = getSurveyIdField(survey.isWork());		
@@ -51,39 +55,60 @@ public class MobileCodeListItemDao extends org.openforis.collect.persistence.Cod
 				+ " and " + OFC_CODE_LIST.CODE_LIST_ID + " = " + codeList.getId()
 				+ " and " + parentIdCondition
 				+ " order by " + OFC_CODE_LIST.SORT_ORDER; 
-		
-		Log.d("Mobile DAO", "Query is: " + query);
-		//Execute query
-		SQLiteDatabase db = DatabaseHelper.getDb();
-		Cursor cursor = db.rawQuery(query, null);
-		Log.d("Mobile DAO", "Number of rows is: " + cursor.getCount());
-		//Close database
-		db.close();
-		//Prepare result
-		Log.e("Mobile DAO", "PrepareResults: " + System.currentTimeMillis());
-		int itemId;
-		PersistedCodeListItem entity;
-		if (cursor.moveToFirst()){
-			do{
-				itemId = cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.ITEM_ID.getName()));
-				entity = new PersistedCodeListItem(codeList, itemId);
-				entity.setSystemId(cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.ID.getName())));
-				entity.setSortOrder(cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.SORT_ORDER.getName())));
-				entity.setCode(cursor.getString(cursor.getColumnIndex(OFC_CODE_LIST.CODE.getName())));
-				entity.setParentId(cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.PARENT_ID.getName())));
-				entity.setQualifiable(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(OFC_CODE_LIST.QUALIFIABLE.getName()))));
-				entity.setSinceVersion(extractModelVersion(entity, cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.SINCE_VERSION_ID.getName()))));
-				entity.setDeprecatedVersion(extractModelVersion(entity, cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.DEPRECATED_VERSION_ID.getName()))));
-				extractLabels(codeList, cursor, entity);
-				extractDescriptions(codeList, cursor, entity);			
-				
-				result.add(entity);
-			}while(cursor.moveToNext());
+		//checking if the same query was already executed
+		int queryPositionOnTheList = findQueryOnTheList(this.queriesList,query); 
+		Log.e("queryEXISTS","=="+queryPositionOnTheList);
+		if (queryPositionOnTheList>=0){
+			result = ((List<PersistedCodeListItem>)this.queriesList.get(queryPositionOnTheList+1));
+		} else {
+			this.queriesList.add(query);
+			Log.d("Mobile DAO", "Query is: " + query);
+			//Execute query
+			SQLiteDatabase db = DatabaseHelper.getDb();
+			Cursor cursor = db.rawQuery(query, null);
+			Log.d("Mobile DAO", "Number of rows is: " + cursor.getCount());
+			//Close database
+			db.close();
+			int itemId;
+			PersistedCodeListItem entity;
+			if (cursor.moveToFirst()){
+				do{
+					itemId = cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.ITEM_ID.getName()));
+					entity = new PersistedCodeListItem(codeList, itemId);
+					entity.setSystemId(cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.ID.getName())));
+					entity.setSortOrder(cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.SORT_ORDER.getName())));
+					entity.setCode(cursor.getString(cursor.getColumnIndex(OFC_CODE_LIST.CODE.getName())));
+					entity.setParentId(cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.PARENT_ID.getName())));
+					entity.setQualifiable(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(OFC_CODE_LIST.QUALIFIABLE.getName()))));
+					entity.setSinceVersion(extractModelVersion(entity, cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.SINCE_VERSION_ID.getName()))));
+					entity.setDeprecatedVersion(extractModelVersion(entity, cursor.getInt(cursor.getColumnIndex(OFC_CODE_LIST.DEPRECATED_VERSION_ID.getName()))));
+					extractLabels(codeList, cursor, entity);
+					extractDescriptions(codeList, cursor, entity);			
+					
+					result.add(entity);
+				}while(cursor.moveToNext());
+			}
+			this.queriesList.add(result);
 		}	
-		
 		Log.e("Mobile DAO", "Ready to return child item: " + System.currentTimeMillis());
 		Log.e("Mobile DAO", "Total time: " + (System.currentTimeMillis() - startTime));
 		return result;
+	}
+	
+	private int findQueryOnTheList(ArrayList<Object> queriesList, String query){
+		try {
+			for (int i=0;i<queriesList.size();i++){
+				if (i%2==0){
+					String queryFromList = (String)queriesList.get(i);
+					if (queryFromList.equals(query)){
+						return i;
+					}
+				}			
+			}	
+		} catch (Exception e){
+			
+		}		
+		return -1;		
 	}
 	
 	protected ModelVersion extractModelVersion(SurveyObject surveyObject, Integer versionId) {
