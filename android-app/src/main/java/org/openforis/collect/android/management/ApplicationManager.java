@@ -186,7 +186,7 @@ public class ApplicationManager extends BaseActivity {
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);
 			SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
 			editor.putInt(getResources().getString(R.string.backgroundColor), backgroundColor);
-			
+
 			int gpsTimeout = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.gpsTimeout), getResources().getInteger(R.integer.gpsTimeoutInMs));
 			editor = ApplicationManager.appPreferences.edit();
 			editor.putInt(getResources().getString(R.string.gpsTimeout), gpsTimeout);
@@ -217,6 +217,10 @@ public class ApplicationManager extends BaseActivity {
 			
 			String screenOrientation = ApplicationManager.appPreferences.getString(getResources().getString(R.string.screenOrientation), getResources().getString(R.string.defaultScreenOrientation));
 			editor.putString(getResources().getString(R.string.screenOrientation), screenOrientation);
+			
+			Log.e("classs","=="+ApplicationManager.appPreferences.getString(getResources().getString(R.string.fontSize), getResources().getString(R.string.defaultFontSize)).getClass());
+			String fontSize = String.valueOf(ApplicationManager.appPreferences.getString(getResources().getString(R.string.fontSize), getResources().getString(R.string.defaultFontSize)));
+			editor.putString(getResources().getString(R.string.fontSize), fontSize);
 			
 	    	editor.commit();
 	    	

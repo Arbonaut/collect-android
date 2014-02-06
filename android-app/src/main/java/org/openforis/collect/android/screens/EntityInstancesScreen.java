@@ -326,7 +326,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}
 			
 		}*/
-		Log.e("EntityInstancesScreen","clickedViewClaass=="+arg0.getClass());
+
 		if (arg0 instanceof Button){			
 			Button btn = (Button)arg0;
 			//Log.e("ADDING",btn.getId()+"ENTITY"+getResources().getInteger(R.integer.addButtonMultipleEntity));

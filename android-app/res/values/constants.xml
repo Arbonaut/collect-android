@@ -48,6 +48,8 @@
     <string name="defaultFormDefinitionPath">/test.idm.xml</string>
     <string name="surveyId">surveyId</string>
     <string name="defaultSurveyId">99</string>
+    <string name="fontSize">fontSize</string>
+    <string name="defaultFontSize">12</string>
     <string name="username">username</string>
     <string name="recordsDownloadPath">recordsDownloadPath</string>
     <string name="defaultRecordsDownloadPath">http://ar5.arbonaut.com/awfdatademo/planned/</string>

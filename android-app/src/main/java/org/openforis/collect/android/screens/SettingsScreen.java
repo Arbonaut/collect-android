@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -59,6 +60,9 @@ public class SettingsScreen extends Activity{
 	
 	private TextView tvSurveyId;
 	private EditText txtSurveyId;
+	
+	private TextView tvFontSize;
+	private EditText txtFontSize;
 	
 	private TextView tvRecordsDownloadPath;
 	private EditText txtRecordsDownloadPath;
@@ -163,6 +167,8 @@ public class SettingsScreen extends Activity{
 		        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 		        public void onTextChanged(CharSequence s, int start, int before, int count){}
 		    });
+            this.tvFormDefinitionFilePath.setVisibility(View.GONE);
+            this.txtFormDefinitionFilePath.setVisibility(View.GONE);
             
          	this.tvUsername = (TextView)findViewById(R.id.lblUsername);
 			this.txtUsername = (EditText)findViewById(R.id.txtUsername);
@@ -199,6 +205,31 @@ public class SettingsScreen extends Activity{
 		        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 		        public void onTextChanged(CharSequence s, int start, int before, int count){}
 		    });
+            
+         	this.tvFontSize = (TextView)findViewById(R.id.lblFontSize);
+			this.txtFontSize = (EditText)findViewById(R.id.txtFontSize);
+			int fontSize = Integer.valueOf(ApplicationManager.appPreferences.getString(getResources().getString(R.string.fontSize), getResources().getString(R.string.defaultFontSize)));
+			this.txtFontSize.setText(String.valueOf(fontSize));
+            this.txtFontSize.addTextChangedListener(new TextWatcher(){
+		        public void afterTextChanged(Editable s) {            
+					SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
+					editor = ApplicationManager.appPreferences.edit();
+					try{
+						if (s.length()==2)
+							editor.putString(getResources().getString(R.string.fontSize), s.toString());
+					} catch (Exception e){
+	
+					}
+					editor.commit();
+					int fontSize = Integer.valueOf(ApplicationManager.appPreferences.getString(getResources().getString(R.string.fontSize), getResources().getString(R.string.defaultFontSize)));
+					if ((fontSize>=10)&&(fontSize<=20))
+						changeFontSize(fontSize);
+		        }
+		        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+		        public void onTextChanged(CharSequence s, int start, int before, int count){}
+		    });
+            this.tvFontSize.setVisibility(View.GONE);
+            this.txtFontSize.setVisibility(View.GONE);
             
          	this.tvRecordsDownloadPath = (TextView)findViewById(R.id.lblRecordsDownloadPath);
 			this.txtRecordsDownloadPath = (EditText)findViewById(R.id.txtRecordsDownloadPath);
@@ -282,6 +313,9 @@ public class SettingsScreen extends Activity{
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);
 		this.chckWhiteBackground.setChecked((backgroundColor==Color.WHITE)?true:false);		
 		changeBackgroundColor(backgroundColor);
+		int fontSize = Integer.valueOf(ApplicationManager.appPreferences.getString(getResources().getString(R.string.fontSize), getResources().getString(R.string.defaultFontSize)));
+		if ((fontSize>=10)&&(fontSize<=20))
+			changeFontSize(fontSize);
 		if (ApplicationManager.getSurvey()!=null){
         	List<String> languageList = ApplicationManager.getSurvey().getLanguages();
             this.languageAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languageList);
@@ -297,8 +331,7 @@ public class SettingsScreen extends Activity{
         } else {
         	this.tvLanguage.setVisibility(View.GONE);
         	this.spinLanguage.setVisibility(View.GONE);
-        }
-		
+        }		
 	}
     
     private void changeBackgroundColor(int backgroundColor){
@@ -317,8 +350,22 @@ public class SettingsScreen extends Activity{
 			rdBtn.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
 		} 
 		this.tvSurveyId.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+		this.tvFontSize.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvRecordsDownloadPath.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		this.tvRecordsUploadPath.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-		//this.txtGpsMaxWaitingTime.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+    }
+    
+    private void changeFontSize(int fontSize){
+    	int pixels = (int) (fontSize * ApplicationManager.dpiScale + 0.5f);
+		this.tvFontSize.setTextSize(pixels);
+		this.tvFormDefinitionFilePath.setTextSize(pixels);
+		this.tvGpsMaxWaitingTime.setTextSize(pixels);
+		this.tvLanguage.setTextSize(pixels);
+		this.tvRecordsDownloadPath.setTextSize(pixels);
+		this.tvRecordsUploadPath.setTextSize(pixels);
+		this.tvScreenOrientation.setTextSize(pixels);
+		this.tvScreenTitle.setTextSize(pixels);
+		this.tvSurveyId.setTextSize(pixels);
+		this.tvUsername.setTextSize(pixels);
     }
 }

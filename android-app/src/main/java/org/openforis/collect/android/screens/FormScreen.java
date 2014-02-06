@@ -326,7 +326,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     				//}
 				}else {					
 					if (nodeDef instanceof TextAttributeDefinition){
-						Log.e("MEMOfield","=="+((TextAttributeDefinition) nodeDef).getType().toString().toUpperCase());
 						/*if (((TextAttributeDefinition) nodeDef).getType().toString().toUpperCase().equals(getResources().getString(R.string.shortTextField))){
 							FormScreen.this.ll.addView(TextField.resumeTextField());
 						}
@@ -1075,6 +1074,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    	    } 
 	    	    } 	
 	    	});
+	    	//sv.setOnTouchListener(new ActivitySwipeDetector());
 	
 			
 		} catch (Exception e){

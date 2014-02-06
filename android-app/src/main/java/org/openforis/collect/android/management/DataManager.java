@@ -221,7 +221,7 @@ public class DataManager {
 	
 	public List<TaxonVernacularName> findByVernacularName(int taxonomyId, String searchString, int maxResults){
 		List<TaxonVernacularName> entitiesList = new ArrayList<TaxonVernacularName>();
-		searchString = "%" + searchString.toUpperCase() + "%";
+		searchString = /*"%" +*/ searchString.toUpperCase() + "%";
 		String query = "SELECT *"
 				+ " FROM " + OFC_TAXON_VERNACULAR_NAME
 				+ " JOIN " + OFC_TAXON

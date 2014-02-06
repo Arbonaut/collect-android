@@ -17,11 +17,6 @@ import org.openforis.idm.metamodel.SurveyObject;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-//import org.jooq.SelectQuery;
-//import org.jooq.Record;
-//import org.jooq.Result;
-//import org.jooq.SelectQuery;
-//import org.openforis.collect.persistence.CodeListItemDao.JooqFactory;
 
 
 public class MobileCodeListItemDao extends org.openforis.collect.persistence.CodeListItemDao {
@@ -36,8 +31,6 @@ public class MobileCodeListItemDao extends org.openforis.collect.persistence.Cod
 	@Override
 	protected List<PersistedCodeListItem> loadChildItems(CodeList codeList, Integer parentItemId, ModelVersion version) {
 		List<PersistedCodeListItem> result = new ArrayList<PersistedCodeListItem>();
-		long startTime = System.currentTimeMillis();
-		Log.e("Mobile DAO", "Starts loading child item: " + startTime);
 	
 		//Prepare query
 		CollectSurvey survey = (CollectSurvey) codeList.getSurvey();
@@ -56,19 +49,18 @@ public class MobileCodeListItemDao extends org.openforis.collect.persistence.Cod
 				+ " and " + parentIdCondition
 				+ " order by " + OFC_CODE_LIST.SORT_ORDER; 
 		//checking if the same query was already executed
-		int queryPositionOnTheList = findQueryOnTheList(this.queriesList,query); 
-		Log.e("queryEXISTS","=="+queryPositionOnTheList);
+		int queryPositionOnTheList = findQueryOnTheList(this.queriesList,query);
 		if (queryPositionOnTheList>=0){
-			result = ((List<PersistedCodeListItem>)this.queriesList.get(queryPositionOnTheList+1));
+			try{
+				result = ((List<PersistedCodeListItem>)this.queriesList.get(queryPositionOnTheList+1));	
+			} catch (IndexOutOfBoundsException e){
+				this.queriesList.add(null);
+				result = null;
+			}
 		} else {
 			this.queriesList.add(query);
-			Log.d("Mobile DAO", "Query is: " + query);
-			//Execute query
 			SQLiteDatabase db = DatabaseHelper.getDb();
 			Cursor cursor = db.rawQuery(query, null);
-			Log.d("Mobile DAO", "Number of rows is: " + cursor.getCount());
-			//Close database
-			db.close();
 			int itemId;
 			PersistedCodeListItem entity;
 			if (cursor.moveToFirst()){
@@ -88,10 +80,10 @@ public class MobileCodeListItemDao extends org.openforis.collect.persistence.Cod
 					result.add(entity);
 				}while(cursor.moveToNext());
 			}
+			cursor.close();
+			db.close();
 			this.queriesList.add(result);
-		}	
-		Log.e("Mobile DAO", "Ready to return child item: " + System.currentTimeMillis());
-		Log.e("Mobile DAO", "Total time: " + (System.currentTimeMillis() - startTime));
+		}
 		return result;
 	}
 	

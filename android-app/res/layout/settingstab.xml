@@ -139,13 +139,36 @@
 	   		android:layout_toRightOf="@id/lblSurveyId"
 	   		android:layout_below="@id/lblUsername"
 	   		 >
-	   	</EditText>	   		   
+	   	</EditText>	   	
+	   	
+   	    <TextView 
+	   		android:id="@+id/lblFontSize"
+	   		android:layout_width="wrap_content"
+	   		android:layout_height="wrap_content"
+	   		android:layout_below="@id/txtSurveyId"
+	   		android:text="@string/lblFontSize" 
+	   		android:layout_alignBottom="@+id/txtFontSize"
+	        android:layout_alignTop="@id/txtFontSize"
+	        android:gravity="center_vertical"
+	   		 >
+	   	</TextView>
+	   	
+	    <EditText 
+	   		android:id="@+id/txtFontSize"
+	   		android:layout_width="fill_parent"
+	   		android:layout_height="wrap_content"
+	   		android:layout_toRightOf="@id/lblFontSize"
+	   		android:layout_below="@id/txtSurveyId"
+	   		android:inputType="number"
+	   		android:maxLength="2"
+	   		 >
+	   	</EditText>	   
 	   	
 	    <TextView 
 	   		android:id="@+id/lblRecordsDownloadPath"
 	   		android:layout_width="wrap_content"
 	   		android:layout_height="wrap_content"
-	   		android:layout_below="@id/txtSurveyId"
+	   		android:layout_below="@id/txtFontSize"
 	   		android:text="@string/lblRecordDownloadPath" 
 	   		android:layout_alignBottom="@+id/txtRecordDownloadPath"
 	        android:layout_alignTop="@id/txtRecordDownloadPath"
@@ -158,7 +181,7 @@
 	   		android:layout_width="fill_parent"
 	   		android:layout_height="wrap_content"
 	   		android:layout_toRightOf="@id/lblRecordsDownloadPath"
-	   		android:layout_below="@id/txtSurveyId"
+	   		android:layout_below="@id/txtFontSize"
 	   		 >
 	   	</EditText>
 	   	

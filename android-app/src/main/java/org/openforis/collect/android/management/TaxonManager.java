@@ -82,7 +82,6 @@ public class TaxonManager {
 		if (taxonomy!=null){
 			//List<Taxon> list = taxonDao.findByScientificName(taxonomy.getId(), searchString, maxResults);
 			List<Taxon> list = ApplicationManager.dataManager.findByScientificName(taxonomy.getId(), searchString, maxResults);
-			Log.e("findBySCIName","==");
 			for (Taxon taxon : list) {
 				TaxonOccurrence o = new TaxonOccurrence(taxon.getCode(), taxon.getScientificName());
 				result.add(o);
