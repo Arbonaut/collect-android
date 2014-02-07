@@ -8,13 +8,13 @@ import org.openforis.collect.android.management.ApplicationManager;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -75,7 +75,7 @@ public class SettingsScreen extends Activity{
         setContentView(R.layout.settingstab);
         try{        	        	
         	this.tvScreenTitle = (TextView)findViewById(R.id.lblTitle);
-    		this.tvScreenTitle.setTextSize(getResources().getInteger(R.integer.breadcrumbFontSize));
+    		this.tvScreenTitle.setTextSize(getResources().getInteger(R.integer.breadcrumbFontSize) * ApplicationManager.dpiScale + 0.5f);
         	
         	this.chckSoftKeyboardOnText = (CheckBox)findViewById(R.id.chkSoftKeyboardOnText);        	
     		this.chckSoftKeyboardOnText.setOnClickListener(new OnClickListener() {
@@ -294,6 +294,7 @@ public class SettingsScreen extends Activity{
 							
 						}
 						editor.commit();
+						SettingsScreen.this.setScreenOrientation();
 				    }
 				});
         } catch (Exception e){
@@ -331,7 +332,7 @@ public class SettingsScreen extends Activity{
         } else {
         	this.tvLanguage.setVisibility(View.GONE);
         	this.spinLanguage.setVisibility(View.GONE);
-        }		
+        }	
 	}
     
     private void changeBackgroundColor(int backgroundColor){
@@ -368,4 +369,15 @@ public class SettingsScreen extends Activity{
 		this.tvSurveyId.setTextSize(pixels);
 		this.tvUsername.setTextSize(pixels);
     }
+    
+    private void setScreenOrientation(){
+		String screenOrientation = ApplicationManager.appPreferences.getString(getResources().getString(R.string.screenOrientation), getResources().getString(R.string.defaultScreenOrientation)); 
+		if (screenOrientation.equals("vertical")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    	} else if (screenOrientation.equals("horizontal")){
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);	
+    	} else {
+    		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    	}
+	}
 }
