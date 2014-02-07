@@ -1,7 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OFC Mobile</string>
+    <string name="app_name">OFC Móvil</string>
+    <!-- about tab -->
+    <string name="aboutTabTitle">Acerca de</string>
+    <string name="lblApplicationName">Nombre de la aplicación:\u0020</string>
+    <string name="lblProgramVersionName">Versión de la aplicación:\u0020</string>
+    <string name="lblFormVersionName">Versión de la forma:\u0020</string>
+    
     <!-- settings screen -->
+    <string name="lblLoadedDataFileName">Archivo de datos cargado:\u0020</string>
+    <string name="lblGpsTimeout">Tiempo de recuperación del GPS :\u0020</string>
+    <string name="txtGpsTimeout">Establecer tiempo de recuperación del GPS</string>
+    <string name="lblLanguage">Idioma:\u0020</string>
+    <string name="lblFormDefinitionFile">Ubicación de la definición de forma en la tarjeta SD:\u0020</string>
+    <string name="lblUsername">Usuario:\u0020</string>
+    <string name="lblSurveyId">ID del Proyecto:\u0020</string>
+    <string name="lblFontSize">Font size:\u0020</string>
+	<string name="lblRecordDownloadPath">Ruta descarga del set de datos:\u0020</string>
+    <string name="lblRecordUploadPath">Ruta de subida del set de datos:\u0020</string>
+    <string name="lblScreenOrientation">Orientación de la pantalla</string>
+    <string name="lblRadioHorizontal">Horizontal</string>
+    <string name="lblRadioVertical">Vertical</string>
+    <string name="lblRadioAutoOrientation">Auto</string>
+    
+    <!-- dialogs -->
+    <string name="exitAppTitle">Saliendo&#8230;</string>    
+    <string name="exitAppMessage">¿Quiere salir de la aplicación?</string>
+    <string name="selectFormDefinitionTitle">Volver a seleccionar la definición de forma&#8230;</string> 
+    <string name="selectFormDefinitionMessage">¿Quiere ir a la pantalla de selección de la definición de forma?</string>
+    <string name="selectFormDefinitionFromDatabaseErrorTitle">Loading form definitions from database&#8230;</string> 
+    <string name="selectFormDefinitionFromDatabaseErrorMessage">Error has occured while loading form definitions from database file. Please make sure the form definitions in the database are correct.</string>
+    <string name="loadFormDefinitionTitle">Cargando definición de forma&#8230;</string>
+    <string name="loadFormDefinitionMessage">La definición de forma no ha podido cargarse. Por favor asegúrese de que el archivo existe y contiene la definición de forma correcta.</string>
+    <string name="selectRootEntityTitle"> Volver a la pantalla principal de selección de entidades&#8230;</string>    
+    <string name="selectRootEntityMessage">¿Quiere ir a la pantalla principal de selección de entidades?</string>
+    <string name="selectRecordTitle">Volver a la pantalla de selección del set de datos&#8230;</string>    
+    <string name="selectRecordMessage">¿Quiere volver a la pantalla de selección del set de datos?</string>
+    <string name="startGpsTitle">GPS iniciándose&#8230;</string>
+    <string name="startGpsMessage">El GPS en su dispositivo está inhabilitado.¿Quiere habilitarlo en los ajustes del sistema operativo?</string>
+    <string name="savingDataTitle">Guardando&#8230;</string>    
+    <string name="savingDataQuestionMessage">¿Quiere guardar los datos de forma?</string>
+    <string name="savingDataSuccessMessage">El set de datos se ha guardado con éxito.</string>
+    <string name="savingDataFailureMessage">El set de datos no se ha podido guardado.</string>
+    <string name="backingupDataSuccessMessage">Todos los sets de datos se han guardado con éxito.</string>
+    <string name="backingupDataFailureMessage">Todos los sets de datos no se han guardado.</string>    
+	<string name="gettingCoordsFinishedTitle">Obteniendo las coordenadas&#8230;</string>    
+    <string name="gettingCoordsSuccessMessage">Coordenadas del GPS recuperadas.</string>
+    <string name="gettingCoordsFailureMessage">Las coordenadas no se han recuperado desde el GPS, por falta de tiempo de recuperación</string>
+    <string name="savingToDatabase">Guardar</string>
+    <string name="savingToFile">XML</string>
+    <string name="openingPlotListTitle">Volver a la lista&#8230;</string>    
+    <string name="openingPlotListMessage">¿Quiere abrir la lista de formas?</string>
+    <string name="editingMemoField">Editando</string>
+    <string name="deleteRecordTitle">Borrando&#8230;</string>
+    <string name="deleteRecord">¿Quiere borrar la grabación?</string>
+    <string name="deleteEntityTitle">Borrando&#8230;</string>
+    <string name="deleteEntity">¿Quiere borrar la entidad?</string>  
+    <string name="deleteAttributeTitle">Borrando&#8230;</string>
+    <string name="deleteAttribute">¿Quiere borrar el valor del atributo?</string>      
+    <string name="noInternetTitle">No hay conexión a Internet&#8230;</string>    
+    <string name="noInternetMessage">No hay conexión disponible. Asegúrese de que está conectado a una red e intente cargar los datos de nuevo.</string>
+    <string name="maxCountTitle">Demasiadas instancias&#8230;</string>
+    <string name="maxCountMessage">El número de instancias para este elmento ha alcanzado su máximo.</string>
+	<string name="addNewEntityTitle">Añadiendo nueva instancia de la entidad&#8230;</string>
+    <string name="addNewEntityMessage">¿Quiere añadir una nueva instancia de la entidad?</string>
+    <string name="addNewAttributeTitle">Añadiendo nueva instancia del atributo&#8230;</string>
+    <string name="addNewAttributeMessage">¿Quiere añadir una nueva instancia del atributo?</string>
+    <string name="uploadToServerSuccessfulTitle">Carga completada</string>
+    <string name="uploadToServerSuccessfulMessage">Carga de datos en el servidor ha sido completada satisfactoriamente.</string>
+    <string name="downloadToDeviceSuccessfulTitle">Descarga completada</string>       
+    <string name="downloadToDeviceSuccessfulMessage">Descarga de datos ha sido completada con éxito.</string>
+    <string name="copyingDatabaseTitle">Copiando la base de datos&#8230;</string>    
+    <string name="copyingDatabaseWrongFileExtensionMessage">El archivo seleccionado no parece ser un archivo de la base de datos(Su extensión no es .db)</string>
+    <string name="backupingDatabaseTitle">Exportando la base de datos&#8230;</string>
+    <string name="backupingDatabaseMessageSuccess">Archivo base de datos exportado.</string>
+    <string name="backupingDatabaseMessageFileNotFound">El archivo base de datos no se ha podido exportar, porque no se ha encontrado la base de datos.</string>
+    <string name="backupingDatabaseMessageIOException">El archivo base de datos no se ha podido exportar, porque la carpeta de destino en la tarjeta SD no se ha encontrado.</string>
+	<string name="retrievingGpsTitle">Recuperando la posición desde el GPS&#8230;</string>    
+    <string name="retrievingGpsMessage"> Por favor espere hasta que la posición del GPS se haya recuperado.</string>
+    
+    <!-- toasts -->
+    <string name="attributeDeletedToast">Atributo borrado.</string>
+    <string name="entityDeletedToast">Entidad borrada.</string>
+    
+    <!-- buttons -->
+    <string name="footerSave">Guardar</string>
+    <string name="footerClusterList">Volver a la lista</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancelar</string>
+    <string name="okay">OK</string>
+    <string name="previousInstanceButton">ANTERIOR</string>
+    <string name="nextInstanceButton">SIGUIENTE</string>
+    <string name="addInstanceButton">AÑADIR</string>
+    <string name="deleteInstanceButton">BORRAR</string>	
+    <string name="spatialReferenceSystemLabel">Sistema espacial de referencia</string>	
+    <string name="internalGpsButton">Obtener del GPS</string>
+    <string name="uploadToServerButton">Cargar</string>
+    <string name="downloadFromServerButton">Descargar</string>
+    <string name="importFromFileButton">Importar</string>
+	<string name="searchButton">Buscar</string>
+    <string name="taxonCodeLabel">Código</string>
+    <string name="taxonScientificNameLabel">Nombre científico</string>
+    <string name="taxonVernacularNameLabel">Nombre común</string>
+    <string name="taxonVernacularLanguageLabel">Lengua vernácula</string>
+    <string name="taxonLanguageVariantLabel">Langua variante</string>
+	<string name="taxonSearchBy">Buscar por\u0020</string>
+    <string name="taxonSearchButtonLabel">Buscar</string>
+    <string name="taxonSearchResultsLabel">Buscar resultados:\u0020</string>
+    <string name="taxonSearchByHint">Enter species name</string>
+    
+    <!-- images -->
+    <string name="arbonautlogo">Logo de Arbonaut</string>
+    <string name="faologo">Logo de FAO</string>
+    <string name="ofclogo">Logo de OpenForisCollect</string>
+    
+    <!-- menu -->
+    <string name="open">Volver a la lista</string>
+    <string name="save">Guardar</string>
+    <string name="export_to_xml">Exportar a XML</string>
+    <string name="export_all_to_zip">Exportar todo</string>
+    <string name="import_from_xml_file">Importar desde XML</string>
+	<string name="import_database_from_file">Importar la base de datos desde el archivo</string>
+    <string name="backup_database">Hacer backup de la base de datos local</string>
+    <string name="import_codelist_from_csv_file">Importar lista de códigos desde CSV</string>
+    <string name="import_species_from_csv_file">Importar especies desde CSV</string>
+    <string name="download_from_server">Descargar XML</string>    
+    <string name="upload_to_server">Cargar XML</string>
+    <string name="settings">Ajustes</string>
+    <string name="about">Acerca de</string>
+    <string name="exit">Salir</string>
+    
+    <string name="addNewRecord">Añadir nuevo</string>
+    <string name="addNewSurvey">Añadir nueva definición de forma <!--desde el archivo ubicado en: /sdcard--></string>
+    
+    
+    <!-- settings screen -->
+    <string name="settingsScreenTitle">Ajustes</string>
+    <string name="showSoftKeyboardOnNumeric">Mostrar teclado en pantalla para los campos numéricos</string>
+    <string name="showSoftKeyboardOnText">Mostrar teclado en pantalla para los campos de texto</string>
+    <string name="whiteBackground">Usar fondo blanco</string>
+    
+    <string name="plotListPrompt">Elegir entidad </string>
+    <string name="plotListTitle">Insertar nombre </string>    
+    
+    <!-- progress -->
+    <string name="workInProgress">Procesando&#8230;</string>
+    <string name="saving">Guardando&#8230;</string>
+    <string name="loading">Cargando&#8230;</string>   
+    <string name="launchAppMessage">Lanzando la aplicación&#8230;</string>
+    <string name="loadingNewFormDefinitionMessage">Cargando nueva definición de forma&#8230;</string>
+    <string name="unmarshallingSurveyMessage">Decodificando la definición de forma desde el archivo&#8230;</string>
+    <string name="importingSurveyToDatabaseMessage">Guardando la definición de forma&#8230;</string>
+    <string name="uploadingDataToServerMessage">Cargando los datos en el servidor&#8230;</string>
+    <string name="downloadingDataToServerMessage">Descargando los datos en el dispositivo&#8230;</string>
+    <string name="searchingForTaxon">Buscando las especies que se ajusten a los criterios&#8230;</string>
+    <string name="backupingData">Preparando backup de los datos&#8230;</string>
+    <string name="savingRecordToXml">Guardando el set de datos a un archivo xml&#8230;</string>
+    <string name="refreshingScreen">Preparando la pantalla solicitada&#8230;</string>
+	<string name="loadingSavedRecordsList">Cargando lista de los sets de datos&#8230;</string>
+    <string name="loadingSavedRecord">Cargando los sets de datos seleccionados&#8230;</string>
+    <string name="loadingNewRecord">Creando nuevos sets de datos&#8230;</string>
+    <string name="loadingMultipleEntitiesList">Cargando lista de entidades&#8230;</string>
+   	<string name="loadingSavedEntity">Cargando la entidad instancia seleccionada&#8230;</string>
+    <string name="loadingNewEntity">Creando una nueva entidad instancia&#8230;</string>
+	<string name="scrollingToOtherEntity">Buscando valores&#8230;</string>
+    <string name="scrollingToOtherMultipleAttribute">Buscando valores&#8230;</string>
+    
+    <!-- lists -->
+    <string name="clusterChoiceFailedBecauseNoDataSaved">No hay datos guardados en la base de datos local</string>
+    <string name="clusterChoiceListLabel">Sets de datos disponibles</string>
+    <string name="rootEntityChoiceListLabel">Seleccione la entidad raiz</string>
+    <string name="formChoiceListLabel">Seleccione la definición de forma</string>
+    <string name="dataToUpload">Seleccione los archivos para cargar</string>
+    <string name="noDataToUpload">No existen archivos XML en la carpeta de la aplicación: </string>
+    <string name="dataToDownload">Seleccione los archivos para descargar</string>
+    <string name="dataToImport">Seleccione los archivos para importar</string>
+    <string name="noDataToDownload">No existen archivos XML en el servidor. </string>
+	<string name="dataToDownloadNotExisting">No se han encontrado los archivos en el servidor para la posición especificada.</string>
+    <string name="noDataToImport">No existen archivos XML en la carpeta de exportación. </string>
+    <string name="dataToUplaodColumnHeaders">Cargar  sobrescribir </string>
+    <string name="dataToDownlaodColumnHeaders">Descargar</string>
+    <string name="dataToImportColumnHeaders">Importar</string>
+    <string name="currentDirectory">Current directory:\u0020</string>      	
+
+    <!-- others -->
+    <string name="entityMarker">[]</string>    
+</resources>
+<!--<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OFC Mobile</string>
+     settings screen 
     <string name="aboutTabTitle">About</string>
     <string name="lblApplicationName">Application name:\u0020</string>
     <string name="lblProgramVersionName">Application version:\u0020</string>
@@ -21,7 +210,7 @@
     <string name="lblRecordDownloadPath">Records download path:\u0020</string>
     <string name="lblRecordUploadPath">Records upload path:\u0020</string>
     
-    <!-- dialogs -->
+     dialogs 
     <string name="exitAppTitle">Exiting&#8230;</string>    
     <string name="exitAppMessage">Do you want to exit?</string>
     <string name="selectFormDefinitionTitle">Back to form definition selection&#8230;</string> 
@@ -77,11 +266,11 @@
     <string name="retrievingGpsTitle">Retrieving location from GPS&#8230;</string>    
     <string name="retrievingGpsMessage">Please wait until location is being retrieved from GPS.</string>	
     
-    <!-- toasts -->
+     toasts 
     <string name="attributeDeletedToast">Attribute was deleted.</string>
     <string name="entityDeletedToast">Entity was deleted.</string>
     
-    <!-- buttons -->
+     buttons 
     <string name="footerSave">Save</string>
     <string name="footerClusterList">Back to list</string>
     <string name="yes">Yes</string>
@@ -108,12 +297,12 @@
     <string name="taxonSearchResultsLabel">Search results:\u0020</string>
     <string name="taxonSearchByHint">Enter species name</string>	
     
-    <!-- images -->
+     images 
     <string name="arbonautlogo">Arbonaut logo</string>
     <string name="faologo">FAO logo</string>
     <string name="ofclogo">OpenForisCollect logo</string>
     
-    <!-- menu -->
+     menu 
     <string name="open">Back to list</string>
     <string name="save">Save</string>
     <string name="export_to_xml">Export to XML</string>
@@ -133,7 +322,7 @@
     <string name="addNewSurvey">Add new survey from file /sdcard</string>
     
     
-    <!-- settings screen -->
+     settings screen 
     <string name="settingsScreenTitle">SETTINGS</string>
     <string name="showSoftKeyboardOnNumeric">Show soft-keyboard on numeric fields</string>
     <string name="showSoftKeyboardOnText">Show soft-keyboard on text fields</string>
@@ -143,7 +332,7 @@
     <string name="plotListTitle">Insert name </string>
     
     
-    <!-- progress -->
+     progress 
     <string name="workInProgress">Processing&#8230;</string>
     <string name="saving">Saving&#8230;</string>
     <string name="loading">Loading&#8230;</string>   
@@ -166,7 +355,7 @@
     <string name="scrollingToOtherEntity">Fetching values&#8230;</string>
     <string name="scrollingToOtherMultipleAttribute">Fetching values&#8230;</string>	
     
-    <!-- lists -->
+     lists 
     <string name="clusterChoiceFailedBecauseNoDataSaved">No data saved in local database</string>
     <string name="clusterChoiceListLabel">Available records</string>
     <string name="rootEntityChoiceListLabel">Select root entity</string>
@@ -183,7 +372,7 @@
     <string name="dataToImportColumnHeaders">Import</string>
     <string name="currentDirectory">Current directory:\u0020</string>        
     
-    <!-- others -->
+     others
     <string name="entityMarker">[]</string>
     
-</resources>
+</resources>-->

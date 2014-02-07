@@ -163,55 +163,78 @@
 	   		android:maxLength="2"
 	   		 >
 	   	</EditText>	   
-	   	
+	   	<LinearLayout
+	android:id="@+id/downloadFields"   	    
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/txtFontSize"
+    android:layout_weight="1"
+    android:gravity="center" >
+    	   	
 	    <TextView 
 	   		android:id="@+id/lblRecordsDownloadPath"
-	   		android:layout_width="wrap_content"
+	   		android:layout_width="0dp"
 	   		android:layout_height="wrap_content"
 	   		android:layout_below="@id/txtFontSize"
 	   		android:text="@string/lblRecordDownloadPath" 
 	   		android:layout_alignBottom="@+id/txtRecordDownloadPath"
 	        android:layout_alignTop="@id/txtRecordDownloadPath"
 	        android:gravity="center_vertical"
+	        android:layout_weight="0.2"
 	   		 >
 	   	</TextView>
 	   	
 	    <EditText 
 	   		android:id="@+id/txtRecordsDownloadPath"
-	   		android:layout_width="fill_parent"
+	   		android:layout_width="0dp"
 	   		android:layout_height="wrap_content"
 	   		android:layout_toRightOf="@id/lblRecordsDownloadPath"
 	   		android:layout_below="@id/txtFontSize"
+	   		android:layout_weight="0.8"
 	   		 >
 	   	</EditText>
-	   	
+	   	</LinearLayout>
+	    
+	   	<LinearLayout
+	android:id="@+id/uploadFields"   	    
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/downloadFields"
+    android:layout_weight="1"
+    android:gravity="center" >
+    
 	    <TextView 
 	   		android:id="@+id/lblRecordsUploadPath"
-	   		android:layout_width="wrap_content"
+	   		android:layout_width="0dp"
 	   		android:layout_height="wrap_content"
 	   		android:layout_below="@id/txtRecordsDownloadPath"
 	   		android:text="@string/lblRecordUploadPath" 
 	   		android:layout_alignBottom="@+id/txtRecordsUploadPath"
 	        android:layout_alignTop="@id/txtRecordsUploadPath"
 	        android:gravity="center_vertical"
+	        android:layout_weight="0.2"
 	   		 >
 	   	</TextView>
 	   	
 	    <EditText 
 	   		android:id="@+id/txtRecordsUploadPath"
-	   		android:layout_width="fill_parent"
+	   		android:layout_width="0dp"
 	   		android:layout_height="wrap_content"
 	   		android:layout_toRightOf="@id/lblRecordsUploadPath"
 	   		android:layout_below="@id/txtRecordsDownloadPath"
+	   		android:layout_weight="0.8"
 	   		 >
 	   	</EditText>
 	   	
+	</LinearLayout>   	
 	    
 	    <TextView 
 	   		android:id="@+id/lblScreenOrientation"
 	   		android:layout_width="wrap_content"
 	   		android:layout_height="wrap_content"
-	   		android:layout_below="@id/txtRecordsUploadPath"
+	   		android:layout_below="@id/uploadFields"
 	   		android:text="@string/lblScreenOrientation" 
 	        android:gravity="center_vertical"
 	   		 >
