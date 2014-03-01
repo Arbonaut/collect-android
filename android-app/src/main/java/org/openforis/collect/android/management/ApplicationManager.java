@@ -218,7 +218,6 @@ public class ApplicationManager extends BaseActivity {
 			String screenOrientation = ApplicationManager.appPreferences.getString(getResources().getString(R.string.screenOrientation), getResources().getString(R.string.defaultScreenOrientation));
 			editor.putString(getResources().getString(R.string.screenOrientation), screenOrientation);
 			
-			Log.e("classs","=="+ApplicationManager.appPreferences.getString(getResources().getString(R.string.fontSize), getResources().getString(R.string.defaultFontSize)).getClass());
 			String fontSize = String.valueOf(ApplicationManager.appPreferences.getString(getResources().getString(R.string.fontSize), getResources().getString(R.string.defaultFontSize)));
 			editor.putString(getResources().getString(R.string.fontSize), fontSize);
 			

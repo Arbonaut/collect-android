@@ -118,6 +118,7 @@
     <!-- menu -->
     <string name="open">Volver a la lista</string>
     <string name="save">Guardar</string>
+    <string name="map">Show map</string>
     <string name="export_to_xml">Exportar a XML</string>
     <string name="export_all_to_zip">Exportar todo</string>
     <string name="import_from_xml_file">Importar desde XML</string>

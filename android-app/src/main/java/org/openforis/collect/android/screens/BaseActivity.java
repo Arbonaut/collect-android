@@ -7,6 +7,7 @@ import org.openforis.collect.android.lists.UploadActivity;
 import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.DataManager;
+import org.openforis.collect.android.maps.OsmMapActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.ImportSpeciesFromCsvActivity;
 import org.openforis.collect.model.CollectSurvey;
@@ -79,6 +80,9 @@ public class BaseActivity extends Activity {
     {
         switch (item.getItemId())
         {
+			case R.id.menu_map:
+			    startActivity(new Intent(BaseActivity.this, OsmMapActivity.class));
+			    return true;
 			case R.id.menu_exit:
 				AlertMessage.createPositiveNegativeDialog(BaseActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.exitAppTitle), getResources().getString(R.string.exitAppMessage),
