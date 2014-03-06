@@ -482,6 +482,7 @@ public class DownloadActivity extends Activity{
     			downloadFile(adapter.getItem(i).getName());	
     		}    		
     	}
+    	ApplicationManager.recordsList = ApplicationManager.dataManager.loadSummaries();
     	pd.dismiss();
     }
      
