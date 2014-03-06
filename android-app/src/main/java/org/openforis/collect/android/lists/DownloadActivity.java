@@ -103,7 +103,7 @@ public class DownloadActivity extends Activity{
                     public void onClick(View v) {
                     	//showProgress(dwnload_file_path);
                     	pd = ProgressDialog.show(DownloadActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.downloadingDataToServerMessage));
-                    	for (int i=0;i<dataFilesList.size();i++){
+                    	/*for (int i=0;i<dataFilesList.size();i++){
                     		if (DownloadActivity.this.adapter.checkList.get(i)[0]){
                     			final int number = i;
                     					
@@ -117,7 +117,13 @@ public class DownloadActivity extends Activity{
                     	}
                     	if (filesCount==0){
     			    		pd.dismiss();
-    			    	}
+    			    	}*/
+                    	
+                    	 new Thread(new Runnable() {
+                             public void run() {
+                                  downloadFiles(dataFilesList);
+                             }
+                           }).start();
     			    	/*CheckBox upload;
     			    	//CheckBox overwrite;
     			    	for (int i=0;i<adapter.getCount();i++){
@@ -380,9 +386,9 @@ public class DownloadActivity extends Activity{
         
         try {
         	String dwnload_file_path = ApplicationManager.appPreferences.getString(getResources().getString(R.string.recordsDownloadPath), getResources().getString(R.string.defaultRecordsDownloadPath));
-        	Log.e("dwnload_file_path","=="+dwnload_file_path);
+        	//Log.e("dwnload_file_path","=="+dwnload_file_path);
             URL url = new URL(dwnload_file_path+fileName);
-            Log.e("file","=="+dwnload_file_path+fileName);
+            //Log.e("file","=="+dwnload_file_path+fileName);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
  
             urlConnection.setRequestMethod("GET");
@@ -433,10 +439,13 @@ public class DownloadActivity extends Activity{
                     //dialog.dismiss(); // if you want close it..
                 }
             });*/
+            //Log.e("file DOWNLOADED","=="+fileName);
             DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
-            Log.e("fileNAMEtoLoad","=="+fileName);
+            //Log.e("fileNAMEtoLoad","=="+fileName);
             fileName = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.imported_data_folder)+"/"+fileName;
+            //Log.e("loadRecordFromXml","STARTS"+fileName);
             dataManager.loadRecordFromXml(fileName);
+            //Log.e("loadRecordFromXml","ENDS"+fileName);
             filesCount--;
             if (filesCount==0){
             	pd.dismiss();
@@ -455,13 +464,25 @@ public class DownloadActivity extends Activity{
         } catch (final MalformedURLException e) {
             showError("Error : MalformedURLException " + e);       
             e.printStackTrace();
+            pd.dismiss();
         } catch (final IOException e) {
             showError("Error : IOException " + e);         
             e.printStackTrace();
+            pd.dismiss();
         }
         catch (final Exception e) {
             showError("Error : Please check your internet connection " + e);
+            pd.dismiss();
         }      
+    }
+    
+    void downloadFiles(List<DataFile> dataFilesList){    	
+    	for (int i=0;i<dataFilesList.size();i++){
+    		if (DownloadActivity.this.adapter.checkList.get(i)[0]){
+    			downloadFile(adapter.getItem(i).getName());	
+    		}    		
+    	}
+    	pd.dismiss();
     }
      
     void showError(final String err){

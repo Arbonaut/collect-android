@@ -90,9 +90,6 @@ public class DataManager {
 	
 	public int saveRecord(CollectRecord recordToSave) {
 		try {
-//			JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
-//			jdbcDao.getConnection();
-			Log.e("recordToSave==null","=="+(recordToSave==null));
 			if (recordToSave.getId()==null){
 				recordToSave.setCreatedBy(this.user);
 				recordToSave.setCreationDate(new Date());
@@ -163,9 +160,13 @@ public class DataManager {
 		//filename = Environment.getExternalStorageDirectory().toString()+"/ofcm/data/imported/"+filename;
 		CollectRecord loadedRecord = null;
 		try {
+			Log.e("parse","STARTS"+filename);
 			ParseRecordResult result = this.dataUnmarshaller.parse(filename);
+			Log.e("loadedRecord","STARTS"+filename);
 			loadedRecord = result.getRecord();
+			Log.e("saveRecord","STARTS"+filename);
 			this.saveRecord(loadedRecord);
+			Log.e("saveRecord","ENDS"+filename);
 		} catch (NullPointerException e){
 			e.printStackTrace();
 		} catch (DataUnmarshallerException e) {

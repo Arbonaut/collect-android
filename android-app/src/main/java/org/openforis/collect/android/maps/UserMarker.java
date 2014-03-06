@@ -18,11 +18,11 @@ class UserMarker extends ItemizedOverlay<OverlayItem>{
 	private List<OverlayItem> locations = new ArrayList<OverlayItem>();
 	//private Drawable marker;
 
-	public UserMarker(Drawable defaultMarker, int LatitudeE6, int LongitudeE6, ResourceProxy pResourceProxy) {
+	public UserMarker(Drawable defaultMarker, double latitude, double longitude, ResourceProxy pResourceProxy) {
 		super(defaultMarker,pResourceProxy);
 		//this.marker=defaultMarker;
-		GeoPoint myPlace = new GeoPoint(LatitudeE6,LongitudeE6);
-		locations.add(new OverlayItem("Current location", "Current location", myPlace));
+		GeoPoint userLocation = new GeoPoint(latitude, longitude);
+		locations.add(new OverlayItem("Current location", "Current location", userLocation));
 		populate();
 	}
 	

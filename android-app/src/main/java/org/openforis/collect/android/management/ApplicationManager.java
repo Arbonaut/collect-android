@@ -14,6 +14,7 @@ import org.openforis.collect.android.lists.FormChoiceActivity;
 import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.lists.RootEntityChoiceActivity;
 import org.openforis.collect.android.logs.RunnableHandler;
+import org.openforis.collect.android.maps.OsmMapActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.CodeListItemsStorage;
 import org.openforis.collect.android.misc.ViewBacktrack;
@@ -88,6 +89,7 @@ public class ApplicationManager extends BaseActivity {
 	public static Activity recordSelectionActivity;
 	public static List<Activity> formScreenActivityList;
 	public static Activity formSelectionActivity;
+	public static OsmMapActivity mapActivity;
 	
 	public static List<CodeListItemsStorage> storedItemsList;
 	

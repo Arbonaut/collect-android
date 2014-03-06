@@ -50,7 +50,6 @@ public class GpsActivity extends Activity {
 
 				@Override
 				public void run() {
-					Log.e("setWaitingTime","=="+waitingTime);
 					while ((loc == null) && (SystemClock.currentThreadTimeMillis()<waitingTime)) {
 						// Wait for first GPS coords change (do nothing until loc != null)
 					}				
