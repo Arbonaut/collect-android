@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_map"
-          android:title="@string/map" />
+    <item android:id="@+id/menu_map_refresh_location"
+          android:title="@string/map_refresh_location" />
     
-    <item android:id="@+id/menu_exit"
+    <item android:id="@+id/menu_map_exit"
           android:title="@string/exit" />
     
 </menu>

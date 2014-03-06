@@ -17,7 +17,7 @@ public class LocationReceiver {
 	}
 	
 	public void startTracking(){
-		ll = new LocationChangeListener();
+		ll = new LocationChangeListener("");
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, ll);
 	}
 	
@@ -26,18 +26,17 @@ public class LocationReceiver {
 	}
 	
 	public void startNavigating(GeoPoint destination){
-		/*if ( !lm.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-			buildAlertMessageNoGps();
-		}
-		else
-		{*/
-			ll = new LocationChangeListener(destination);
-			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, ll);
-		//}
+		ll = new LocationChangeListener(destination);
+		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, ll);
 	}
 	
-	public void stopNavigating(){
+	public void stopListeningForLocationUpdates(){
 		lm.removeUpdates(ll);
+	}
+	
+	public void getCurrentLocation(){
+		ll = new LocationChangeListener("currentLocation");
+		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, ll);
 	}
 	
 	/*private void buildAlertMessageNoGps() {

@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -86,13 +87,37 @@ public class OsmMapActivity extends Activity {
         mapView.getOverlays().add(overlay);
         
         //Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_myplaces);
-        Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_mylocation);
-        	   marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
-        	   ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
-        	   mapView.getOverlays().add(new UserMarker(marker, 62.6, 29.78, resourceProxy));
+
 
         //addPolygon();
         //drawLine(new GeoPoint(62.6, 29.7),new GeoPoint(62.9, 29.9));
+        showCurrentLocation();
+	}
+	
+	public void showCurrentLocation(){
+		Log.e("showCurrentLocation","==================");
+		this.turnGPSOn();
+		locRec = new LocationReceiver((LocationManager) getSystemService(Context.LOCATION_SERVICE));
+		locRec.getCurrentLocation();		
+	}
+	
+	public void drawUserMarker(Location location){
+		Log.e("drawUserMarker","================");
+		location.setLatitude(62.6);
+		location.setLongitude(29.78);
+		Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_mylocation);
+		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
+		ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
+		List<Overlay> overlays = mapView.getOverlays();
+		for (int i=0;i<overlays.size();i++){
+			if (overlays.get(i) instanceof UserMarker){
+				this.removeOverlay(overlays.get(i));
+				break;
+			}
+		}
+		mapView.getOverlays().add(new UserMarker(marker, location.getLatitude(), location.getLongitude(), resourceProxy));
+		//mapView.getOverlays().add(new UserMarker(marker, location.getLongitude(), location.getLatitude(), resourceProxy));
+		mapView.invalidate();
 	}
 	
 	public PathOverlay drawLine(GeoPoint pt1, GeoPoint pt2){
@@ -165,14 +190,20 @@ public class OsmMapActivity extends Activity {
 	
 	public void stopNavigationToPlot(){
 		Log.e("navigation","===STOPPED");
-		locRec.stopNavigating();
+		locRec.stopListeningForLocationUpdates();
 		this.turnGPSOff();
 	    mapView.getOverlays().remove(mapView.getOverlays().size()-1);
 	    mapView.invalidate();
 	}
 	
-	public void openPlotData(int recordId){
-		Log.e("plot","IS BEING OPENED"+recordId);
+	public void stopGPS(){
+		Log.e("stopGPS","===STOPPED");
+		locRec.stopListeningForLocationUpdates();
+		this.turnGPSOff();
+	}
+	
+	public void openRecordData(int recordId){
+		Log.e("RECORD","IS BEING OPENED"+recordId);
 		CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();
 		ApplicationManager.dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
     	ApplicationManager.currentRecord = ApplicationManager.dataManager.loadRecord(recordId);
@@ -233,11 +264,10 @@ public class OsmMapActivity extends Activity {
     {
         switch (item.getItemId())
         {
-			case R.id.menu_map:
-				//drawLine(new GeoPoint(62.7, 29.6),new GeoPoint(62.6, 29.6));
-				this.stopNavigationToPlot();
+			case R.id.menu_map_refresh_location:
+				this.showCurrentLocation();
 			    return true;
-			case R.id.menu_exit:
+			case R.id.menu_map_exit:
 				AlertMessage.createPositiveNegativeDialog(OsmMapActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.exitAppTitle), getResources().getString(R.string.exitAppMessage),
 	 					getResources().getString(R.string.yes), getResources().getString(R.string.no),

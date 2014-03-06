@@ -15,14 +15,18 @@ public class LocationChangeListener implements LocationListener {
 	private final double distanceThreshold = 10; 
 	
 	private PathOverlay latestDirection;
-
-	public LocationChangeListener(){
+	
+	private String requestType;
+	
+	public LocationChangeListener(String requestType){
 		this.destination = null;
 		this.latestDirection = null;		
+		this.requestType = requestType;
 	}
 	
 	public LocationChangeListener(GeoPoint destination){
 		this.destination = destination;
+		this.requestType = "navigation";
 	}
 	
 	@Override
@@ -37,7 +41,10 @@ public class LocationChangeListener implements LocationListener {
 				} else {
 					ApplicationManager.mapActivity.stopNavigationToPlot();
 				}
-			}
+			} else if (this.requestType.equals("currentLocation")){
+				ApplicationManager.mapActivity.drawUserMarker(location);
+				ApplicationManager.mapActivity.stopGPS();
+			} 
 		}
 	}
 
