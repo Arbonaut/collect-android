@@ -10,7 +10,9 @@ import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.screens.BaseListActivity;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectSurvey;
+import org.openforis.idm.metamodel.AttributeDefinition;
 import org.openforis.idm.metamodel.EntityDefinition;
+import org.openforis.idm.metamodel.NodeLabel.Type;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -56,8 +58,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 	private EntityDefinition rootEntityDef;
 	
 	private String[] clusterList;
-	
-	//private ScrollView sv;
+
     private ListView lv;
     private LinearLayout mainLayout;      
     
@@ -86,15 +87,12 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
 		try{
-			//RecordChoiceActivity.this.sv = new ScrollView(RecordChoiceActivity.this);
 			RecordChoiceActivity.pd = ProgressDialog.show(RecordChoiceActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecordsList));
 			LayoutParams lp = new LayoutParams(
 		            LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-			//RecordChoiceActivity.this.sv.setLayoutParams(lp);
 			RecordChoiceActivity.this.lv = new ListView(RecordChoiceActivity.this);
 			RecordChoiceActivity.this.lv.setLayoutParams(lp);
 			RecordChoiceActivity.this.lv.setId(android.R.id.list);
-			//RecordChoiceActivity.this.sv.addView(lv);
 			registerForContextMenu(lv);
 			
 			RecordChoiceActivity.this.mainLayout = new LinearLayout(RecordChoiceActivity.this);
@@ -339,11 +337,24 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						clusterList[0]="";
 					} else {
 						clusterList = new String[recordsList.size()/*+2*/];
-					}
+					}									
 					for (int i=0;i<recordsList.size();i++){
-						CollectRecord record = recordsList.get(i);
+						CollectRecord record = recordsList.get(i);		
+						List<String> keyValues = record.getRootEntityKeyValues();
 						clusterList[i] = /*record.getId()*/(i+1)+" "+record.getCreatedBy().getName()
 								+"\n"+record.getCreationDate();
+						CollectRecord currentRecord = null;
+						List<AttributeDefinition> attrDefs = null;
+						if (keyValues.size()>0){
+							currentRecord = dataManager.loadRecord(record.getId());
+							attrDefs = currentRecord.getRootEntity().getDefinition().getKeyAttributeDefinitions();
+						}
+						for (String key : keyValues){
+							if (key!=null){
+								String label = attrDefs.get(i).getLabel(Type.INSTANCE, ApplicationManager.selectedLanguage);
+								clusterList[i] += "\r\n"+label+": "+key;
+							}						
+						}
 						if (record.getModifiedDate()!=null){
 							clusterList[i] += "\n"+record.getModifiedDate();
 						}
