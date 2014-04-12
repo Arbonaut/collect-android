@@ -348,12 +348,16 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						if (keyValues.size()>0){
 							currentRecord = dataManager.loadRecord(record.getId());
 							attrDefs = currentRecord.getRootEntity().getDefinition().getKeyAttributeDefinitions();
+							Log.e("keyValuesNo","=="+keyValues.size());
+							Log.e("attrDEFSno","=="+attrDefs.size());
 						}
-						for (String key : keyValues){
+						for (int j=0;j<keyValues.size();j++){
+							String key = keyValues.get(j);
 							if (key!=null){
-								String label = attrDefs.get(i).getLabel(Type.INSTANCE, ApplicationManager.selectedLanguage);
-								clusterList[i] += "\r\n"+label+": "+key;
-							}						
+								String label = attrDefs.get(j).getLabel(Type.INSTANCE, ApplicationManager.selectedLanguage);	
+								if (label!=null)
+									clusterList[i] += "\r\n"+label+": "+key;
+							}				
 						}
 						if (record.getModifiedDate()!=null){
 							clusterList[i] += "\n"+record.getModifiedDate();

@@ -6,6 +6,7 @@ import org.openforis.collect.android.R;
 import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.filechooser.FileChooser;
+import org.openforis.collect.android.lists.DownloadActivity;
 import org.openforis.collect.android.lists.FileImportActivity;
 import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
@@ -148,6 +149,9 @@ public class BaseListActivity extends ListActivity {
 			case R.id.menu_download:
 				startActivity(new Intent(BaseListActivity.this, DownloadActivity.class));
 			    return true;*/
+			case R.id.menu_download:
+				startActivity(new Intent(BaseListActivity.this, DownloadActivity.class));
+			    return true;    
 			case R.id.menu_import_from_file:
 				startActivity(new Intent(BaseListActivity.this, FileImportActivity.class));
 			    return true;
