@@ -449,6 +449,7 @@ public class DownloadActivity extends Activity{
             filesCount--;
             if (filesCount==0){
             	pd.dismiss();
+            	DownloadActivity.this.finish();
     			/*AlertMessage.createPositiveDialog(DownloadActivity.this, true, null,
     					getResources().getString(R.string.downloadToDeviceSuccessfulTitle), 
     					getResources().getString(R.string.downloadToDeviceSuccessfulMessage),

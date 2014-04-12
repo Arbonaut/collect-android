@@ -170,25 +170,25 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
         final int position = (int)adapInfo.id;
         switch (item.getItemId()) {
         case R.id.view:
-        	if (this.recordsList.size()==0){
+        	/*if (this.recordsList.size()==0){
         		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingNewRecord));
     			Intent resultHolder = new Intent();
     			resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
     			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
     			RecordChoiceActivity.this.finish();		
-    		} else {
+    		} else {*/
     			//if (position!=recordsList.size()){
     			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecord));
-    				Intent resultHolder = new Intent();
-    				if (position<recordsList.size()){
-    					resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
-    				} else {
-    					resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
-    				}			
-    				setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
-    				RecordChoiceActivity.this.finish();	
+				Intent resultHolder = new Intent();
+				if (position<recordsList.size()){
+					resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
+				} else {
+					resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
+				}			
+				setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
+				RecordChoiceActivity.this.finish();	
     			//}
-    		}
+    		//}
             return true;
         case R.id.delete:
         	AlertMessage.createPositiveNegativeDialog(RecordChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
@@ -219,25 +219,25 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 		super.onListItemClick(l, v, position, id);
 		Log.i(getResources().getString(R.string.app_name),TAG+":onListItemClick");
 		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecord));
-		if (this.recordsList.size()==0){
+		/*if (this.recordsList.size()==0){
 			ApplicationManager.isRecordListUpToDate = false;
 			Intent resultHolder = new Intent();
 			resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
 			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
 			RecordChoiceActivity.this.finish();					
-		} else {
+		} else {*/
 			//if (position!=recordsList.size()){
-				ApplicationManager.isRecordListUpToDate = false;
-				Intent resultHolder = new Intent();
-				if (position<recordsList.size()){
-					resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
-				} else {
-					resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
-				}			
-				setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
-				RecordChoiceActivity.this.finish();	
+			ApplicationManager.isRecordListUpToDate = false;
+			Intent resultHolder = new Intent();
+			if (position<recordsList.size()){
+				resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
+			} else {
+				resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
+			}			
+			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
+			RecordChoiceActivity.this.finish();	
 			//}
-		}		
+		//}		
 	}
     
 	@Override
@@ -314,6 +314,11 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 					RecordChoiceActivity.this.adapter = new ArrayAdapter<String>(RecordChoiceActivity.this, layout, R.id.plotlabel, clusterList);
 				    RecordChoiceActivity.this.lv.setAdapter(RecordChoiceActivity.this.adapter);
 					//RecordChoiceActivity.this.setListAdapter(RecordChoiceActivity.this.adapter);
+				    if (clusterList[0].equals("")){
+				    	RecordChoiceActivity.this.lv.setVisibility(View.GONE);
+				    } else {
+				    	RecordChoiceActivity.this.lv.setVisibility(View.VISIBLE);
+				    }
 				    RecordChoiceActivity.pd.dismiss();
 			    }};
 		  new Thread(new Runnable() {
@@ -325,12 +330,12 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 			    		ApplicationManager.recordsList = dataManager.loadSummaries();
 			    	}
 			    	RecordChoiceActivity.this.recordsList = ApplicationManager.recordsList;
-			    	if (RecordChoiceActivity.this.recordsList.size()==0){
+			    	/*if (RecordChoiceActivity.this.recordsList.size()==0){
 			    		Intent resultHolder = new Intent();
 						resultHolder.putExtra(getResources().getString(R.string.recordId), -1);	
 						setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
 						RecordChoiceActivity.this.finish();	
-			    	}
+			    	}*/
 					
 					if (RecordChoiceActivity.this.recordsList.size()==0){
 						clusterList = new String[1];
@@ -348,8 +353,6 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						if (keyValues.size()>0){
 							currentRecord = dataManager.loadRecord(record.getId());
 							attrDefs = currentRecord.getRootEntity().getDefinition().getKeyAttributeDefinitions();
-							Log.e("keyValuesNo","=="+keyValues.size());
-							Log.e("attrDEFSno","=="+attrDefs.size());
 						}
 						for (int j=0;j<keyValues.size();j++){
 							String key = keyValues.get(j);
