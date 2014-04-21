@@ -262,7 +262,6 @@ public class BaseListActivity extends ListActivity {
 					   resultCode==getResources().getInteger(R.integer.formFileChosen)){
 				Intent resultHolder = new Intent();
 				String selectedFileName = data.getStringExtra(getResources().getString(R.string.formFileName));
-				Log.e("CHOSEN FILE1","=="+selectedFileName);
 				resultHolder.putExtra(getResources().getString(R.string.formId), -1);
 				resultHolder.putExtra(getResources().getString(R.string.formFileName), selectedFileName);	
 				setResult(getResources().getInteger(R.integer.formDefinitionChoiceSuccessful),resultHolder);

@@ -162,4 +162,12 @@
     <!-- COLLECT constants -->
     <string name="shortTextField">SHORT</string>
     <string name="memoTextField">MEMO</string>
+    
+    <!-- MAP CONSTANTS -->
+    <string name="plotEntityField">plot_det</string>
+    <string name="plotCoordinatesField">plot_center_coordinates</string>
+    <string name="plotIdField">plot_number</string>
+    <string name="plotBoundariesSavingPath">/ofcm/plot_shape_files</string>
+    <string name="plotBoundariesSavingBaseFileName">/plot_shape_</string>
+    <string name="plotBoundariesSavingFileExtension">.kml</string>
 </resources>

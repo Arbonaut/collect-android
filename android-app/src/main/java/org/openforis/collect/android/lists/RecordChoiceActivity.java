@@ -115,7 +115,12 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 			changeBackgroundColor(backgroundColor);
 			
-			refreshRecordsList();	
+			refreshRecordsList();
+			/*ApplicationManager.isRecordListUpToDate = false;
+			Intent resultHolder = new Intent();
+			resultHolder.putExtra(getResources().getString(R.string.recordId), 1);			
+			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
+			RecordChoiceActivity.this.finish();*/
 		} catch (Exception e){
 			RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":on",
     				Environment.getExternalStorageDirectory().toString()
@@ -322,7 +327,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 				    RecordChoiceActivity.pd.dismiss();
 			    }};
 		  new Thread(new Runnable() {
-			    public void run() {			    	
+			    public void run() {	    	
 			    	RecordChoiceActivity.this.rootEntityDef = ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(getIntent().getIntExtra(getResources().getString(R.string.rootEntityId),1));					
 					CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			    	DataManager dataManager = new DataManager(collectSurvey,RecordChoiceActivity.this.rootEntityDef.getName(),ApplicationManager.getLoggedInUser());
@@ -346,8 +351,8 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 					for (int i=0;i<recordsList.size();i++){
 						CollectRecord record = recordsList.get(i);		
 						List<String> keyValues = record.getRootEntityKeyValues();
-						clusterList[i] = /*record.getId()*/(i+1)+" "+record.getCreatedBy().getName()
-								+"\n"+record.getCreationDate();
+						clusterList[i] = record.getId()+"=="+(i+1)+" "+record.getCreatedBy().getName()
+								+"\r\n"+record.getCreationDate();
 						CollectRecord currentRecord = null;
 						List<AttributeDefinition> attrDefs = null;
 						if (keyValues.size()>0){
@@ -363,7 +368,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 							}				
 						}
 						if (record.getModifiedDate()!=null){
-							clusterList[i] += "\n"+record.getModifiedDate();
+							clusterList[i] += "\r\n"+record.getModifiedDate();
 						}
 					}
 					/*if (RecordChoiceActivity.this.recordsList.size()==0){		

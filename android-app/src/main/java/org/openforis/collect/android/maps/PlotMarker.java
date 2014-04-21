@@ -11,6 +11,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+/**
+ * 
+ * @author K. Waga
+ *
+ */
 public class PlotMarker extends ItemizedIconOverlay<OverlayItem> {
     protected Context mContext;
 
@@ -23,7 +28,6 @@ public class PlotMarker extends ItemizedIconOverlay<OverlayItem> {
                         return false;
                 }
               } );
-        // TODO Auto-generated constructor stub
          mContext = context;
     }
 
@@ -35,9 +39,12 @@ public class PlotMarker extends ItemizedIconOverlay<OverlayItem> {
         dialog.setMessage(item.getSnippet()+item.getUid());
         dialog.show();*/
         final String uid = item.getUid();
+        //Log.e("UID","=="+uid);
         //if (uid=="111"){
+        String title = item.getTitle();
+        String description = item.getSnippet();
            AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext);
-           builder.setTitle("MENU");
+           builder.setTitle("MENU (plot "+title+": "+description+")");
            builder.setPositiveButton("NAVIGATE", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     ApplicationManager.mapActivity.navigateToPlot(uid);

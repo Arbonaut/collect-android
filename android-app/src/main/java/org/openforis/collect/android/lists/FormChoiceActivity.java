@@ -9,7 +9,6 @@ import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.screens.BaseListActivity;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.model.CollectSurvey;
-import org.openforis.idm.metamodel.xml.IdmlParseException;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -121,6 +120,12 @@ public class FormChoiceActivity extends BaseListActivity {
 			int layout = (backgroundColor!=Color.WHITE)?R.layout.localclusterrow_white:R.layout.localclusterrow_black;
 	        this.adapter = new ArrayAdapter<String>(this, layout, R.id.plotlabel, formsList);
 			this.setListAdapter(this.adapter);
+			
+		    if (formsList[0].equals("")){
+		    	FormChoiceActivity.this.lv.setVisibility(View.GONE);
+		    } else {
+		    	FormChoiceActivity.this.lv.setVisibility(View.VISIBLE);
+		    }
 			
 			ApplicationManager.setSurvey(null);
 		} catch (Exception e){			

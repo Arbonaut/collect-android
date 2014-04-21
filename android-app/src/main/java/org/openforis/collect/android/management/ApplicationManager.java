@@ -102,6 +102,8 @@ public class ApplicationManager extends BaseActivity {
 	
 	public static boolean isBackFromTaxonSearch;
 	
+	public static boolean isPlotDrawingStarted;
+	
 	private Thread creationThread = new Thread() {
 		@Override
 		public void run() {
@@ -142,6 +144,8 @@ public class ApplicationManager extends BaseActivity {
 			    folder.mkdirs();
 			    folder = new File(sdcardPath+getResources().getString(R.string.codelists_folder));
 			    folder.mkdirs();
+			    folder = new File(sdcardPath+getResources().getString(R.string.plotBoundariesSavingPath));
+			    folder.mkdirs();			    
 			    
 	        	ApplicationManager.uiElementsMap = new HashMap<Integer,UIElement>();        	
 	        	
@@ -161,6 +165,7 @@ public class ApplicationManager extends BaseActivity {
 	            ApplicationManager.pd.dismiss();
 	            
 	            //showRootEntitiesListScreen();
+	            ApplicationManager.isPlotDrawingStarted = false;
 	            showFormsListScreen();
 			} catch (Exception e) {
 				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
@@ -287,6 +292,7 @@ public class ApplicationManager extends BaseActivity {
 	 	    		} else {//record from database
 	 	    			CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			        	//DataManager dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+	 	    			Log.e("selectedRecordId","=="+recordId);
 	 	    			ApplicationManager.dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
 			        	ApplicationManager.currentRecord = dataManager.loadRecord(recordId);
 			        	Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();

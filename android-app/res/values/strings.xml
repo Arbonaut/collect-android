@@ -116,7 +116,9 @@
     <string name="open">Back to list</string>
     <string name="save">Save</string>
     <string name="map">Show map</string>
-    <string name="map_refresh_location">Refresh location</string>
+    <string name="map_refresh_location">Refresh my location</string>
+    <string name="map_draw_plot_start">Mark plot boundaries</string>
+    <string name="map_draw_plot_end">Finish marking plot</string>
     <string name="export_to_xml">Export to XML</string>
     <string name="export_all_to_zip">Export all</string>
     <string name="import_from_xml_file">Import from XML</string>

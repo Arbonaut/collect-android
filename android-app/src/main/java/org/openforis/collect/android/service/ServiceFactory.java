@@ -2,6 +2,7 @@ package org.openforis.collect.android.service;
 
 import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.DatabaseHelper;
+import org.openforis.collect.android.database.MobileRecordDao;
 import org.openforis.collect.android.database.SQLDroidDataSource;
 import org.openforis.collect.android.management.TaxonManager;
 import org.openforis.collect.manager.RecordFileManager;
@@ -9,7 +10,6 @@ import org.openforis.collect.manager.RecordManager;
 import org.openforis.collect.manager.SurveyManager;
 import org.openforis.collect.manager.UserManager;
 import org.openforis.collect.model.CollectSurveyContext;
-import org.openforis.collect.persistence.RecordDao;
 import org.openforis.collect.persistence.SurveyDao;
 import org.openforis.collect.persistence.SurveyWorkDao;
 import org.openforis.collect.persistence.TaxonDao;
@@ -28,7 +28,7 @@ import org.openforis.idm.model.expression.ExpressionFactory;
  */
 public class ServiceFactory {
 
-	private static RecordManager recordManager;
+	private static /*Mobile*/RecordManager recordManager;
 	private static RecordFileManager recordFileManager;
 	private static SurveyManager surveyManager;
 	private static UserManager userManager;
@@ -68,8 +68,8 @@ public class ServiceFactory {
 	    	surveyManager.setSurveyDao(surveyDao);
 	    	surveyManager.setCodeListManager(codeListManager);
 	    	
-	    	RecordDao recordDao = new RecordDao();
-	    	recordManager = new RecordManager(false);	    	
+	    	MobileRecordDao recordDao = new MobileRecordDao();
+	    	recordManager = new /*Mobile*/RecordManager(false);	    	
 	    	recordDao.setDataSource(dataSource);
 	    	recordManager.setRecordDao(recordDao);
 	    	
@@ -104,7 +104,7 @@ public class ServiceFactory {
 		return dataSource;
 	}
 	
-	public static RecordManager getRecordManager() {
+	public static /*Mobile*/RecordManager getRecordManager() {
 		return recordManager;
 	}
 	

@@ -44,7 +44,7 @@ public class LocationChangeListener implements LocationListener {
 			} else if (this.requestType.equals("currentLocation")){
 				ApplicationManager.mapActivity.drawUserMarker(location);
 				ApplicationManager.mapActivity.stopGPS();
-			} 
+			}
 		}
 	}
 

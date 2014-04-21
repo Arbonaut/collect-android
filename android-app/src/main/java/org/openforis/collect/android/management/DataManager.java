@@ -1,5 +1,6 @@
 package org.openforis.collect.android.management;
 
+import static org.openforis.collect.persistence.jooq.Tables.OFC_RECORD;
 import static org.openforis.collect.persistence.jooq.tables.OfcTaxon.OFC_TAXON;
 import static org.openforis.collect.persistence.jooq.tables.OfcTaxonVernacularName.OFC_TAXON_VERNACULAR_NAME;
 
@@ -18,6 +19,7 @@ import org.openforis.collect.manager.dataexport.BackupProcess;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectRecord.Step;
 import org.openforis.collect.model.CollectSurvey;
+import org.openforis.collect.model.RecordSummarySortField;
 import org.openforis.collect.model.User;
 import org.openforis.collect.persistence.RecordPersistenceException;
 import org.openforis.collect.persistence.RecordUnlockedException;
@@ -26,9 +28,12 @@ import org.openforis.collect.persistence.xml.DataMarshaller;
 import org.openforis.collect.persistence.xml.DataUnmarshaller;
 import org.openforis.collect.persistence.xml.DataUnmarshaller.ParseRecordResult;
 import org.openforis.collect.persistence.xml.DataUnmarshallerException;
+import org.openforis.idm.metamodel.EntityDefinition;
+import org.openforis.idm.metamodel.Schema;
 import org.openforis.idm.model.species.Taxon;
 import org.openforis.idm.model.species.Taxon.TaxonRank;
 import org.openforis.idm.model.species.TaxonVernacularName;
+import org.springframework.transaction.annotation.Transactional;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
@@ -194,8 +199,12 @@ public class DataManager {
 		//JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
 		//jdbcDao.getConnection();
 		//android.os.Debug.startMethodTracing("slad");
-		List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
+		//List<CollectRecord> recordsList = this.loadSummaries(survey, rootEntity, (Step) null, 0, Integer.MAX_VALUE, (List<RecordSummarySortField>) null, (String[]) null);
+		//List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
+		//MobileRecordManager recordManager = (MobileRecordManager) ServiceFactory.getRecordManager();
+		List<CollectRecord> recordsList = ServiceFactory.getRecordManager().getRecordDao().loadSummaries(survey, rootEntity);
 		//android.os.Debug.stopMethodTracing();
+		System.err.println("LOADING SUMMARIESS");
 		Log.e("loadSummaries","=="+((System.currentTimeMillis()-startTime)));
 		//JdbcDaoSupport.close();
 		ApplicationManager.isRecordListUpToDate = true;
@@ -332,4 +341,89 @@ public class DataManager {
 		db.close();
 		return entitiesList;
 	}
+	
+	private static final TableField[] SUMMARY_FIELDS = 
+		{OFC_RECORD.DATE_CREATED, OFC_RECORD.CREATED_BY_ID, OFC_RECORD.DATE_MODIFIED, OFC_RECORD.ERRORS, OFC_RECORD.ID, 
+	     OFC_RECORD.MISSING, OFC_RECORD.MODEL_VERSION, OFC_RECORD.MODIFIED_BY_ID, OFC_RECORD.OWNER_ID, 
+	     OFC_RECORD.ROOT_ENTITY_DEFINITION_ID, OFC_RECORD.SKIPPED, OFC_RECORD.STATE, OFC_RECORD.STEP, OFC_RECORD.SURVEY_ID, 
+	     OFC_RECORD.WARNINGS, OFC_RECORD.KEY1, OFC_RECORD.KEY2, OFC_RECORD.KEY3, 
+	     OFC_RECORD.COUNT1, OFC_RECORD.COUNT2, OFC_RECORD.COUNT3, OFC_RECORD.COUNT4, OFC_RECORD.COUNT5};
+	
+	/*@Transactional
+	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
+			List<RecordSummarySortField> sortFields, String... keyValues) {
+		List<CollectRecord> summariesList = new ArrayList<CollectRecord>();
+		Log.e("DataManager","==========loadSummaries");
+		String summaryFields = "";
+		for (int i=0;i<SUMMARY_FIELDS.length;i++){
+			if (i<SUMMARY_FIELDS.length-1)
+				summaryFields += SUMMARY_FIELDS[i] + ", ";
+			else 
+				summaryFields += SUMMARY_FIELDS[i];
+		}
+		String query = "SELECT "+ summaryFields
+				+ " FROM " + OFC_RECORD;
+		
+		Schema schema = survey.getSchema();
+		EntityDefinition rootEntityDefn = schema.getRootEntityDefinition(rootEntity);
+		Integer rootEntityDefnId = rootEntityDefn.getId();
+		
+		query += " WHERE " + OFC_RECORD.SURVEY_ID + "=" + survey.getId()
+				+ " AND " + OFC_RECORD.ROOT_ENTITY_DEFINITION_ID + "=" + rootEntityDefnId;
+		
+		if ( step != null ) {
+			query += " AND " + OFC_RECORD.STEP + "=" + step.getStepNumber();
+		}
+		
+		query += " ORDER BY " + OFC_RECORD.ID;
+		
+		SQLiteDatabase db = DatabaseHelper.getDb();
+		Cursor cursor = db.rawQuery(query, null);
+		Log.e("cursor.size","=="+cursor.getCount());
+		CollectRecord summary;
+		if (cursor.moveToFirst()){
+			do {
+				summary = new CollectRecord();
+				
+				summariesList.add(summary);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+		return summariesList;
+		/*JooqFactory jf = getMappingJooqFactory(survey);
+		SelectQuery q = jf.selectQuery();	
+		q.addSelect(SUMMARY_FIELDS);
+		Field<String> ownerNameField = OFC_USER.USERNAME.as(RecordSummarySortField.Sortable.OWNER_NAME.name());
+		q.addSelect(ownerNameField);
+		q.addFrom(OFC_RECORD);
+		q.addJoin(OFC_USER, JoinType.LEFT_OUTER_JOIN, OFC_RECORD.OWNER_ID.equal(OFC_USER.ID));
+
+		Schema schema = survey.getSchema();
+		EntityDefinition rootEntityDefn = schema.getRootEntityDefinition(rootEntity);
+		Integer rootEntityDefnId = rootEntityDefn.getId();
+		q.addConditions(OFC_RECORD.SURVEY_ID.equal(survey.getId()));
+		q.addConditions(OFC_RECORD.ROOT_ENTITY_DEFINITION_ID.equal(rootEntityDefnId));
+		if ( step != null ) {
+			q.addConditions(OFC_RECORD.STEP.equal(step.getStepNumber()));
+		}
+		addFilterByKeyConditions(q, keyValues);
+		
+		if ( sortFields != null ) {
+			for (RecordSummarySortField sortField : sortFields) {
+				addOrderBy(q, sortField, ownerNameField);
+			}
+		}
+		
+		//always order by ID to avoid pagination issues
+		q.addOrderBy(OFC_RECORD.ID);
+		
+		//add limit
+		q.addLimit(offset, maxRecords);
+		
+		//fetch results
+		Result<Record> result = q.fetch();
+		
+		return jf.fromResult(result);*/
+	//}
 }
