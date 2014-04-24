@@ -105,6 +105,7 @@
     <string name="intentType">intentType</string>
     <string name="idmlId">idmlId</string>
     <string name="parentFormScreenId">parentFormScreenId</string>
+    <string name="plotId">plotId</string>
     <string name="instanceNo">instanceNo</string>
     <string name="numberOfInstances">numberOfInstances</string>
     <string name="instanceValues">instanceValues</string>
@@ -164,7 +165,7 @@
     <string name="memoTextField">MEMO</string>
     
     <!-- MAP CONSTANTS -->
-    <string name="plotEntityField">plot_det</string>
+    <string name="plotEntityField">plot_details</string>
     <string name="plotCoordinatesField">plot_center_coordinates</string>
     <string name="plotIdField">plot_number</string>
     <string name="plotBoundariesSavingPath">/ofcm/plot_shape_files</string>

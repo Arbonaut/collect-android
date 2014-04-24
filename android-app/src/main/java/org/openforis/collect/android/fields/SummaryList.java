@@ -27,6 +27,7 @@ import org.openforis.idm.model.Value;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -48,6 +49,8 @@ public class SummaryList extends UIElement {
 
 	private int instanceNo;
 	
+	public int plotNo;
+	
 	public SummaryList(Context context, EntityDefinition entityDef, int threshold,
 			OnClickListener listener, int entityInstanceNo) {
 		super(context, entityDef);
@@ -63,6 +66,7 @@ public class SummaryList extends UIElement {
 		this.tableLayout.setPadding(5, 10, 5, 10);
 		
 		this.entityDefinition = entityDef;
+		this.plotNo = -1;
 		//Log.e("entityDef",this.entityDefinition.getName()+"=="+this.instanceNo);
 		
 		//adding the entity and its nodes if do not exist yet
@@ -120,6 +124,8 @@ public class SummaryList extends UIElement {
 				isAtLeastOneKeyValue = true;
 			}					
 			keysList.add(key);
+			Log.e("value","=="+stringValue);
+			this.plotNo = Integer.valueOf(stringValue);
 		}
 			
 			String keysLine = "";

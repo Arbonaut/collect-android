@@ -52,7 +52,7 @@ public class PlotMarker extends ItemizedIconOverlay<OverlayItem> {
            });
            builder.setNegativeButton("OPEN", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    ApplicationManager.mapActivity.openRecordData(Integer.valueOf(uid));
+                    ApplicationManager.mapActivity.openPlotData(Integer.valueOf(uid),Integer.valueOf(item.getTitle()));
                }
            });
             builder.show();

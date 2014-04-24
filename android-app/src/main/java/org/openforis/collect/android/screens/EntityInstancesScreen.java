@@ -19,7 +19,9 @@ import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.EntityBuilder;
+import org.openforis.idm.model.IntegerValue;
 import org.openforis.idm.model.Node;
+import org.openforis.idm.model.Value;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -66,6 +68,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	//private int fieldsNo;
 	private int idmlId;
 	//public int currInstanceNo;
+	public int plotId;
 	
 	public Entity parentEntity;
 	public Entity parentEntitySingleAttribute;
@@ -92,7 +95,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		this.idmlId = this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId),-1);
     		//this.currInstanceNo = this.startingIntent.getIntExtra(getResources().getString(R.string.instanceNo),-1);
     		//this.numberOfInstances = this.startingIntent.getIntExtra(getResources().getString(R.string.numberOfInstances),-1);
-    		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;    		
+    		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;
+    		this.plotId = this.startingIntent.getIntExtra(getResources().getString(R.string.plotId),-1);
     		this.setScreenOrientation();
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
@@ -264,6 +268,32 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	    	});*/
 	
 			ApplicationManager.pd.dismiss();
+			
+	    	Log.e("entityinstancesscreen","plotId"+this.plotId);
+	    	//this.plotId=12;
+	    	if (this.plotId>-1){
+	    		//opening specific plot	    		
+	    		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
+	    		SummaryList summaryList = null;
+	    		int childNo = EntityInstancesScreen.this.ll.getChildCount();
+	    		Log.e("childNo","=="+childNo);
+	    		for (int i=0;i<childNo;i++){
+	    			View view = EntityInstancesScreen.this.ll.getChildAt(i);
+	    			Log.e("view"+i,"=="+view.getClass());
+	    			//Object parentView = view.getParent().getParent().getParent();
+	    			//Log.e("parentView"+i,"=="+parentView.getClass());
+	    			if (view instanceof SummaryList){
+	    				summaryList = (SummaryList)view;
+	    				int plotNo = summaryList.plotNo;	    				
+	    				Log.e("SummaryList","=="+plotNo);
+	    				if (plotNo==this.plotId){
+	    					break;
+	    				}
+	    			}
+	    		}
+	    		this.startActivity(this.prepareIntentForNewScreen(summaryList));
+	    		this.plotId=-1;
+	    	}
 		} catch (Exception e){
 			RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onResume",
 					Environment.getExternalStorageDirectory().toString()
@@ -335,6 +365,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				addNewEntity();
 			}
 		} else if (arg0 instanceof TextView){
+			Log.e("textview","clicked");
 			Object parentView = arg0.getParent().getParent().getParent();
 			if (parentView instanceof SummaryList){
 				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedEntity));
@@ -344,6 +375,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				this.startActivity(this.prepareIntentForNewScreen(temp));
 			}	
 		} else if (arg0 instanceof SummaryList){
+			Log.e("SummaryList","clicked");
 			SummaryList tempList = (SummaryList)arg0;
 			ViewBacktrack viewBacktrack = new ViewBacktrack(tempList,EntityInstancesScreen.this.getFormScreenId(tempList.getInstanceNo()));
 			ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);				

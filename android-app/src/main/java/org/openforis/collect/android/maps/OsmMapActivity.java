@@ -116,9 +116,9 @@ public class OsmMapActivity extends Activity {
         	for (Node<? extends NodeDefinition> plot : plotsList){
         		Entity plotEntity = (Entity)plot;
         		Coordinate plotCenter = (Coordinate) plotEntity.getValue(getResources().getString(R.string.plotCoordinatesField), 0);
-        		Log.e("plotcoords",plotCenter.getY()+"=="+plotCenter.getX());
+        		Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
         		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
-        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), plotCenter.getX()+","+plotCenter.getY(),  new GeoPoint(plotCenter.getX(),plotCenter.getY()));
+        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), plotCenter.getY()+","+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
             	overlayItemArray.add(olItem);
         	}        	
         }
@@ -139,8 +139,8 @@ public class OsmMapActivity extends Activity {
 	
 	public void drawUserMarker(Location location){
 		Log.e("drawUserMarker","================");
-		location.setLatitude(62.6);
-		location.setLongitude(29.78);
+		//location.setLatitude(60.2477);
+		//location.setLongitude(25.011);
 		Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_mylocation);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
 		ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
@@ -151,6 +151,7 @@ public class OsmMapActivity extends Activity {
 				break;
 			}
 		}
+		Log.e("marker drawn",location.getLatitude()+"=="+location.getLongitude());
 		mapView.getOverlays().add(new UserMarker(marker, location.getLatitude(), location.getLongitude(), resourceProxy));
 		//mapView.getOverlays().add(new UserMarker(marker, location.getLongitude(), location.getLatitude(), resourceProxy));
 		mapView.invalidate();
@@ -238,12 +239,11 @@ public class OsmMapActivity extends Activity {
 		this.turnGPSOff();
 	}
 	
-	public void openRecordData(int recordId){
-		Log.e("RECORD","IS BEING OPENED"+recordId);
+	public void openPlotData(int recordId, int plotId){
+		Log.e("PLOT",recordId+"IS BEING OPENED"+plotId);
 		CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();
 		ApplicationManager.dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
     	ApplicationManager.currentRecord = ApplicationManager.dataManager.loadRecord(recordId);
-    	Log.e("recordId","=="+recordId);
     	Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 		rootEntity.setId(ApplicationManager.currRootEntityId);
 		Intent intent = new Intent(this,FormScreen.class);
@@ -254,6 +254,7 @@ public class OsmMapActivity extends Activity {
 		intent.putExtra(getResources().getString(R.string.parentFormScreenId), "");
 		intent.putExtra(getResources().getString(R.string.idmlId), ApplicationManager.currRootEntityId);
 		intent.putExtra(getResources().getString(R.string.instanceNo), 0);
+		intent.putExtra(getResources().getString(R.string.plotId), plotId);
 		List<NodeDefinition> entityAttributes = rootEntityDef.getChildDefinitions();
         int counter = 0;
         for (NodeDefinition formField : entityAttributes){
@@ -417,17 +418,17 @@ public class OsmMapActivity extends Activity {
 	private int savePlotShapeToFile(List<GeoPoint> plotCorners){
 		Log.e("saving plot","to KML file"+plotCorners.size());
 		/*
-		 <kml xmlns="http://earth.google.com/kml/2.0">
-  <Placemark>
-   <name>Bora-Bora Airport</name>
-   <Point>
-     <coordinates>-151.752044,-16.443118</coordinates>
-   </Point>
-  </Placemark>
-</kml>
+	 	<kml xmlns="http://earth.google.com/kml/2.0">
+		  <Placemark>
+		   <name>Bora-Bora Airport</name>
+		   <Point>
+		     <coordinates>-151.752044,-16.443118</coordinates>
+		   </Point>
+		  </Placemark>
+		</kml>
 		 */
 		if (plotCorners.size()>2){
-			try{				
+			try{
 				File file = new File(Environment.getExternalStorageDirectory().toString()
 						+getResources().getString(R.string.plotBoundariesSavingPath)
 						+getResources().getString(R.string.plotBoundariesSavingBaseFileName)

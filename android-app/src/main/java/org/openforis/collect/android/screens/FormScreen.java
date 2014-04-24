@@ -43,6 +43,7 @@ import org.openforis.idm.metamodel.RangeAttributeDefinition;
 import org.openforis.idm.metamodel.TaxonAttributeDefinition;
 import org.openforis.idm.metamodel.TextAttributeDefinition;
 import org.openforis.idm.metamodel.TimeAttributeDefinition;
+import org.openforis.idm.metamodel.NodeLabel.Type;
 import org.openforis.idm.model.BooleanValue;
 import org.openforis.idm.model.Code;
 import org.openforis.idm.model.Coordinate;
@@ -103,6 +104,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	private int fieldsNo;
 	private int idmlId;
 	public int currInstanceNo;
+	public int plotId;
 	
 	public Entity parentEntity;
 	public Entity parentEntitySingleAttribute;
@@ -132,6 +134,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     		//this.parentEntitySingleAttribute = this.findParentEntity(this.getFormScreenId());
     		//this.parentEntityMultipleAttribute = this.findParentEntity(this.parentFormScreenId);
 
+    		this.plotId = this.startingIntent.getIntExtra(getResources().getString(R.string.plotId),-1);
+    		
+    		
     		this.currentPictureField = null;
     		this.currentCoordinateField = null;
     		this.photoPath = null;
@@ -1075,8 +1080,35 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    	    } 	
 	    	});
 	    	//sv.setOnTouchListener(new ActivitySwipeDetector());
-	
-			
+	    	Log.e("FORMScreen","plotId"+this.plotId);
+	    	//this.plotId=12;
+	    	if (this.plotId>-1){
+	    		boolean isFound = false;
+	    		//opening specific plot from the record
+	    		
+	    		EntityLink plotEntityLink = null;
+	    		int childNo = FormScreen.this.ll.getChildCount();
+	    		Log.e("childNo","=="+childNo);
+	    		for (int i=0;i<childNo;i++){
+	    			View view = FormScreen.this.ll.getChildAt(i);
+	    			Log.e("view"+i,"=="+view.getClass());
+	    			if (view instanceof EntityLink){
+	    				plotEntityLink = (EntityLink)view;
+	    				String name = plotEntityLink.nodeDefinition.getName();
+	    				Log.e("entityLink","=="+name);
+	    				if (name.equals("plot_details")){
+	    					isFound = true;
+	    					break;
+	    				}
+	    			}
+	    		}
+	    		Log.e("isFound","=="+isFound);
+	    		if (isFound){
+	    			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
+	    			this.startActivity(this.prepareIntentForEntityInstancesList(plotEntityLink,plotId));
+	    		}
+	    		this.plotId=-1;
+	    	}
 		} catch (Exception e){
 			RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onResume",
 					Environment.getExternalStorageDirectory().toString()
@@ -1218,11 +1250,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		} else  if (arg0 instanceof EntityLink){
 			//Log.e("onClick","entityLink");
 			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
-			this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)arg0));
+			this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)arg0,-1));
 		}
 	}
 	
-	private Intent prepareIntentForEntityInstancesList(EntityLink entityLink){
+	private Intent prepareIntentForEntityInstancesList(EntityLink entityLink, int plotId){
 		Intent intent = new Intent(this,EntityInstancesScreen.class);
 		if (!this.breadcrumb.equals("")){
 			String title = "";
@@ -1274,6 +1306,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		intent.putExtra(getResources().getString(R.string.intentType), getResources().getInteger(R.integer.multipleEntityIntent));
 		//Log.e("idmlIdPassedToEntity","=="+entityLink.getId());
 		intent.putExtra(getResources().getString(R.string.idmlId), entityLink.getId());
+		intent.putExtra(getResources().getString(R.string.plotId), plotId);
 		//intent.putExtra(getResources().getString(R.string.instanceNo), entityLink.getInstanceNo());
 		intent.putExtra(getResources().getString(R.string.parentFormScreenId), this.getFormScreenId());
         List<NodeDefinition> entityAttributes = entityLink.getEntityDefinition().getChildDefinitions();

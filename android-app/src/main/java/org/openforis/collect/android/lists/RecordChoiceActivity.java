@@ -351,7 +351,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 					for (int i=0;i<recordsList.size();i++){
 						CollectRecord record = recordsList.get(i);		
 						List<String> keyValues = record.getRootEntityKeyValues();
-						clusterList[i] = record.getId()+"=="+(i+1)+" "+record.getCreatedBy().getName()
+						clusterList[i] = /*record.getId()+"=="+*/(i+1)+" "+record.getCreatedBy().getName()
 								+"\r\n"+record.getCreationDate();
 						CollectRecord currentRecord = null;
 						List<AttributeDefinition> attrDefs = null;

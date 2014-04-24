@@ -23,7 +23,7 @@
     
     
     <string name="exitAppTitle">Exiting&#8230;</string>    
-    <string name="exitAppMessage">Do you want to exit?</string>
+    <string name="exitAppMessage">Do you want to exit the application?</string>
     <string name="selectFormDefinitionTitle">Back to form definition selection&#8230;</string> 
     <string name="selectFormDefinitionMessage">Do you want to go to form definition selection screen?</string>
     <string name="loadFormDefinitionTitle">Loading form definition&#8230;</string>
