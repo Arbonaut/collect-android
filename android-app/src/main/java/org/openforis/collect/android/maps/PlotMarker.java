@@ -41,13 +41,14 @@ public class PlotMarker extends ItemizedIconOverlay<OverlayItem> {
         final String uid = item.getUid();
         //Log.e("UID","=="+uid);
         //if (uid=="111"){
-        String title = item.getTitle();
+        String title = item.getTitle();   
         String description = item.getSnippet();
            AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext);
-           builder.setTitle("MENU (plot "+title+": "+description+")");
+           builder.setTitle("plot "+title);
+           builder.setMessage(description);  
            builder.setPositiveButton("NAVIGATE", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    ApplicationManager.mapActivity.navigateToPlot(uid);
+                    ApplicationManager.mapActivity.navigateToPlot(/*Integer.valueOf(uid),Integer.valueOf(item.getTitle()),*/item.getPoint());
                }
            });
            builder.setNegativeButton("OPEN", new DialogInterface.OnClickListener() {

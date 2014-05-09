@@ -65,6 +65,9 @@ public class OsmMapActivity extends Activity {
     private double MAP_DEFAULT_LONGITUDE = 25.0179958;
     
     LocationReceiver locRec;
+    
+    private double latestKnowUserLocationLatitude;
+    private double latestKnowUserLocationLongitude;
  
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,6 +94,10 @@ public class OsmMapActivity extends Activity {
         //addPolygon();
         //drawLine(new GeoPoint(62.6, 29.7),new GeoPoint(62.9, 29.9));
         //showCurrentLocation();
+        this.latestKnowUserLocationLatitude = MAP_DEFAULT_LATITUDE;
+        this.latestKnowUserLocationLongitude = MAP_DEFAULT_LONGITUDE;
+        
+        mapView.getOverlays().add(new MapGestureDetectorOverlay(this, mapView));
 	}
 	
 	public void onResume(){
@@ -110,37 +117,111 @@ public class OsmMapActivity extends Activity {
         DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
         List<CollectRecord> savedRecordsSummaries = dataManager.loadSummaries();
         ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
-        for (CollectRecord savedRecordSummary : savedRecordsSummaries){
-        	CollectRecord savedRecord = dataManager.loadRecord(savedRecordSummary.getId());
-        	List<Node<? extends NodeDefinition>> plotsList = savedRecord.getRootEntity().getAll(getResources().getString(R.string.plotEntityField));
-        	for (Node<? extends NodeDefinition> plot : plotsList){
-        		Entity plotEntity = (Entity)plot;
-        		Coordinate plotCenter = (Coordinate) plotEntity.getValue(getResources().getString(R.string.plotCoordinatesField), 0);
-        		Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
-        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
-        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), plotCenter.getY()+","+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
-            	overlayItemArray.add(olItem);
-        	}        	
-        }
-        PlotMarker overlay = new PlotMarker(this, overlayItemArray);
-        mapView.getOverlays().add(overlay);
+        
+    	for (CollectRecord savedRecordSummary : savedRecordsSummaries){
+    		Log.e("savedrecord","id=="+savedRecordSummary.getId());
+    		Log.e("currentrecord","id=="+ApplicationManager.currentRecord.getId());
+    		if (savedRecordSummary.getId().equals(ApplicationManager.currentRecord.getId())){//it is currently opened plot
+	        	CollectRecord savedRecord = dataManager.loadRecord(savedRecordSummary.getId());
+	        	List<Node<? extends NodeDefinition>> plotsList = savedRecord.getRootEntity().getAll(getResources().getString(R.string.plotEntityField));
+	        	for (Node<? extends NodeDefinition> plot : plotsList){
+	        		Entity plotEntity = (Entity)plot;
+	        		Coordinate plotCenter = (Coordinate) plotEntity.getValue(getResources().getString(R.string.plotCoordinatesField), 0);
+	        		Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
+	        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
+	        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), "Y: "+plotCenter.getY()+"\r\nX:"+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
+	            	overlayItemArray.add(olItem);
+	        	}        	
+		        PlotMarker overlay = new PlotMarker(this, overlayItemArray);
+		        mapView.getOverlays().add(overlay);
+		        break;
+    		}
+    	}      
         
         //mapView.getOverlays().add(new PlotOverlay(this));
-        mapView.getOverlays().add(new MapGestureDetectorOverlay(this, mapView));
+        //mapView.getOverlays().add(new MapGestureDetectorOverlay(this, mapView));
+        //drawUserMarker(new Location(""));
+    	
+    	//draw user shapes on map from previous map session
+    	int pointsNo = ApplicationManager.points.size();
+		int linesNo = ApplicationManager.lineEnds.size();
+		int plotsNo = ApplicationManager.plots.size();
+		Log.e("pointsNo","=="+pointsNo);
+		Log.e("linesNo","=="+linesNo);
+		Log.e("plotsNo","=="+plotsNo);
+				
+		if ((pointsNo+linesNo+plotsNo)>0){
+			for (int i=0;i<pointsNo;i++){
+				GeoPoint point = ApplicationManager.points.get(i);
+				this.drawPointMarker(point);
+			}
+			for (int i=0;i<linesNo;i++){
+				GeoPoint startPoint = ApplicationManager.lineEnds.get(i++);
+				/*Log.e("startPoint",startPoint.getLatitudeE6()/1E6+"=="+startPoint.getLongitudeE6()/1E6);
+				OverlayItem olItem = new OverlayItem("3", "LINE","",  startPoint);
+				ArrayList<OverlayItem> overlayLineArray = new ArrayList<OverlayItem>();
+				overlayLineArray.add(olItem);
+				PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+				mapView.getOverlays().add(overlay);
+				*/GeoPoint endPoint = ApplicationManager.lineEnds.get(i);
+				/*olItem = new OverlayItem("3", "LINE","",  endPoint);
+				overlayLineArray = new ArrayList<OverlayItem>();
+				overlayLineArray.add(olItem);
+				overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+				mapView.getOverlays().add(overlay);
+				PathOverlay myOverlay= new PathOverlay(Color.BLUE, this);
+				myOverlay.addPoint(endPoint);
+				mapView.getOverlays().add(myOverlay);
+				mapView.invalidate();*/
+				this.drawLine(startPoint, endPoint, Color.BLUE);
+				this.drawPointMarker(startPoint);
+				this.drawPointMarker(endPoint);
+			}
+			
+			for (int i=0;i<plotsNo;i++){
+				List<GeoPoint> plotCorners =  ApplicationManager.plots.get(i);
+				int plotCornersNo = plotCorners.size();
+				GeoPoint previousCorner = null;
+				for (int j=0;j<plotCornersNo;j++){
+					GeoPoint point = plotCorners.get(j);
+					this.drawPointMarker(point);
+					if (previousCorner!=null){
+						this.drawLine(previousCorner, point, Color.RED);
+					}
+					previousCorner = point;
+				}
+				if (previousCorner!=null){
+					this.drawLine(previousCorner, plotCorners.get(0), Color.RED);
+				}
+			}
+			
+		}    	
         mapView.invalidate();
 	}	
 	
 	public void showCurrentLocation(){
-		Log.e("showCurrentLocation","==================");
+		Log.e("showCurrentLocation","===============================");
 		this.turnGPSOn();
 		locRec = new LocationReceiver((LocationManager) getSystemService(Context.LOCATION_SERVICE));
 		locRec.getCurrentLocation();		
 	}
+
+	public void drawPointMarker(GeoPoint point){
+		Log.e("drawPointMarker","================");
+		ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
+		//GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+		OverlayItem olItem = new OverlayItem("Current location", "", point);
+    	overlayItemArray.add(olItem);
+    	mapView.getOverlays().add(new UserMarker(this, overlayItemArray, point.getLatitudeE6()/1E6, point.getLongitudeE6()/1E6));
+		//mapView.getOverlays().add(new UserMarker(marker, location.getLatitude(), location.getLongitude(), resourceProxy));
+		//mapView.getOverlays().add(new UserMarker(marker, location.getLongitude(), location.getLatitude(), resourceProxy));
+		mapView.invalidate();
+	}
 	
 	public void drawUserMarker(Location location){
 		Log.e("drawUserMarker","================");
-		//location.setLatitude(60.2477);
-		//location.setLongitude(25.011);
+		//location.setLatitude(60.2677);
+		//location.setLongitude(25.02);
 		Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_mylocation);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
 		ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
@@ -152,14 +233,20 @@ public class OsmMapActivity extends Activity {
 			}
 		}
 		Log.e("marker drawn",location.getLatitude()+"=="+location.getLongitude());
-		mapView.getOverlays().add(new UserMarker(marker, location.getLatitude(), location.getLongitude(), resourceProxy));
+		ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
+		GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+		OverlayItem olItem = new OverlayItem("Current location", "Y: "+location.getLatitude()+"\r\nX:"+location.getLongitude(), userLocation);
+    	overlayItemArray.add(olItem);
+    	mapView.getOverlays().add(new UserMarker(this, overlayItemArray, location.getLatitude(), location.getLongitude()));
+		//mapView.getOverlays().add(new UserMarker(marker, location.getLatitude(), location.getLongitude(), resourceProxy));
 		//mapView.getOverlays().add(new UserMarker(marker, location.getLongitude(), location.getLatitude(), resourceProxy));
+		mapView.getController().setCenter(new GeoPoint(location.getLatitude(), location.getLongitude()));
 		mapView.invalidate();
 	}
 	
-	public PathOverlay drawLine(GeoPoint pt1, GeoPoint pt2){
+	public PathOverlay drawLine(GeoPoint pt1, GeoPoint pt2, int color){
 		Log.e("drawingLine","============");
-		PathOverlay myOverlay= new PathOverlay(Color.RED, this);
+		PathOverlay myOverlay= new PathOverlay(color, this);
 	    //myOverlay.getPaint().setStyle(Paint.Style.FILL);
 	    myOverlay.addPoint(pt1);
 	    myOverlay.addPoint(pt2);
@@ -216,11 +303,11 @@ public class OsmMapActivity extends Activity {
 	    mapView.getOverlays().add(myOverlay);
 	}
 	
-	public void navigateToPlot(String plotId){
-		Log.e("navigation","started"+plotId);
+	public void navigateToPlot(GeoPoint plotLocation){
+		Log.e("navigation","started"+plotLocation.getLatitudeE6()+"=="+plotLocation.getLongitudeE6());
 		this.turnGPSOn();
 		locRec = new LocationReceiver((LocationManager) getSystemService(Context.LOCATION_SERVICE));
-		locRec.startNavigating(new GeoPoint(62.61,29.79));
+		locRec.startNavigating(plotLocation);
 		//mapView.getOverlays().remove(mapView.getOverlays().size()-1);
 		
 	}
@@ -314,9 +401,18 @@ public class OsmMapActivity extends Activity {
 			    return true;
 			case R.id.menu_map_plot_drawing_ends:
 				this.stopDrawingPlot();
+			    return true;
+			case R.id.menu_map_add_point:
+				this.startDrawingDot();
+			    return true;			
+			case R.id.menu_map_plot_add_line:
+				this.startDrawingLine();
 			    return true;			    
 			case R.id.menu_map_refresh_location:
 				this.showCurrentLocation();
+			    return true;
+			case R.id.menu_map_save_to_kml:
+				Log.e("rezultat zapisu","=="+this.saveShapesToKML());
 			    return true;
 			case R.id.menu_map_exit:
 				AlertMessage.createPositiveNegativeDialog(OsmMapActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
@@ -405,29 +501,118 @@ public class OsmMapActivity extends Activity {
 	
 	public void startDrawingPlot(){
 		ApplicationManager.isPlotDrawingStarted = true;
+		ApplicationManager.isDotDrawingStarted = false;
+		ApplicationManager.isLineDrawingStarted = false;
+		ApplicationManager.plots.add(new ArrayList<GeoPoint>());
 		Log.e("drawing","STARTED");
 	}
 	
 	public void stopDrawingPlot(){
 		ApplicationManager.isPlotDrawingStarted = false;
-		int savingResult = savePlotShapeToFile(MapGestureDetectorOverlay.plotCorners);
-		MapGestureDetectorOverlay.plotCorners.clear();
-		Log.e("drawing","FINISHED"+savingResult);
+		List<GeoPoint> plotCorners = ApplicationManager.plots.get(ApplicationManager.plots.size()-1);		
+		this.drawLine(plotCorners.get(0), plotCorners.get(plotCorners.size()-1), Color.RED);
+		//int savingResult = savePlotShapeToFile(MapGestureDetectorOverlay.plotCorners);
+		//MapGestureDetectorOverlay.plotCorners.clear();
+		Log.e("drawing","FINISHED");
 	}
 	
-	private int savePlotShapeToFile(List<GeoPoint> plotCorners){
-		Log.e("saving plot","to KML file"+plotCorners.size());
+	public void startDrawingLine(){
+		ApplicationManager.isLineDrawingStarted = true;
+		ApplicationManager.isPlotDrawingStarted = false;
+		ApplicationManager.isDotDrawingStarted = false;
+		Log.e("drawing LINE","STARTED");
+	}
+	
+	public static void stopDrawingLine(){
+		ApplicationManager.isLineDrawingStarted = false;
+		Log.e("drawing LINE","FINISHED");
+	}
+
+	public void startDrawingDot(){
+		ApplicationManager.isDotDrawingStarted = true;
+		ApplicationManager.isPlotDrawingStarted = false;
+		ApplicationManager.isLineDrawingStarted = false;
+		Log.e("drawing DOT","STARTED");
+	}
+	
+	public static void stopDrawingDot(){
+		ApplicationManager.isDotDrawingStarted = false;
+		Log.e("drawing DOT","FINISHED");
+	}	
+	
+	private int saveShapesToKML(){
+		Log.e("saving shapes","to KML file");
 		/*
 	 	<kml xmlns="http://earth.google.com/kml/2.0">
 		  <Placemark>
-		   <name>Bora-Bora Airport</name>
 		   <Point>
 		     <coordinates>-151.752044,-16.443118</coordinates>
 		   </Point>
 		  </Placemark>
 		</kml>
 		 */
-		if (plotCorners.size()>2){
+		int pointsNo = ApplicationManager.points.size();
+		int linesNo = ApplicationManager.lineEnds.size();
+		int plotsNo = ApplicationManager.plots.size();
+		
+		
+		if ((pointsNo+linesNo+plotsNo)>0){
+			try{
+				File file = new File(Environment.getExternalStorageDirectory().toString()
+						+getResources().getString(R.string.plotBoundariesSavingPath)
+						+getResources().getString(R.string.plotBoundariesSavingBaseFileName)
+						+System.currentTimeMillis()
+						+getResources().getString(R.string.plotBoundariesSavingFileExtension));
+				if (!file.exists()) {
+					file.createNewFile();
+				}
+	 
+				FileWriter fw = new FileWriter(file.getAbsoluteFile());
+				BufferedWriter bw = new BufferedWriter(fw);
+				
+				bw.write("<kml>\r\n");
+				
+				for (int i=0;i<pointsNo;i++){
+					bw.write("\t<placemark>\r\n");
+					GeoPoint point = ApplicationManager.points.get(i);
+					bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
+					bw.write("\t</placemark>\r\n");
+				}
+				for (int i=0;i<linesNo;i++){
+					bw.write("\t<placemark>\r\n");
+					GeoPoint point = ApplicationManager.lineEnds.get(i++);
+					bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
+					point = ApplicationManager.lineEnds.get(i);
+					bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
+					bw.write("\t</placemark>\r\n");
+				}
+				for (int i=0;i<plotsNo;i++){
+					bw.write("\t<placemark>\r\n");
+					List<GeoPoint> plotCorners = ApplicationManager.plots.get(i);
+					int plotCornersNo = plotCorners.size();
+					for (int j=0;j<plotCornersNo;j++){
+						GeoPoint point = plotCorners.get(j);
+						bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
+					}
+					bw.write("\t</placemark>\r\n");
+				}
+				
+				bw.write("</kml>");
+				bw.close();
+			} catch (Exception e){
+				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":savePlotShapeToFile",
+	    				Environment.getExternalStorageDirectory().toString()
+	    				+getResources().getString(R.string.logs_folder)
+	    				+getResources().getString(R.string.logs_file_name)
+	    				+System.currentTimeMillis()
+	    				+getResources().getString(R.string.log_file_extension));
+			}				
+		} else {
+			return -1;//no shapes on the map so nothing to save
+		}
+		
+		return 0;
+		/*if (plotCorners.size()>2){
 			try{
 				File file = new File(Environment.getExternalStorageDirectory().toString()
 						+getResources().getString(R.string.plotBoundariesSavingPath)
@@ -458,6 +643,6 @@ public class OsmMapActivity extends Activity {
 		} else {
 			return -1;//plot has to have at least 3 corners
 		}
-		return 0;
+		return 0;*/
 	}
 }

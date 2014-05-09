@@ -31,6 +31,7 @@ import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.metamodel.NodeLabel.Type;
 import org.openforis.idm.metamodel.Survey;
 import org.openforis.idm.model.Entity;
+import org.osmdroid.util.GeoPoint;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -102,7 +103,12 @@ public class ApplicationManager extends BaseActivity {
 	
 	public static boolean isBackFromTaxonSearch;
 	
+	public static List<List<GeoPoint>> plots;
+	public static List<GeoPoint> lineEnds;
+	public static List<GeoPoint> points;
 	public static boolean isPlotDrawingStarted;
+	public static boolean isLineDrawingStarted;
+	public static boolean isDotDrawingStarted;
 	
 	private Thread creationThread = new Thread() {
 		@Override
@@ -166,6 +172,11 @@ public class ApplicationManager extends BaseActivity {
 	            
 	            //showRootEntitiesListScreen();
 	            ApplicationManager.isPlotDrawingStarted = false;
+	            ApplicationManager.isLineDrawingStarted = false;
+	            ApplicationManager.isDotDrawingStarted = false;
+	            ApplicationManager.plots = new ArrayList<List<GeoPoint>>();
+	            ApplicationManager.lineEnds = new ArrayList<GeoPoint>();
+	            ApplicationManager.points = new ArrayList<GeoPoint>();
 	            showFormsListScreen();
 			} catch (Exception e) {
 				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",

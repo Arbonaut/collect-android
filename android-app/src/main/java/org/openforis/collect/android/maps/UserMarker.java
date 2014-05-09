@@ -3,50 +3,61 @@ package org.openforis.collect.android.maps;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osmdroid.ResourceProxy;
+import org.openforis.collect.android.management.ApplicationManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedOverlay;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
-import android.graphics.Canvas;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 
-class UserMarker extends ItemizedOverlay<OverlayItem>{    	 
+class UserMarker extends ItemizedIconOverlay<OverlayItem>{ 
+	protected Context ctx;
 
 	private List<OverlayItem> locations = new ArrayList<OverlayItem>();
 	//private Drawable marker;
 
-	public UserMarker(Drawable defaultMarker, double latitude, double longitude, ResourceProxy pResourceProxy) {
-		super(defaultMarker,pResourceProxy);
+	public UserMarker(final Context context, final List<OverlayItem> aList/*Drawable defaultMarker, double latitude, double longitude, ResourceProxy pResourceProxy*/, double latitude, double longitude) {
+		//super(defaultMarker,pResourceProxy);
+		super(context, aList, new OnItemGestureListener<OverlayItem>() {
+            @Override public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                return false;
+        }
+        @Override public boolean onItemLongPress(final int index, final OverlayItem item) {
+                return false;
+        }
+      } );
 		//this.marker=defaultMarker;
-		GeoPoint userLocation = new GeoPoint(latitude, longitude);
-		locations.add(new OverlayItem("Current location", "Current location", userLocation));
-		populate();
+		//GeoPoint userLocation = new GeoPoint(latitude, longitude);
+		//locations.add(new OverlayItem("Current location", "Current location", userLocation));
+		//populate();
+		this.ctx = context;
 	}
 	
 	@Override
-	protected OverlayItem createItem(int i) {
-		// TODO Auto-generated method stub
-		return locations.get(i);
-	}
-	
-	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return locations.size();
-	}
-	
-	@Override
-	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-		// TODO Auto-generated method stub
-		super.draw(canvas, mapView, shadow);
-	}
-
-	@Override
-	public boolean onSnapToItem(int arg0, int arg1, Point arg2, MapView arg3) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    protected boolean onSingleTapUpHelper(final int index, final OverlayItem item, final MapView mapView) {
+        //Toast.makeText(mContext, "Item " + index + " has been tapped!", Toast.LENGTH_SHORT).show();
+        /*AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+        dialog.setTitle(item.getTitle());
+        dialog.setMessage(item.getSnippet()+item.getUid());
+        dialog.show();*/
+        //final String uid = item.getUid();
+        //Log.e("UID","=="+uid);
+        //if (uid=="111"){
+        //String title = item.getTitle();
+        String description = item.getSnippet();
+           AlertDialog.Builder builder = new AlertDialog.Builder(this.ctx);
+           builder.setTitle("USER POSITION");
+           builder.setMessage(description); 
+           builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    
+               }
+           });
+            builder.show();
+        //}
+        return true;
+    }
 }

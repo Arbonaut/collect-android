@@ -4,6 +4,7 @@ import org.openforis.collect.android.management.ApplicationManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.PathOverlay;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -37,7 +38,7 @@ public class LocationChangeListener implements LocationListener {
 				Log.e("user->plot distance","=="+ApplicationManager.mapActivity.haversine(location.getLatitude(), location.getLongitude(), destination.getLatitudeE6()/1000000, destination.getLongitudeE6()/1000000));
 				if (ApplicationManager.mapActivity.haversine(location.getLatitude(), location.getLongitude(), destination.getLatitudeE6()/1000000, destination.getLongitudeE6()/1000000)>distanceThreshold){				    
 				    ApplicationManager.mapActivity.removeOverlay(this.latestDirection);
-					this.latestDirection = ApplicationManager.mapActivity.drawLine(new GeoPoint(location),this.destination);	
+					this.latestDirection = ApplicationManager.mapActivity.drawLine(new GeoPoint(location),this.destination,Color.RED);	
 				} else {
 					ApplicationManager.mapActivity.stopNavigationToPlot();
 				}

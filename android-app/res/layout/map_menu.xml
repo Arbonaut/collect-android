@@ -3,12 +3,21 @@
 
     <item android:id="@+id/menu_map_refresh_location"
           android:title="@string/map_refresh_location" />
+
+    <item android:id="@+id/menu_map_add_point"
+          android:title="@string/map_draw_dot" />    
+    
+    <item android:id="@+id/menu_map_plot_add_line"
+          android:title="@string/map_draw_line" />
     
     <item android:id="@+id/menu_map_plot_drawing_starts"
           android:title="@string/map_draw_plot_start" />
     
     <item android:id="@+id/menu_map_plot_drawing_ends"
           android:title="@string/map_draw_plot_end" />
+    
+    <item android:id="@+id/menu_map_save_to_kml"
+          android:title="@string/map_save_to_kml" />
     
     <item android:id="@+id/menu_map_exit"
           android:title="@string/exit" />
