@@ -122,6 +122,9 @@
     <string name="map_draw_plot_start">Mark plot boundaries</string>
     <string name="map_draw_plot_end">Finish marking plot</string>
     <string name="map_save_to_kml">Save as KML file</string>
+    <string name="map_save_to_kml_result_title">Saving to KML&#8230;</string>
+    <string name="map_save_to_kml_result_message_successfull">succeeded.</string>
+    <string name="map_save_to_kml_result_message_unsuccessfull">didn\'t succeed.</string>
     <string name="export_to_xml">Export to XML</string>
     <string name="export_all_to_zip">Export all</string>
     <string name="import_from_xml_file">Import from XML</string>

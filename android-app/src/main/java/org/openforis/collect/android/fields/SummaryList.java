@@ -122,10 +122,13 @@ public class SummaryList extends UIElement {
 			if (stringValue!=null && !stringValue.equals("")){
 				key.add(stringValue);
 				isAtLeastOneKeyValue = true;
-			}					
+			}
 			keysList.add(key);
 			Log.e("value","=="+stringValue);
-			this.plotNo = Integer.valueOf(stringValue);
+			if (stringValue!=null)
+				this.plotNo = Integer.valueOf(stringValue);
+			else 
+				this.plotNo = -1;
 		}
 			
 			String keysLine = "";

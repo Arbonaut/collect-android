@@ -47,6 +47,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * 
@@ -127,10 +129,12 @@ public class OsmMapActivity extends Activity {
 	        	for (Node<? extends NodeDefinition> plot : plotsList){
 	        		Entity plotEntity = (Entity)plot;
 	        		Coordinate plotCenter = (Coordinate) plotEntity.getValue(getResources().getString(R.string.plotCoordinatesField), 0);
-	        		Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
-	        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
-	        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), "Y: "+plotCenter.getY()+"\r\nX:"+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
-	            	overlayItemArray.add(olItem);
+	        		if (plotCenter!=null){
+	        			Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
+		        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
+		        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), "Y: "+plotCenter.getY()+"\r\nX:"+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
+		            	overlayItemArray.add(olItem);	
+	        		}	        		
 	        	}        	
 		        PlotMarker overlay = new PlotMarker(this, overlayItemArray);
 		        mapView.getOverlays().add(overlay);
@@ -199,6 +203,34 @@ public class OsmMapActivity extends Activity {
         mapView.invalidate();
 	}	
 	
+	@Override
+    protected void onDestroy() {
+	    super.onDestroy();
+	    Log.i(getResources().getString(R.string.app_name),TAG+":onDestroy");
+	    unbindDrawables(findViewById(R.id.rootMapView));
+	    System.gc();
+    }
+	
+	@Override
+    protected void onPause() {
+	    super.onPause();
+	    Log.i(getResources().getString(R.string.app_name),TAG+":onPause");
+	    unbindDrawables(findViewById(R.id.rootMapView));
+	    System.gc();
+    }
+
+    private void unbindDrawables(View view) {
+        if (view.getBackground() != null) {
+        view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+            	unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
+        }
+    }
+	
 	public void showCurrentLocation(){
 		Log.e("showCurrentLocation","===============================");
 		this.turnGPSOn();
@@ -207,7 +239,6 @@ public class OsmMapActivity extends Activity {
 	}
 
 	public void drawPointMarker(GeoPoint point){
-		Log.e("drawPointMarker","================");
 		ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
 		//GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
 		OverlayItem olItem = new OverlayItem("Current location", "", point);
@@ -245,7 +276,6 @@ public class OsmMapActivity extends Activity {
 	}
 	
 	public PathOverlay drawLine(GeoPoint pt1, GeoPoint pt2, int color){
-		Log.e("drawingLine","============");
 		PathOverlay myOverlay= new PathOverlay(color, this);
 	    //myOverlay.getPaint().setStyle(Paint.Style.FILL);
 	    myOverlay.addPoint(pt1);
@@ -412,7 +442,17 @@ public class OsmMapActivity extends Activity {
 				this.showCurrentLocation();
 			    return true;
 			case R.id.menu_map_save_to_kml:
-				Log.e("rezultat zapisu","=="+this.saveShapesToKML());
+				int savingResult = this.saveShapesToKML();
+				AlertMessage.createPositiveDialog(OsmMapActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
+	 					getResources().getString(R.string.map_save_to_kml_result_title), (savingResult==0)?getResources().getString(R.string.map_save_to_kml_result_message_successfull):getResources().getString(R.string.map_save_to_kml_result_message_unsuccessfull),
+	 					getResources().getString(R.string.okay),
+	 		    		new DialogInterface.OnClickListener() {
+	 						@Override
+	 						public void onClick(DialogInterface dialog, int which) {
+	 							
+	 						}
+	 					},
+	 					null).show();
 			    return true;
 			case R.id.menu_map_exit:
 				AlertMessage.createPositiveNegativeDialog(OsmMapActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
