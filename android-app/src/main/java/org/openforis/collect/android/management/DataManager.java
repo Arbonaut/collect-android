@@ -204,7 +204,7 @@ public class DataManager {
 		//MobileRecordManager recordManager = (MobileRecordManager) ServiceFactory.getRecordManager();
 		List<CollectRecord> recordsList = ServiceFactory.getRecordManager().getRecordDao().loadSummaries(survey, rootEntity);
 		//android.os.Debug.stopMethodTracing();
-		System.err.println("LOADING SUMMARIESS");
+		System.err.println("LOADING SUMMARIES");
 		Log.e("loadSummaries","=="+((System.currentTimeMillis()-startTime)));
 		//JdbcDaoSupport.close();
 		ApplicationManager.isRecordListUpToDate = true;

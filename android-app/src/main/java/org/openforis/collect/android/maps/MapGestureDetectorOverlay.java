@@ -152,7 +152,7 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 					mapView.invalidate();
 					ApplicationManager.lineEnds.add(currentLineEnd);
 					if ((ApplicationManager.lineEnds.size()%2)==0){
-						OsmMapActivity.stopDrawingLine();	
+						OsmMapActivity_notworking.stopDrawingLine();	
 					}
 				}
 			});
@@ -164,14 +164,14 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 			public void onClick(DialogInterface dialog, int id) {
 				Log.e("drawing dot marker",lat+"=="+lng);
 				GeoPoint currentPoint = new GeoPoint(lat,lng);
-				OverlayItem olItem = new OverlayItem("2", "DOT",lat+","+lng,  currentPoint);
+				OverlayItem olItem = new OverlayItem("2", "123",lat+","+lng,  currentPoint);
 				ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
 				overlayItemArray.add(olItem);
 				PlotMarker overlay = new PlotMarker(MapGestureDetectorOverlay.this.context, overlayItemArray);
 				mapView.getOverlays().add(overlay);
 				ApplicationManager.points.add(currentPoint);
 				mapView.invalidate();
-				OsmMapActivity.stopDrawingDot();
+				OsmMapActivity_notworking.stopDrawingDot();
 			}
 			});
 			builder.show();

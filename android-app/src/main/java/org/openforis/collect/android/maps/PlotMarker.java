@@ -10,6 +10,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 
 /**
  * 
@@ -39,6 +40,7 @@ public class PlotMarker extends ItemizedIconOverlay<OverlayItem> {
         dialog.setMessage(item.getSnippet()+item.getUid());
         dialog.show();*/
         final String uid = item.getUid();
+        Log.e("uid","=="+uid);
         //Log.e("UID","=="+uid);
         //if (uid=="111"){
         String title = item.getTitle();   

@@ -49,21 +49,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 /**
  * 
  * @author K. Waga
  *
  */
-
-
-
-public class OsmMapActivity extends Activity {
+public class OsmMapActivity_notworking extends Activity {
 	
 	private static final String TAG = "MapActivity";
-	 
+ 
 	private MapView mapView;
 	
     private int MAP_DEFAULT_ZOOM = 14;
@@ -82,14 +77,14 @@ public class OsmMapActivity extends Activity {
 		Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
 		setContentView(R.layout.osm_map);
 		
-		ApplicationManager.mapActivity = this;
+		//ApplicationManager.mapActivity = this;
 		this.locRec = null;
  
 		mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
         mapView.setClickable(true);        
-        //mapView.setBackgroundColor(Color.RED);
+        mapView.setBackgroundColor(Color.RED);
         mapView.setUseDataConnection(false);
         mapView.getController().setZoom(MAP_DEFAULT_ZOOM);
         mapView.getController().setCenter(new GeoPoint(MAP_DEFAULT_LATITUDE, MAP_DEFAULT_LONGITUDE));
@@ -141,9 +136,7 @@ public class OsmMapActivity extends Activity {
 	        		if (plotCenter!=null){
 	        			Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
 		        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
-		        		Log.e("savedRecord.getId()","=="+savedRecord.getId());
 		        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), "Y: "+plotCenter.getY()+"\r\nX:"+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
-		        		Log.e("olItem.getUid()","=="+olItem.getUid());
 		            	overlayItemArray.add(olItem);	
 	        		}	        		
 	        	}        	
@@ -178,8 +171,7 @@ public class OsmMapActivity extends Activity {
 				overlayLineArray.add(olItem);
 				PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
 				mapView.getOverlays().add(overlay);
-				*/
-				GeoPoint endPoint = ApplicationManager.lineEnds.get(i);
+				*/GeoPoint endPoint = ApplicationManager.lineEnds.get(i);
 				/*olItem = new OverlayItem("3", "LINE","",  endPoint);
 				overlayLineArray = new ArrayList<OverlayItem>();
 				overlayLineArray.add(olItem);
@@ -219,7 +211,7 @@ public class OsmMapActivity extends Activity {
     protected void onDestroy() {
 	    super.onDestroy();
 	    Log.i(getResources().getString(R.string.app_name),TAG+":onDestroy");
-	    //unbindDrawables(findViewById(R.id.rootMapView));
+	    unbindDrawables(findViewById(R.id.rootMapView));
 	    System.gc();
     }
 	
@@ -227,7 +219,7 @@ public class OsmMapActivity extends Activity {
     protected void onPause() {
 	    super.onPause();
 	    Log.i(getResources().getString(R.string.app_name),TAG+":onPause");
-	    //unbindDrawables(findViewById(R.id.rootMapView));
+	    unbindDrawables(findViewById(R.id.rootMapView));
 	    System.gc();
     }
 
@@ -409,7 +401,7 @@ public class OsmMapActivity extends Activity {
     @Override
     public void onBackPressed() {
     	try{
-			OsmMapActivity.this.finish();
+			OsmMapActivity_notworking.this.finish();
     	}catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onBackPressed",
     				Environment.getExternalStorageDirectory().toString()
@@ -457,7 +449,7 @@ public class OsmMapActivity extends Activity {
 			    return true;
 			case R.id.menu_map_save_to_kml:
 				int savingResult = this.saveShapesToKML();
-				AlertMessage.createPositiveDialog(OsmMapActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
+				AlertMessage.createPositiveDialog(OsmMapActivity_notworking.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.map_save_to_kml_result_title), (savingResult==0)?getResources().getString(R.string.map_save_to_kml_result_message_successfull):getResources().getString(R.string.map_save_to_kml_result_message_unsuccessfull),
 	 					getResources().getString(R.string.okay),
 	 		    		new DialogInterface.OnClickListener() {
@@ -469,7 +461,7 @@ public class OsmMapActivity extends Activity {
 	 					null).show();
 			    return true;
 			case R.id.menu_map_exit:
-				AlertMessage.createPositiveNegativeDialog(OsmMapActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
+				AlertMessage.createPositiveNegativeDialog(OsmMapActivity_notworking.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.exitAppTitle), getResources().getString(R.string.exitAppMessage),
 	 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
 	 		    		new DialogInterface.OnClickListener() {
@@ -490,7 +482,7 @@ public class OsmMapActivity extends Activity {
 	 								ApplicationManager.formSelectionActivity.finish();
 	 							}
 	 							ApplicationManager.mainActivity.finish();
-	 							OsmMapActivity.this.finish();
+	 							OsmMapActivity_notworking.this.finish();
 	 						}
 	 					},
 	 		    		new DialogInterface.OnClickListener() {

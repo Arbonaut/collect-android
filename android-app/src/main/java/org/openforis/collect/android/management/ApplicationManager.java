@@ -151,7 +151,9 @@ public class ApplicationManager extends BaseActivity {
 			    folder = new File(sdcardPath+getResources().getString(R.string.codelists_folder));
 			    folder.mkdirs();
 			    folder = new File(sdcardPath+getResources().getString(R.string.plotBoundariesSavingPath));
-			    folder.mkdirs();			    
+			    folder.mkdirs();
+			    folder = new File(sdcardPath+getResources().getString(R.string.maps_folder));
+			    folder.mkdirs();
 			    
 	        	ApplicationManager.uiElementsMap = new HashMap<Integer,UIElement>();        	
 	        	

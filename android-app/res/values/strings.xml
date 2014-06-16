@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">OFC Mobile</string>
-     
     <string name="aboutTabTitle">About</string>
     <string name="lblApplicationName">Application name:\u0020</string>
     <string name="lblProgramVersionName">Application version:\u0020</string>
@@ -20,43 +20,41 @@
     <string name="lblFontSize">Font size:\u0020</string>
     <string name="lblRecordDownloadPath">Records download path:\u0020</string>
     <string name="lblRecordUploadPath">Records upload path:\u0020</string>
-    
-    
-    <string name="exitAppTitle">Exiting&#8230;</string>    
+    <string name="exitAppTitle">Exiting&#8230;</string>
     <string name="exitAppMessage">Do you want to exit the application?</string>
-    <string name="selectFormDefinitionTitle">Back to form definition selection&#8230;</string> 
+    <string name="selectFormDefinitionTitle">Back to form definition selection&#8230;</string>
     <string name="selectFormDefinitionMessage">Do you want to go to form definition selection screen?</string>
     <string name="loadFormDefinitionTitle">Loading form definition&#8230;</string>
     <string name="loadFormDefinitionMessage">Form definition could not be loaded. Make sure that the file exists and contains correct form definition.</string>
-    <string name="selectFormDefinitionFromDatabaseErrorTitle">Loading form definitions from database&#8230;</string> 
-    <string name="selectFormDefinitionFromDatabaseErrorMessage">Error has occured while loading form definitions from database file. Please make sure the form definitions in the database are correct.</string>    
-    <string name="selectRootEntityTitle">Back to root entity selection&#8230;</string>    
+    <string name="selectFormDefinitionFromDatabaseErrorTitle">Loading form definitions from database&#8230;</string>
+    <string name="selectFormDefinitionFromDatabaseErrorMessage">Error has occured while loading form definitions from database file. Please make sure the form definitions in the database are correct.</string>
+    <string name="selectRootEntityTitle">Back to root entity selection&#8230;</string>
     <string name="selectRootEntityMessage">Do you want to go to root entity selection screen?</string>
-    <string name="selectRecordTitle">Back to record selection&#8230;</string>    
+    <string name="selectRecordTitle">Back to record selection&#8230;</string>
     <string name="selectRecordMessage">Do you want to go to record selection screen?</string>
     <string name="startGpsTitle">Starting GPS&#8230;</string>
     <string name="startGpsMessage">GPS on your device is disabled. Do you want to enable it in operating system Settings?</string>
-    <string name="savingDataTitle">Saving&#8230;</string>    
+    <string name="savingDataTitle">Saving&#8230;</string>
     <string name="savingDataQuestionMessage">Do you want to save data from form?</string>
     <string name="savingDataSuccessMessage">Record successfully saved.</string>
     <string name="savingDataFailureMessage">Record could not be saved.</string>
-    <string name="gettingCoordsFinishedTitle">Getting coordinates&#8230;</string>    
+    <string name="gettingCoordsFinishedTitle">Getting coordinates&#8230;</string>
     <string name="gettingCoordsSuccessMessage">Coordinates retrieved from GPS.</string>
-    <string name="gettingCoordsFailureMessage">Coordinates could not be retrieved from GPS, because of timeout.</string>    
+    <string name="gettingCoordsFailureMessage">Coordinates could not be retrieved from GPS, because of timeout.</string>
     <string name="backingupDataSuccessMessage">Data successfully saved.</string>
-    <string name="backingupDataFailureMessage">Data could not be saved.</string>    
+    <string name="backingupDataFailureMessage">Data could not be saved.</string>
     <string name="savingToDatabase">Save</string>
     <string name="savingToFile">XML</string>
-    <string name="openingPlotListTitle">Back to list&#8230;</string>    
+    <string name="openingPlotListTitle">Back to list&#8230;</string>
     <string name="openingPlotListMessage">Do you want to open list of forms?</string>
     <string name="editingMemoField">Editing</string>
     <string name="deleteRecordTitle">Deleting&#8230;</string>
     <string name="deleteRecord">Do you want to delete the record?</string>
     <string name="deleteEntityTitle">Deleting&#8230;</string>
-    <string name="deleteEntity">Do you want to delete the entity?</string>  
+    <string name="deleteEntity">Do you want to delete the entity?</string>
     <string name="deleteAttributeTitle">Deleting&#8230;</string>
-    <string name="deleteAttribute">Do you want to delete the attribute\'s value?</string>      
-    <string name="noInternetTitle">No connection&#8230;</string>    
+    <string name="deleteAttribute">Do you want to delete the attribute\'s value?</string>
+    <string name="noInternetTitle">No connection&#8230;</string>
     <string name="noInternetMessage">There is no connection to Internet available. Make sure you are connected to network and then try to upload data again.</string>
     <string name="maxCountTitle">Too many&#8230;</string>
     <string name="maxCountMessage">Number of instances of this element has reached maximum.</string>
@@ -66,21 +64,18 @@
     <string name="addNewAttributeMessage">Do you want to add a new instance of the attribute?</string>
     <string name="uploadToServerSuccessfulTitle">Upload completed</string>
     <string name="uploadToServerSuccessfulMessage">Uploading data to server successfully finished.</string>
-    <string name="downloadToDeviceSuccessfulTitle">Download completed</string>       
+    <string name="downloadToDeviceSuccessfulTitle">Download completed</string>
     <string name="downloadToDeviceSuccessfulMessage">Downloading data the device successfully finished.</string>
-    <string name="copyingDatabaseTitle">Copying database&#8230;</string>    
+    <string name="copyingDatabaseTitle">Copying database&#8230;</string>
     <string name="copyingDatabaseWrongFileExtensionMessage">Selected file does not seem to be database file (its extension is not .db)</string>
     <string name="backupingDatabaseTitle">Exporting database&#8230;</string>
     <string name="backupingDatabaseMessageSuccess">Database file exported.</string>
     <string name="backupingDatabaseMessageFileNotFound">Database file could not be exported, because no database was found.</string>
     <string name="backupingDatabaseMessageIOException">Database file could not be exported, because destination folder on sdcard was not found.</string>
-    <string name="retrievingGpsTitle">Retrieving location from GPS&#8230;</string>    
-    <string name="retrievingGpsMessage">Please wait until location is being retrieved from GPS.</string>	
-    
+    <string name="retrievingGpsTitle">Retrieving location from GPS&#8230;</string>
+    <string name="retrievingGpsMessage">Please wait until location is being retrieved from GPS.</string>
     <string name="attributeDeletedToast">Attribute was deleted.</string>
     <string name="entityDeletedToast">Entity was deleted.</string>
-    
-  
     <string name="footerSave">Save</string>
     <string name="footerClusterList">Back to list</string>
     <string name="yes">Yes</string>
@@ -105,14 +100,10 @@
     <string name="taxonSearchBy">Search by\u0020</string>
     <string name="taxonSearchButtonLabel">Search</string>
     <string name="taxonSearchResultsLabel">Search results:\u0020</string>
-    <string name="taxonSearchByHint">Enter species name</string>	
-    
-  
+    <string name="taxonSearchByHint">Enter species name</string>
     <string name="arbonautlogo">Arbonaut logo</string>
     <string name="faologo">FAO logo</string>
     <string name="ofclogo">OpenForisCollect logo</string>
-    
-  
     <string name="open">Back to list</string>
     <string name="save">Save</string>
     <string name="map">Show map</string>
@@ -132,30 +123,22 @@
     <string name="backup_database">Backup local database</string>
     <string name="import_codelist_from_csv_file">Import code list from CSV</string>
     <string name="import_species_from_csv_file">Import species from CSV</string>
-    <string name="download_from_server">Download XML</string>    
+    <string name="download_from_server">Download XML</string>
     <string name="upload_to_server">Upload XML</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="exit">Exit</string>
-    
     <string name="addNewRecord">Add new</string>
     <string name="addNewSurvey">Add new survey from file /sdcard</string>
-    
-    
- 
     <string name="settingsScreenTitle">SETTINGS</string>
     <string name="showSoftKeyboardOnNumeric">Show soft-keyboard on numeric fields</string>
     <string name="showSoftKeyboardOnText">Show soft-keyboard on text fields</string>
     <string name="whiteBackground">Use white background</string>
-    
     <string name="plotListPrompt">Choose entity </string>
     <string name="plotListTitle">Insert name </string>
-    
-    
-    
     <string name="workInProgress">Processing&#8230;</string>
     <string name="saving">Saving&#8230;</string>
-    <string name="loading">Loading&#8230;</string>   
+    <string name="loading">Loading&#8230;</string>
     <string name="launchAppMessage">Launching application&#8230;</string>
     <string name="loadingNewFormDefinitionMessage">Loading new form definition&#8230;</string>
     <string name="unmarshallingSurveyMessage">Unmarshalling form definition from file&#8230;</string>
@@ -170,12 +153,10 @@
     <string name="loadingSavedRecord">Loading the selected record&#8230;</string>
     <string name="loadingNewRecord">Creating new record&#8230;</string>
     <string name="loadingMultipleEntitiesList">Loading list of entities&#8230;</string>
-   	<string name="loadingSavedEntity">Loading the selected entity instance&#8230;</string>
+    <string name="loadingSavedEntity">Loading the selected entity instance&#8230;</string>
     <string name="loadingNewEntity">Creating new entity instance&#8230;</string>
     <string name="scrollingToOtherEntity">Fetching values&#8230;</string>
-    <string name="scrollingToOtherMultipleAttribute">Fetching values&#8230;</string>	
-    
-   
+    <string name="scrollingToOtherMultipleAttribute">Fetching values&#8230;</string>
     <string name="clusterChoiceFailedBecauseNoDataSaved">No data saved in local database</string>
     <string name="clusterChoiceListLabel">Available records</string>
     <string name="rootEntityChoiceListLabel">Select root entity</string>
@@ -190,13 +171,14 @@
     <string name="dataToUplaodColumnHeaders">Upload   Overwrite </string>
     <string name="dataToDownlaodColumnHeaders">Download</string>
     <string name="dataToImportColumnHeaders">Import</string>
-    <string name="currentDirectory">Current directory:\u0020</string>        
-    
-     
+    <string name="currentDirectory">Current directory:\u0020</string>
     <string name="entityMarker">[]</string>
-    
-</resources>
-<!--<?xml version="1.0" encoding="utf-8"?>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_test_map">TestMapActivity</string>
+
+</resources><!--
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OFC Móvil</string>
     
@@ -386,4 +368,5 @@
 
    
     <string name="entityMarker">[]</string>    
-</resources>-->
+</resources>
+-->
