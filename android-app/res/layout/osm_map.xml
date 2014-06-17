@@ -10,5 +10,15 @@
             android:layout_height="match_parent"
             android:enabled="true"      
             android:clickable="true"            
-        />  
+        />
+        
+        <ImageButton 
+            android:id="@+id/locateButton" 
+            android:layout_width="100dp" 
+            android:layout_height="50dp"/>
+        
+        <ImageButton 
+            android:id="@+id/addPointButton"
+            android:layout_width="100dp" 
+            android:layout_height="50dp"/>
 </RelativeLayout>

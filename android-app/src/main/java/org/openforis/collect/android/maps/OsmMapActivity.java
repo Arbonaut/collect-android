@@ -49,7 +49,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 /**
  * 
  * @author K. Waga
@@ -67,19 +71,20 @@ public class OsmMapActivity extends Activity {
     private int MAP_DEFAULT_ZOOM = 14;
 
     //private double MAP_DEFAULT_LATITUDE = 60.2483128;
+    //private double MAP_DEFAULT_LATITUDE = 60.4788815;//Naantali
     private double MAP_DEFAULT_LATITUDE = 1.3011456;
     //private double MAP_DEFAULT_LONGITUDE = 25.0179958;    
     private double MAP_DEFAULT_LONGITUDE = 103.7879403;
+    //private double MAP_DEFAULT_LONGITUDE = 22.0927365;//Naantali
     LocationReceiver locRec;
-    
-    private double latestKnowUserLocationLatitude;
-    private double latestKnowUserLocationLongitude;
  
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
 		setContentView(R.layout.osm_map);
 		
+
+	    
 		ApplicationManager.mapActivity = this;
 		this.locRec = null;
  
@@ -92,6 +97,72 @@ public class OsmMapActivity extends Activity {
         mapView.getController().setZoom(MAP_DEFAULT_ZOOM);
         mapView.getController().setCenter(new GeoPoint(MAP_DEFAULT_LATITUDE, MAP_DEFAULT_LONGITUDE));
         mapView.setTileSource(TileSourceFactory.MAPNIK);
+        
+        RelativeLayout rl = (RelativeLayout)findViewById(R.id.rootMapView);
+        
+		ImageButton locateButton = (ImageButton) findViewById(R.id.locateButton);
+	    locateButton.setOnClickListener(new OnClickListener()
+	    {
+	        @Override
+	        public void onClick(View v) {
+	            Log.e("locateButton","CLICKED");
+	            OsmMapActivity.this.showCurrentLocation();
+	        }           
+	    });
+	    locateButton.setImageResource(android.R.drawable.ic_menu_mylocation);
+	    
+	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 50);
+	    //params.rightMargin = 10;
+	    //params.topMargin = 100;
+	    //rl.addView(locateButton, params);
+	    locateButton.setLayoutParams(params);
+	    
+	    ImageButton addPointButton = (ImageButton) findViewById(R.id.addPointButton);
+	    addPointButton.setOnClickListener(new OnClickListener()
+	    {
+	        @Override
+	        public void onClick(View v) {
+	            Log.e("addPointButton","CLICKED");
+	        }           
+	    });
+	    addPointButton.setImageResource(android.R.drawable.ic_menu_mylocation);
+	    params = new RelativeLayout.LayoutParams(100, 50);
+	    params.addRule(RelativeLayout.RIGHT_OF,locateButton.getId());
+	    addPointButton.setLayoutParams(params);
+	    //rl.addView(addPointButton, params);
+	    addPointButton.setVisibility(View.GONE);
+	    
+	    ImageButton addLineButton = new ImageButton(this);
+	    addLineButton.setOnClickListener(new OnClickListener()
+	    {
+	        @Override
+	        public void onClick(View v) {
+	            Log.e("addLineButton","CLICKED");
+	        }           
+	    });
+	    addLineButton.setImageResource(android.R.drawable.ic_menu_mylocation);
+	    
+	    ImageButton addPlotButton = new ImageButton(this);
+	    addPlotButton.setOnClickListener(new OnClickListener()
+	    {
+	        @Override
+	        public void onClick(View v) {
+	            Log.e("addPlotButton","CLICKED");
+	        }           
+	    });
+	    addPlotButton.setImageResource(android.R.drawable.ic_menu_mylocation);
+	    
+	    ImageButton finishAddingPlotButton = new ImageButton(this);
+	    finishAddingPlotButton.setOnClickListener(new OnClickListener()
+	    {
+	        @Override
+	        public void onClick(View v) {
+	            Log.e("finishAddingPlotButton","CLICKED");
+	        }           
+	    });
+	    finishAddingPlotButton.setImageResource(android.R.drawable.ic_menu_mylocation);
+
+
 	}
 	
 	public void onResume(){
@@ -108,8 +179,6 @@ public class OsmMapActivity extends Activity {
         //addPolygon();
         //drawLine(new GeoPoint(62.6, 29.7),new GeoPoint(62.9, 29.9));
         //showCurrentLocation();
-        this.latestKnowUserLocationLatitude = MAP_DEFAULT_LATITUDE;
-        this.latestKnowUserLocationLongitude = MAP_DEFAULT_LONGITUDE;
         mapView.setBackgroundDrawable(getWallpaper());
         mapView.getOverlays().add(new MapGestureDetectorOverlay(this, mapView));
 		/*ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();                
@@ -274,7 +343,8 @@ public class OsmMapActivity extends Activity {
 	public void drawUserMarker(Location location){
 		Log.e("drawUserMarker","================");
 		//location.setLatitude(60.2677);
-		//location.setLongitude(25.02);
+		//location.setLongitude(25.02);		
+		
 		Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_mylocation);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
 		ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
@@ -290,6 +360,7 @@ public class OsmMapActivity extends Activity {
 		GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
 		OverlayItem olItem = new OverlayItem("Current location", "Y: "+location.getLatitude()+"\r\nX:"+location.getLongitude(), userLocation);
     	overlayItemArray.add(olItem);
+    	
     	mapView.getOverlays().add(new UserMarker(this, overlayItemArray, location.getLatitude(), location.getLongitude()));
 		//mapView.getOverlays().add(new UserMarker(marker, location.getLatitude(), location.getLongitude(), resourceProxy));
 		//mapView.getOverlays().add(new UserMarker(marker, location.getLongitude(), location.getLatitude(), resourceProxy));
