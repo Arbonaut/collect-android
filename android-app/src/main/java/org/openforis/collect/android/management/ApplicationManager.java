@@ -17,6 +17,7 @@ import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.maps.OsmMapActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.CodeListItemsStorage;
+import org.openforis.collect.android.misc.Pair;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.screens.BaseActivity;
 import org.openforis.collect.android.screens.FormScreen;
@@ -103,9 +104,9 @@ public class ApplicationManager extends BaseActivity {
 	
 	public static boolean isBackFromTaxonSearch;
 	
-	public static List<List<GeoPoint>> plots;
-	public static List<GeoPoint> lineEnds;
-	public static List<GeoPoint> points;
+	public static List<List<Pair<Integer,GeoPoint>>> plots;
+	public static List<Pair<Integer,GeoPoint>> lineEnds;
+	public static List<Pair<Integer,GeoPoint>> points;
 	public static boolean isPlotDrawingStarted;
 	public static boolean isLineDrawingStarted;
 	public static boolean isDotDrawingStarted;
@@ -128,7 +129,7 @@ public class ApplicationManager extends BaseActivity {
 			    ServiceFactory.init(config);
 			    
 	            ApplicationManager.currentRecord = null;
-	            ApplicationManager.currRootEntityId = -1;
+	            ApplicationManager.currRootEntityId = getResources().getInteger(R.integer.unsavedRecordId);
 	            ApplicationManager.selectedViewsBacktrackList = new ArrayList<ViewBacktrack>();
 	            //ApplicationManager.isToBeScrolled = false;
 	            
@@ -176,9 +177,9 @@ public class ApplicationManager extends BaseActivity {
 	            ApplicationManager.isPlotDrawingStarted = false;
 	            ApplicationManager.isLineDrawingStarted = false;
 	            ApplicationManager.isDotDrawingStarted = false;
-	            ApplicationManager.plots = new ArrayList<List<GeoPoint>>();
-	            ApplicationManager.lineEnds = new ArrayList<GeoPoint>();
-	            ApplicationManager.points = new ArrayList<GeoPoint>();
+	            ApplicationManager.plots = new ArrayList<List<Pair<Integer,GeoPoint>>>();
+	            ApplicationManager.lineEnds = new ArrayList<Pair<Integer,GeoPoint>>();
+	            ApplicationManager.points = new ArrayList<Pair<Integer,GeoPoint>>();
 	            showFormsListScreen();
 			} catch (Exception e) {
 				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
@@ -296,8 +297,8 @@ public class ApplicationManager extends BaseActivity {
 	 	    if (requestCode==getResources().getInteger(R.integer.clusterSelection)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.clusterChoiceSuccessful)){//record was selected	 	    		
 	 	    		
-	 	    		int recordId = data.getIntExtra(getResources().getString(R.string.recordId), -1);
-	 	    		if (recordId==-1){//new record
+	 	    		int recordId = data.getIntExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));
+	 	    		if (recordId==getResources().getInteger(R.integer.unsavedRecordId)){//new record
 	 	    			String versionName = survey.getVersions().isEmpty() ? null: survey.getVersions().get(survey.getVersions().size()-1).getName();
 						ApplicationManager.currentRecord = new CollectRecord(ApplicationManager.survey, versionName);//null;	 	    			
 	 					Entity rootEntity = ApplicationManager.currentRecord.createRootEntity(ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName());
@@ -306,7 +307,7 @@ public class ApplicationManager extends BaseActivity {
 	 	    			CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			        	//DataManager dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
 	 	    			Log.e("selectedRecordId","=="+recordId);
-	 	    			ApplicationManager.dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+	 	    			ApplicationManager.dataManager = new DataManager(this,collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
 			        	ApplicationManager.currentRecord = dataManager.loadRecord(recordId);
 			        	Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 	    				rootEntity.setId(ApplicationManager.currRootEntityId);
@@ -323,8 +324,8 @@ public class ApplicationManager extends BaseActivity {
 	 	    	}
 	 	    } else if (requestCode==getResources().getInteger(R.integer.rootEntitySelection)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.rootEntityChoiceSuccessful)){//root entity was selected	    	
-	 	    		ApplicationManager.currRootEntityId = data.getIntExtra(getResources().getString(R.string.rootEntityId), -1);
-	 	    		ApplicationManager.dataManager = new DataManager(survey,survey.getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
+	 	    		ApplicationManager.currRootEntityId = data.getIntExtra(getResources().getString(R.string.rootEntityId), getResources().getInteger(R.integer.unsavedRecordId));
+	 	    		ApplicationManager.dataManager = new DataManager(this,survey,survey.getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
 	 	    		showRecordsListScreen(ApplicationManager.currRootEntityId);	
 	 	    	} else if (resultCode==getResources().getInteger(R.integer.backButtonPressed)){
 	 	    		showFormsListScreen();
@@ -344,7 +345,7 @@ public class ApplicationManager extends BaseActivity {
 	 	    	}
 	 	    } else if (requestCode==getResources().getInteger(R.integer.startingFormScreen)){
 	 	    	CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
-		    	DataManager dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
+		    	DataManager dataManager = new DataManager(this,collectSurvey,collectSurvey.getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
 		    	if (!ApplicationManager.isRecordListUpToDate){
 		    		ApplicationManager.recordsList = dataManager.loadSummaries();
 		    	}		    	
@@ -765,7 +766,7 @@ public class ApplicationManager extends BaseActivity {
 	}
 	
 	public void showRootEntitiesListScreen(){
-		ApplicationManager.currRootEntityId = -1;		
+		ApplicationManager.currRootEntityId = getResources().getInteger(R.integer.unsavedRecordId);		
 		this.startActivityForResult(new Intent(this, RootEntityChoiceActivity.class),getResources().getInteger(R.integer.rootEntitySelection));
 	}
 	

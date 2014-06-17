@@ -19,7 +19,7 @@
     <string name="logs_file_name">/log_</string>
     <string name="log_file_extension">.txt</string>
     <string name="backup_folder">/ofcm/backups</string>
-    <string name="maps_folder">/osmdroid/</string>
+    <string name="maps_folder">/ofcm/map_tiles/</string>
     <!--<string name="formDefinitionFile">/test.idm.xml</string>-->
     <string name="formDefinitionFile">/pe2013infbiomse.xml</string>
     <string name="database_file_name">/collect</string>
@@ -115,6 +115,7 @@
     <integer name="singleEntityIntent">3</integer>
     <integer name="breadcrumbFontSize">12</integer>
     <integer name="screenTitleFontSize">24</integer>
+    <integer name="unsavedRecordId">-1</integer>
     <string name="photoPath">photoPath</string>
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>

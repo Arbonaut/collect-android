@@ -1,9 +1,9 @@
 package org.openforis.collect.android.maps;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.openforis.collect.android.management.ApplicationManager;
+import org.openforis.collect.android.misc.Pair;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
@@ -109,10 +109,10 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 							PathOverlay myOverlay= new PathOverlay(Color.RED, MapGestureDetectorOverlay.this.context);
 							//myOverlay.getPaint().setStyle(Paint.Style.FILL);						        	 
 							myOverlay.addPoint(currentPlotCorner);
-							myOverlay.addPoint(ApplicationManager.plots.get(numberOfPlots-1).get(ApplicationManager.plots.get(numberOfPlots-1).size()-1));
+							myOverlay.addPoint(ApplicationManager.plots.get(numberOfPlots-1).get(ApplicationManager.plots.get(numberOfPlots-1).size()-1).getRight());
 							mapView.getOverlays().add(myOverlay);														
 						}
-						ApplicationManager.plots.get(numberOfPlots-1).add(currentPlotCorner);
+						ApplicationManager.plots.get(numberOfPlots-1).add(new Pair<Integer,GeoPoint>(ApplicationManager.currentRecord.getId(),currentPlotCorner));
 					/*} else {
 						if (MapGestureDetectorOverlay.this.plotCorners.get(0).size()>0){
 							PathOverlay myOverlay= new PathOverlay(Color.RED, MapGestureDetectorOverlay.this.context);
@@ -146,13 +146,13 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 						//myOverlay.getPaint().setStyle(Paint.Style.FILL);
 							 
 						myOverlay.addPoint(currentLineEnd);
-						myOverlay.addPoint(ApplicationManager.lineEnds.get(ApplicationManager.lineEnds.size()-1));
+						myOverlay.addPoint(ApplicationManager.lineEnds.get(ApplicationManager.lineEnds.size()-1).getRight());
 						mapView.getOverlays().add(myOverlay);					     	
 					}
 					mapView.invalidate();
-					ApplicationManager.lineEnds.add(currentLineEnd);
+					ApplicationManager.lineEnds.add(new Pair<Integer,GeoPoint>(ApplicationManager.currentRecord.getId(),currentLineEnd));
 					if ((ApplicationManager.lineEnds.size()%2)==0){
-						OsmMapActivity_notworking.stopDrawingLine();	
+						OsmMapActivity.stopDrawingLine();	
 					}
 				}
 			});
@@ -169,9 +169,10 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 				overlayItemArray.add(olItem);
 				PlotMarker overlay = new PlotMarker(MapGestureDetectorOverlay.this.context, overlayItemArray);
 				mapView.getOverlays().add(overlay);
-				ApplicationManager.points.add(currentPoint);
+				Log.e("setRecordId","=="+ApplicationManager.currentRecord.getId());
+				ApplicationManager.points.add(new Pair<Integer,GeoPoint>(ApplicationManager.currentRecord.getId(),currentPoint));
 				mapView.invalidate();
-				OsmMapActivity_notworking.stopDrawingDot();
+				OsmMapActivity.stopDrawingDot();
 			}
 			});
 			builder.show();

@@ -14,12 +14,12 @@ import java.util.List;
 
 import org.jooq.TableField;
 import org.openforis.collect.android.database.DatabaseHelper;
+import org.openforis.collect.android.misc.Pair;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.manager.dataexport.BackupProcess;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectRecord.Step;
 import org.openforis.collect.model.CollectSurvey;
-import org.openforis.collect.model.RecordSummarySortField;
 import org.openforis.collect.model.User;
 import org.openforis.collect.persistence.RecordPersistenceException;
 import org.openforis.collect.persistence.RecordUnlockedException;
@@ -28,12 +28,10 @@ import org.openforis.collect.persistence.xml.DataMarshaller;
 import org.openforis.collect.persistence.xml.DataUnmarshaller;
 import org.openforis.collect.persistence.xml.DataUnmarshaller.ParseRecordResult;
 import org.openforis.collect.persistence.xml.DataUnmarshallerException;
-import org.openforis.idm.metamodel.EntityDefinition;
-import org.openforis.idm.metamodel.Schema;
 import org.openforis.idm.model.species.Taxon;
 import org.openforis.idm.model.species.Taxon.TaxonRank;
 import org.openforis.idm.model.species.TaxonVernacularName;
-import org.springframework.transaction.annotation.Transactional;
+import org.osmdroid.util.GeoPoint;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
@@ -46,14 +44,16 @@ public class DataManager {
 	private CollectSurvey survey;
 	private String rootEntity;
 	private User user;
+	private Context context;
 	
 	private DataMarshaller dataMarshaller;
 	private DataUnmarshaller dataUnmarshaller;
 	
-	public DataManager(CollectSurvey survey, String rootEntity, User loggedInUser){
+	public DataManager(Context ctx, CollectSurvey survey, String rootEntity, User loggedInUser){
 		this.survey = survey;
 		this.rootEntity = rootEntity;
 		this.user = loggedInUser;
+		this.context = ctx;
 		
 		this.dataMarshaller = new DataMarshaller();
 		HashMap<String,User> users = new HashMap<String, User>();
@@ -62,7 +62,7 @@ public class DataManager {
 		this.dataUnmarshaller = new DataUnmarshaller(dataHandler);
 	}
 	
-	public boolean saveRecord(Context ctx) {
+	public boolean saveRecord() {
 		boolean isSuccess = true;
 		try {
 			CollectRecord recordToSave = ApplicationManager.currentRecord;
@@ -75,18 +75,24 @@ public class DataManager {
 				recordToSave.setModifiedDate(new Date());
 			}
 			ServiceFactory.getRecordManager().save(recordToSave, ApplicationManager.getSessionId());
+			this.assignShapesToRecord(recordToSave.getId());
+			ApplicationManager.isRecordListUpToDate = false;
 		} catch (RecordUnlockedException e) {
 			e.printStackTrace();
 			isSuccess = false;
+			ApplicationManager.isRecordListUpToDate = true;
 		} catch (RecordPersistenceException e) {
 			e.printStackTrace();
 			isSuccess = false;
+			ApplicationManager.isRecordListUpToDate = true;
 		} catch (NullPointerException e){
 			e.printStackTrace();
 			isSuccess = false;
+			ApplicationManager.isRecordListUpToDate = true;
 		} catch (Exception e){
 			e.printStackTrace();
 			isSuccess = false;
+			ApplicationManager.isRecordListUpToDate = true;
 		} finally {
 			
 		}
@@ -426,4 +432,31 @@ public class DataManager {
 		
 		return jf.fromResult(result);*/
 	//}
+	
+	private void assignShapesToRecord(int recordId){
+		int pointsNo = ApplicationManager.points.size();
+		int linesNo = ApplicationManager.lineEnds.size();
+		int plotsNo = ApplicationManager.plots.size();		
+		Log.e("recordId to be set","=="+recordId);
+		if ((pointsNo+linesNo+plotsNo)>0){
+			for (int i=0;i<pointsNo;i++){
+				if ((ApplicationManager.points.get(i).getLeft()==null)){					
+					ApplicationManager.points.get(i).setLeft(recordId);
+				}
+			}
+			for (int i=0;i<linesNo;i++){
+				if (ApplicationManager.lineEnds.get(i).getLeft()==null){
+					ApplicationManager.lineEnds.get(i).setLeft(recordId);
+				}
+			}
+			for (int i=0;i<plotsNo;i++){
+				if (ApplicationManager.plots.get(i).get(0).getLeft()==null){
+					List<Pair<Integer,GeoPoint>> cornersList = ApplicationManager.plots.get(i);
+					for (Pair<Integer,GeoPoint> pair : cornersList){
+						pair.setLeft(recordId);
+					}
+				}
+			}
+		}
+	}	
 }

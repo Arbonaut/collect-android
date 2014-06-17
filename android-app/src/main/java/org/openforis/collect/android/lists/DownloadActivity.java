@@ -440,7 +440,7 @@ public class DownloadActivity extends Activity{
                 }
             });*/
             //Log.e("file DOWNLOADED","=="+fileName);
-            DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
+            DataManager dataManager = new DataManager(this,(CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
             //Log.e("fileNAMEtoLoad","=="+fileName);
             fileName = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.imported_data_folder)+"/"+fileName;
             //Log.e("loadRecordFromXml","STARTS"+fileName);

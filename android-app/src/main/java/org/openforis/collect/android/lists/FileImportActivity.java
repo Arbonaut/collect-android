@@ -162,7 +162,7 @@ public class FileImportActivity extends Activity{
     void importFile(String fileName){
         
         try {        	
-            DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
+            DataManager dataManager = new DataManager(this,(CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
             Log.e("fileNAMEtoLoad","=="+fileName);
             fileName = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder)+"/"+fileName;
             dataManager.loadRecordFromXml(fileName);

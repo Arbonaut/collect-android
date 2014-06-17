@@ -11,6 +11,7 @@ import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.DataManager;
 import org.openforis.collect.android.messages.AlertMessage;
+import org.openforis.collect.android.misc.Pair;
 import org.openforis.collect.android.screens.FormScreen;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectSurvey;
@@ -49,9 +50,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 /**
  * 
  * @author K. Waga
@@ -88,7 +86,7 @@ public class OsmMapActivity extends Activity {
 		mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setMultiTouchControls(true);
-        mapView.setClickable(true);        
+        mapView.setClickable(true);
         //mapView.setBackgroundColor(Color.RED);
         mapView.setUseDataConnection(false);
         mapView.getController().setZoom(MAP_DEFAULT_ZOOM);
@@ -125,7 +123,7 @@ public class OsmMapActivity extends Activity {
         PlotMarker overlay = new PlotMarker(this, overlayItemArray);
         mapView.getOverlays().add(overlay);*/
         
-        DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
+        DataManager dataManager = new DataManager(this,(CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
         List<CollectRecord> savedRecordsSummaries = dataManager.loadSummaries();
         ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
         
@@ -166,49 +164,61 @@ public class OsmMapActivity extends Activity {
 		Log.e("plotsNo","=="+plotsNo);
 				
 		if ((pointsNo+linesNo+plotsNo)>0){
+			Integer recordId = ApplicationManager.currentRecord.getId();
 			for (int i=0;i<pointsNo;i++){
-				GeoPoint point = ApplicationManager.points.get(i);
-				this.drawPointMarker(point);
+				if (ApplicationManager.points.get(i).getLeft()==recordId){
+					GeoPoint point = ApplicationManager.points.get(i).getRight();
+					this.drawPointMarker(point);	
+				}				
 			}
 			for (int i=0;i<linesNo;i++){
-				GeoPoint startPoint = ApplicationManager.lineEnds.get(i++);
-				/*Log.e("startPoint",startPoint.getLatitudeE6()/1E6+"=="+startPoint.getLongitudeE6()/1E6);
-				OverlayItem olItem = new OverlayItem("3", "LINE","",  startPoint);
-				ArrayList<OverlayItem> overlayLineArray = new ArrayList<OverlayItem>();
-				overlayLineArray.add(olItem);
-				PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
-				mapView.getOverlays().add(overlay);
-				*/
-				GeoPoint endPoint = ApplicationManager.lineEnds.get(i);
-				/*olItem = new OverlayItem("3", "LINE","",  endPoint);
-				overlayLineArray = new ArrayList<OverlayItem>();
-				overlayLineArray.add(olItem);
-				overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
-				mapView.getOverlays().add(overlay);
-				PathOverlay myOverlay= new PathOverlay(Color.BLUE, this);
-				myOverlay.addPoint(endPoint);
-				mapView.getOverlays().add(myOverlay);
-				mapView.invalidate();*/
-				this.drawLine(startPoint, endPoint, Color.BLUE);
-				this.drawPointMarker(startPoint);
-				this.drawPointMarker(endPoint);
+				if (ApplicationManager.lineEnds.get(i).getLeft()==recordId){
+					GeoPoint startPoint = ApplicationManager.lineEnds.get(i++).getRight();
+					/*Log.e("startPoint",startPoint.getLatitudeE6()/1E6+"=="+startPoint.getLongitudeE6()/1E6);
+					OverlayItem olItem = new OverlayItem("3", "LINE","",  startPoint);
+					ArrayList<OverlayItem> overlayLineArray = new ArrayList<OverlayItem>();
+					overlayLineArray.add(olItem);
+					PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+					mapView.getOverlays().add(overlay);
+					*/
+					GeoPoint endPoint = ApplicationManager.lineEnds.get(i).getRight();
+					/*olItem = new OverlayItem("3", "LINE","",  endPoint);
+					overlayLineArray = new ArrayList<OverlayItem>();
+					overlayLineArray.add(olItem);
+					overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+					mapView.getOverlays().add(overlay);
+					PathOverlay myOverlay= new PathOverlay(Color.BLUE, this);
+					myOverlay.addPoint(endPoint);
+					mapView.getOverlays().add(myOverlay);
+					mapView.invalidate();*/
+					this.drawLine(startPoint, endPoint, Color.BLUE);
+					this.drawPointMarker(startPoint);
+					this.drawPointMarker(endPoint);	
+				}				
 			}
 			
 			for (int i=0;i<plotsNo;i++){
-				List<GeoPoint> plotCorners =  ApplicationManager.plots.get(i);
-				int plotCornersNo = plotCorners.size();
-				GeoPoint previousCorner = null;
-				for (int j=0;j<plotCornersNo;j++){
-					GeoPoint point = plotCorners.get(j);
-					this.drawPointMarker(point);
-					if (previousCorner!=null){
-						this.drawLine(previousCorner, point, Color.RED);
+				if (ApplicationManager.plots.get(i).get(0).getLeft()==recordId){
+					List<Pair<Integer, GeoPoint>> plotCornersWithRecordId = ApplicationManager.plots.get(i);
+					List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
+					for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
+						plotCorners.add(pair.getRight());
 					}
-					previousCorner = point;
-				}
-				if (previousCorner!=null){
-					this.drawLine(previousCorner, plotCorners.get(0), Color.RED);
-				}
+					//List<GeoPoint> plotCorners =  ApplicationManager.plots.get(i);
+					int plotCornersNo = plotCorners.size();
+					GeoPoint previousCorner = null;
+					for (int j=0;j<plotCornersNo;j++){
+						GeoPoint point = plotCorners.get(j);
+						this.drawPointMarker(point);
+						if (previousCorner!=null){
+							this.drawLine(previousCorner, point, Color.RED);
+						}
+						previousCorner = point;
+					}
+					if (previousCorner!=null){
+						this.drawLine(previousCorner, plotCorners.get(0), Color.RED);
+					}	
+				}				
 			}
 			
 		}
@@ -373,7 +383,7 @@ public class OsmMapActivity extends Activity {
 	public void openPlotData(int recordId, int plotId){
 		Log.e("PLOT",recordId+"IS BEING OPENED"+plotId);
 		CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();
-		ApplicationManager.dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+		ApplicationManager.dataManager = new DataManager(this,collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
     	ApplicationManager.currentRecord = ApplicationManager.dataManager.loadRecord(recordId);
     	Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 		rootEntity.setId(ApplicationManager.currRootEntityId);
@@ -557,13 +567,18 @@ public class OsmMapActivity extends Activity {
 		ApplicationManager.isPlotDrawingStarted = true;
 		ApplicationManager.isDotDrawingStarted = false;
 		ApplicationManager.isLineDrawingStarted = false;
-		ApplicationManager.plots.add(new ArrayList<GeoPoint>());
+		ApplicationManager.plots.add(new ArrayList<Pair<Integer,GeoPoint>>());
 		Log.e("drawing","STARTED");
 	}
 	
 	public void stopDrawingPlot(){
 		ApplicationManager.isPlotDrawingStarted = false;
-		List<GeoPoint> plotCorners = ApplicationManager.plots.get(ApplicationManager.plots.size()-1);		
+		List<Pair<Integer, GeoPoint>> plotCornersWithRecordId = ApplicationManager.plots.get(ApplicationManager.plots.size()-1);
+		List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
+		for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
+			plotCorners.add(pair.getRight());
+		}
+		//List<GeoPoint> plotCorners = ApplicationManager.plots.get(ApplicationManager.plots.size()-1);		
 		this.drawLine(plotCorners.get(0), plotCorners.get(plotCorners.size()-1), Color.RED);
 		//int savingResult = savePlotShapeToFile(MapGestureDetectorOverlay.plotCorners);
 		//MapGestureDetectorOverlay.plotCorners.clear();
@@ -626,29 +641,41 @@ public class OsmMapActivity extends Activity {
 				
 				bw.write("<kml>\r\n");
 				
+				int recordId = ApplicationManager.currentRecord.getId();
 				for (int i=0;i<pointsNo;i++){
-					bw.write("\t<placemark>\r\n");
-					GeoPoint point = ApplicationManager.points.get(i);
-					bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
-					bw.write("\t</placemark>\r\n");
+					if (recordId==ApplicationManager.points.get(i).getLeft()){
+						bw.write("\t<placemark>\r\n");
+						GeoPoint point = ApplicationManager.points.get(i).getRight();
+						bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
+						bw.write("\t</placemark>\r\n");	
+					}
 				}
 				for (int i=0;i<linesNo;i++){
-					bw.write("\t<placemark>\r\n");
-					GeoPoint point = ApplicationManager.lineEnds.get(i++);
-					bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
-					point = ApplicationManager.lineEnds.get(i);
-					bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
-					bw.write("\t</placemark>\r\n");
+					if (recordId==ApplicationManager.lineEnds.get(i).getLeft()){
+						bw.write("\t<placemark>\r\n");
+						GeoPoint point = ApplicationManager.lineEnds.get(i++).getRight();
+						bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
+						point = ApplicationManager.lineEnds.get(i).getRight();
+						bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
+						bw.write("\t</placemark>\r\n");	
+					}
 				}
 				for (int i=0;i<plotsNo;i++){
-					bw.write("\t<placemark>\r\n");
-					List<GeoPoint> plotCorners = ApplicationManager.plots.get(i);
-					int plotCornersNo = plotCorners.size();
-					for (int j=0;j<plotCornersNo;j++){
-						GeoPoint point = plotCorners.get(j);
-						bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
-					}
-					bw.write("\t</placemark>\r\n");
+					if (recordId==ApplicationManager.plots.get(i).get(0).getLeft()){
+						bw.write("\t<placemark>\r\n");
+						List<Pair<Integer, GeoPoint>> plotCornersWithRecordId = ApplicationManager.plots.get(i);
+						List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
+						for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
+							plotCorners.add(pair.getRight());
+						}
+						//List<GeoPoint> plotCorners = ApplicationManager.plots.get(i);
+						int plotCornersNo = plotCorners.size();
+						for (int j=0;j<plotCornersNo;j++){
+							GeoPoint point = plotCorners.get(j);
+							bw.write("\t\t<point>\r\n\t\t\t<coordinates>"+(point.getLatitudeE6()/1E6)+","+(point.getLongitudeE6()/1E6)+"</coordinates>\r\n\t\t</point>\r\n");
+						}
+						bw.write("\t</placemark>\r\n");
+					}					
 				}
 				
 				bw.write("</kml>");
