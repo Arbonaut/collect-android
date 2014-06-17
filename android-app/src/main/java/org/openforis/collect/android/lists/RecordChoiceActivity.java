@@ -201,10 +201,9 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
     				getResources().getString(R.string.yes), getResources().getString(R.string.no),
     	    		new DialogInterface.OnClickListener() {
     					@Override
-    					public void onClick(DialogInterface dialog, int which) {							
-    						ApplicationManager.dataManager.deleteRecord(position);
-    						ApplicationManager.recordsList.remove(position);
-    						refreshRecordsList();
+    					public void onClick(DialogInterface dialog, int which) {
+    						RecordChoiceActivity.pd = ProgressDialog.show(RecordChoiceActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.deletingRecord));
+    						deleteRecord(position);
     					}
     				},
     	    		new DialogInterface.OnClickListener() {
@@ -378,6 +377,23 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						clusterList[recordsList.size()+1]=getResources().getString(R.string.addNewRecord)+" "+ApplicationManager.getLabel(RecordChoiceActivity.this.rootEntityDef);;
 					}*/
 					
+					Message msg = Message.obtain();
+			        msg.what = 1;
+					handler.sendMessage(msg);
+			    }
+			  }).start();
+	}
+	
+	private void deleteRecord(final int position){
+		 final Handler handler = new Handler(){
+			    @Override
+			    public void handleMessage(Message msg) {
+			    	refreshRecordsList();
+			    }};
+		  new Thread(new Runnable() {
+			    public void run() {	    	
+					ApplicationManager.dataManager.deleteRecord(position);
+					ApplicationManager.recordsList.remove(position);					
 					Message msg = Message.obtain();
 			        msg.what = 1;
 					handler.sendMessage(msg);
