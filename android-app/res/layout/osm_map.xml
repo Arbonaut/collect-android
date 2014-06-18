@@ -14,11 +14,32 @@
         
         <ImageButton 
             android:id="@+id/locateButton" 
-            android:layout_width="100dp" 
-            android:layout_height="50dp"/>
+            android:layout_width="50dp" 
+            android:layout_height="32dp"/>
         
         <ImageButton 
             android:id="@+id/addPointButton"
-            android:layout_width="100dp" 
-            android:layout_height="50dp"/>
+            android:layout_width="50dp" 
+            android:layout_height="32dp"
+            android:layout_toRightOf="@id/locateButton" />
+        
+        <ImageButton 
+            android:id="@+id/addLineButton"
+            android:layout_width="50dp" 
+            android:layout_height="32dp"
+            android:layout_toRightOf="@id/addPointButton" />
+        
+        <ImageButton 
+            android:id="@+id/addPlotButton"
+            android:layout_width="50dp" 
+            android:layout_height="32dp"
+            android:layout_toRightOf="@id/addLineButton" />
+        
+        <ImageButton 
+            android:id="@+id/finishAddingPlotButton"
+            android:layout_width="50dp" 
+            android:layout_height="32dp"
+            android:layout_toRightOf="@id/addPlotButton"
+            android:visibility="gone" />
+               
 </RelativeLayout>

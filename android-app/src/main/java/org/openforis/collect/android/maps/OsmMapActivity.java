@@ -77,6 +77,9 @@ public class OsmMapActivity extends Activity {
     private double MAP_DEFAULT_LONGITUDE = 103.7879403;
     //private double MAP_DEFAULT_LONGITUDE = 22.0927365;//Naantali
     LocationReceiver locRec;
+    
+    ImageButton addPlotButton;
+    ImageButton finishAddingPlotButton;
  
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -122,47 +125,49 @@ public class OsmMapActivity extends Activity {
 	    {
 	        @Override
 	        public void onClick(View v) {
-	            Log.e("addPointButton","CLICKED");
+	            OsmMapActivity.this.startDrawingDot();
 	        }           
 	    });
-	    addPointButton.setImageResource(android.R.drawable.ic_menu_mylocation);
-	    params = new RelativeLayout.LayoutParams(100, 50);
-	    params.addRule(RelativeLayout.RIGHT_OF,locateButton.getId());
-	    addPointButton.setLayoutParams(params);
-	    //rl.addView(addPointButton, params);
-	    addPointButton.setVisibility(View.GONE);
+	    addPointButton.setImageResource(android.R.drawable.ic_menu_myplaces);
 	    
-	    ImageButton addLineButton = new ImageButton(this);
+	    ImageButton addLineButton = (ImageButton) findViewById(R.id.addLineButton);
 	    addLineButton.setOnClickListener(new OnClickListener()
 	    {
 	        @Override
 	        public void onClick(View v) {
 	            Log.e("addLineButton","CLICKED");
+				OsmMapActivity.this.startDrawingLine();
 	        }           
 	    });
-	    addLineButton.setImageResource(android.R.drawable.ic_menu_mylocation);
+	    addLineButton.setImageResource(android.R.drawable.ic_menu_directions);
 	    
-	    ImageButton addPlotButton = new ImageButton(this);
-	    addPlotButton.setOnClickListener(new OnClickListener()
-	    {
-	        @Override
-	        public void onClick(View v) {
-	            Log.e("addPlotButton","CLICKED");
-	        }           
-	    });
-	    addPlotButton.setImageResource(android.R.drawable.ic_menu_mylocation);
+	    addPlotButton = (ImageButton) findViewById(R.id.addPlotButton);
+	   	finishAddingPlotButton = (ImageButton) findViewById(R.id.finishAddingPlotButton);
 	    
-	    ImageButton finishAddingPlotButton = new ImageButton(this);
 	    finishAddingPlotButton.setOnClickListener(new OnClickListener()
 	    {
 	        @Override
 	        public void onClick(View v) {
 	            Log.e("finishAddingPlotButton","CLICKED");
+	            OsmMapActivity.this.stopDrawingPlot();
+	            addPlotButton.setVisibility(View.VISIBLE);
+				finishAddingPlotButton.setVisibility(View.GONE);
 	        }           
 	    });
-	    finishAddingPlotButton.setImageResource(android.R.drawable.ic_menu_mylocation);
-
-
+	    finishAddingPlotButton.setImageResource(android.R.drawable.star_big_on);
+	    
+	   
+	    addPlotButton.setOnClickListener(new OnClickListener()
+	    {
+	        @Override
+	        public void onClick(View v) {
+	            Log.e("addPlotButton","CLICKED");
+				OsmMapActivity.this.startDrawingPlot();
+				addPlotButton.setVisibility(View.GONE);
+				finishAddingPlotButton.setVisibility(View.VISIBLE);
+	        }           
+	    });
+	    addPlotButton.setImageResource(android.R.drawable.star_big_off);
 	}
 	
 	public void onResume(){
@@ -523,9 +528,13 @@ public class OsmMapActivity extends Activity {
         {
 			case R.id.menu_map_plot_drawing_starts:
 				this.startDrawingPlot();
+	            addPlotButton.setVisibility(View.GONE);
+				finishAddingPlotButton.setVisibility(View.VISIBLE);
 			    return true;
 			case R.id.menu_map_plot_drawing_ends:
 				this.stopDrawingPlot();
+	            addPlotButton.setVisibility(View.VISIBLE);
+				finishAddingPlotButton.setVisibility(View.GONE);
 			    return true;
 			case R.id.menu_map_add_point:
 				this.startDrawingDot();
@@ -645,14 +654,18 @@ public class OsmMapActivity extends Activity {
 	public void stopDrawingPlot(){
 		ApplicationManager.isPlotDrawingStarted = false;
 		List<Pair<Integer, GeoPoint>> plotCornersWithRecordId = ApplicationManager.plots.get(ApplicationManager.plots.size()-1);
-		List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
-		for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
-			plotCorners.add(pair.getRight());
+		if (plotCornersWithRecordId.size()>2){
+			List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
+			for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
+				plotCorners.add(pair.getRight());
+			}
+			//List<GeoPoint> plotCorners = ApplicationManager.plots.get(ApplicationManager.plots.size()-1);		
+			this.drawLine(plotCorners.get(0), plotCorners.get(plotCorners.size()-1), Color.RED);
+			//int savingResult = savePlotShapeToFile(MapGestureDetectorOverlay.plotCorners);
+			//MapGestureDetectorOverlay.plotCorners.clear();
+		} else {
+			
 		}
-		//List<GeoPoint> plotCorners = ApplicationManager.plots.get(ApplicationManager.plots.size()-1);		
-		this.drawLine(plotCorners.get(0), plotCorners.get(plotCorners.size()-1), Color.RED);
-		//int savingResult = savePlotShapeToFile(MapGestureDetectorOverlay.plotCorners);
-		//MapGestureDetectorOverlay.plotCorners.clear();
 		Log.e("drawing","FINISHED");
 	}
 	
@@ -701,6 +714,7 @@ public class OsmMapActivity extends Activity {
 				File file = new File(Environment.getExternalStorageDirectory().toString()
 						+getResources().getString(R.string.plotBoundariesSavingPath)
 						+getResources().getString(R.string.plotBoundariesSavingBaseFileName)
+						+ApplicationManager.currentRecord.getId()
 						+System.currentTimeMillis()
 						+getResources().getString(R.string.plotBoundariesSavingFileExtension));
 				if (!file.exists()) {
