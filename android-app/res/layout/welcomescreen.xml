@@ -45,6 +45,7 @@ android:background="#000000">
         android:layout_weight="0.7"
         >
         <ImageView
+            android:contentDescription="@string/faologo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/faologo"
@@ -57,6 +58,7 @@ android:background="#000000">
         android:layout_weight="0.2"
         >
         <ImageView
+            android:contentDescription="@string/arbonautlogo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/arbonaut_logo_big"
@@ -69,6 +71,7 @@ android:background="#000000">
         android:layout_weight="0.1"
         >
         <ImageView
+            android:contentDescription="@string/ofclogo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ofclogo"

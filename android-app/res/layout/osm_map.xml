@@ -15,29 +15,34 @@
         
         <ImageButton 
             android:id="@+id/locateButton" 
+            android:contentDescription="@string/locateButton"
             android:layout_width="50dp" 
             android:layout_height="32dp"/>
         
         <ImageButton 
             android:id="@+id/addPointButton"
+            android:contentDescription="@string/addPointButton"
             android:layout_width="50dp" 
             android:layout_height="32dp"
             android:layout_toRightOf="@id/locateButton" />
         
         <ImageButton 
             android:id="@+id/addLineButton"
+            android:contentDescription="@string/addLineButton"
             android:layout_width="50dp" 
             android:layout_height="32dp"
             android:layout_toRightOf="@id/addPointButton" />
         
         <ImageButton 
             android:id="@+id/addPlotButton"
+            android:contentDescription="@string/addPlotButton"
             android:layout_width="50dp" 
             android:layout_height="32dp"
             android:layout_toRightOf="@id/addLineButton" />
         
         <ImageButton 
             android:id="@+id/finishAddingPlotButton"
+            android:contentDescription="@string/finishAddingPlotButton"
             android:layout_width="50dp" 
             android:layout_height="32dp"
             android:layout_toRightOf="@id/addPlotButton"

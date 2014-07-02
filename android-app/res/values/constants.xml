@@ -144,7 +144,7 @@
     <string name="valuesSeparator1">,</string>
     <string name="valuesSeparator2">;</string>
     <string name="valuesEqualsTo">=</string>
-    <string name="valuesNotVisibleSign">...</string>
+    <string name="valuesNotVisibleSign">&#8230;</string>
     <string name="dateSeparator">-</string>
     <string name="timeSeparator">:</string>
     <string name="rangeSeparator">-</string>
