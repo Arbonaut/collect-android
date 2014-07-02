@@ -92,7 +92,8 @@
     <integer name="cameraStarted">986</integer>  
     <integer name="internalGpsStarted">985</integer>
     <integer name="photoTaken">702</integer>
-    <integer name="internalGpsLocationReceived">701</integer>        
+    <integer name="internalGpsLocationReceived">701</integer>
+    <integer name="bluetoothEnabled">901</integer>
    
     <!-- INTENT EXTRAS -->
     <string name="recordId">recordId</string>

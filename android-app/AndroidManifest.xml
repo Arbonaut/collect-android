@@ -10,15 +10,15 @@
         android:targetSdkVersion="10" />
 
     <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission-group android:name="android.permission-group.STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+   	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <!--
        <instrumentation android:name="android.test.InstrumentationTestRunner"
        android:targetPackage="org.openforis.collect.android" android:label="Tests for OFCMobile" />
@@ -141,23 +141,14 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="org.openforis.collect.android.maps.MapActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="org.openforis.collect.android.maps.OsmMapActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
         </activity>
-                <!--<activity
-            android:name="org.openforis.collect.android.maps.TestMapActivity"
+        <activity
+            android:name="org.openforis.collect.android.bluetooth.BluetoothActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
-        </activity>-->
-        <activity
-            android:name="org.openforis.collect.android.TestMapActivity"
-            android:label="@string/title_activity_test_map" >
         </activity>
     </application>
 

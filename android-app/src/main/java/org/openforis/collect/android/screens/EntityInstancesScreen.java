@@ -19,9 +19,7 @@ import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.EntityBuilder;
-import org.openforis.idm.model.IntegerValue;
 import org.openforis.idm.model.Node;
-import org.openforis.idm.model.Value;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -73,11 +71,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	public Entity parentEntity;
 	public Entity parentEntitySingleAttribute;
 	public Entity parentEntityMultipleAttribute;
-	//public PhotoField currentPictureField;
-	//public CoordinateField currentCoordinateField;
-	//private String photoPath;
-	//private String latitude;
-	//private String longitude;
 	
 	private boolean isTextViewClicked = false;
 	

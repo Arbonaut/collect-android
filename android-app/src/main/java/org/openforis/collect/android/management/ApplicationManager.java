@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.openforis.collect.android.R;
+import org.openforis.collect.android.bluetooth.BluetoothActivity;
 import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.fields.UIElement;
@@ -245,6 +246,9 @@ public class ApplicationManager extends BaseActivity {
 	    	editor.commit();
 	    	
 	    	ApplicationManager.this.setScreenOrientation();
+	    	
+            Intent enableBtIntent = new Intent(ApplicationManager.this, BluetoothActivity.class);
+		    startActivity(enableBtIntent);
 	    	
         	creationThread.start();
         	
