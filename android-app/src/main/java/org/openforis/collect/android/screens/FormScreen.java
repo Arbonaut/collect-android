@@ -172,7 +172,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	{
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
-		long startTime = System.currentTimeMillis();
 		try{
 			FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId());
 			FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity(FormScreen.this.parentFormScreenId);
@@ -864,7 +863,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        				final TaxonField taxonField= new TaxonField(FormScreen.this, nodeDef, codes, options, vernLang);
 	        				taxonField.setOnClickListener(FormScreen.this);
 	        				taxonField.setId(nodeDef.getId());
-	        				Log.e("taxonField","FormScreen1");
 	        				taxonField.setValue(0, code, sciName, vernName, vernLang, langVariant, FormScreen.this.getFormScreenId(),false);
 	        				ApplicationManager.putUIElement(taxonField.getId(), taxonField);
 	        				FormScreen.this.ll.addView(taxonField);
@@ -964,13 +962,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    	    	} 
 	    	    } 	
 	    	});
-	    	Log.e("FORMScreen","plotId"+this.plotId);
 	    	if (this.plotId>-1){
 	    		boolean isFound = false;
 	    		//opening specific plot from the record
 	    		EntityLink plotEntityLink = null;
 	    		int childNo = FormScreen.this.ll.getChildCount();
-	    		Log.e("childNo","=="+childNo);
 	    		for (int i=0;i<childNo;i++){
 	    			View view = FormScreen.this.ll.getChildAt(i);
 	    			if (view instanceof EntityLink){
