@@ -12,6 +12,7 @@ import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.DataManager;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.Pair;
+import org.openforis.collect.android.screens.BaseActivity;
 import org.openforis.collect.android.screens.FormScreen;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectSurvey;
@@ -21,8 +22,6 @@ import org.openforis.idm.model.Coordinate;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.IntegerValue;
 import org.openforis.idm.model.Node;
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -31,6 +30,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,6 +42,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -52,16 +54,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 /**
  * 
  * @author K. Waga
  *
  */
-
-
-
 public class OsmMapActivity extends Activity {
 	
 	private static final String TAG = "MapActivity";
@@ -85,218 +83,270 @@ public class OsmMapActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
 		setContentView(R.layout.osm_map);
+	    final ProgressDialog pdOpeningMap = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.openingMap));
+		final Handler openingMapHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {						
+			}
+		};
+    	Thread openingMapThread = new Thread() {
+    		@Override
+    		public void run() {
+    			try {
+    				super.run();
+    				ApplicationManager.mapActivity = OsmMapActivity.this;
+    				OsmMapActivity.this.locRec = null;
+    		 
+    				mapView = (MapView) findViewById(R.id.mapview);
+    		        mapView.setBuiltInZoomControls(true);
+    		        mapView.setMultiTouchControls(true);
+    		        mapView.setClickable(true);
+    		        //mapView.setBackgroundColor(Color.RED);
+    		        mapView.setUseDataConnection(false);
+    		        mapView.getController().setZoom(MAP_DEFAULT_ZOOM);
+    		        mapView.getController().setCenter(new GeoPoint(MAP_DEFAULT_LATITUDE, MAP_DEFAULT_LONGITUDE));
+    		        mapView.setTileSource(TileSourceFactory.MAPNIK);
+    		        
+    		        //RelativeLayout rl = (RelativeLayout)findViewById(R.id.rootMapView);
+    		        
+    				ImageButton locateButton = (ImageButton) findViewById(R.id.locateButton);
+    			    locateButton.setOnClickListener(new OnClickListener()
+    			    {
+    			        @Override
+    			        public void onClick(View v) {
+    			            OsmMapActivity.this.showCurrentLocation();
+    			        }           
+    			    });
+    			    locateButton.setImageResource(android.R.drawable.ic_menu_mylocation);
+    			    
+    			    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 50);
+    			    //params.rightMargin = 10;
+    			    //params.topMargin = 100;
+    			    //rl.addView(locateButton, params);
+    			    locateButton.setLayoutParams(params);
+    			    
+    			    ImageButton addPointButton = (ImageButton) findViewById(R.id.addPointButton);
+    			    addPointButton.setOnClickListener(new OnClickListener()
+    			    {
+    			        @Override
+    			        public void onClick(View v) {
+    			            OsmMapActivity.this.startDrawingDot();
+    			        }           
+    			    });
+    			    addPointButton.setImageResource(android.R.drawable.ic_menu_myplaces);
+    			    
+    			    ImageButton addLineButton = (ImageButton) findViewById(R.id.addLineButton);
+    			    addLineButton.setOnClickListener(new OnClickListener()
+    			    {
+    			        @Override
+    			        public void onClick(View v) {
+    						OsmMapActivity.this.startDrawingLine();
+    			        }           
+    			    });
+    			    addLineButton.setImageResource(android.R.drawable.ic_menu_directions);
+    			    
+    			    addPlotButton = (ImageButton) findViewById(R.id.addPlotButton);
+    			   	finishAddingPlotButton = (ImageButton) findViewById(R.id.finishAddingPlotButton);
+    			    
+    			    finishAddingPlotButton.setOnClickListener(new OnClickListener()
+    			    {
+    			        @Override
+    			        public void onClick(View v) {
+    			            Log.e("finishAddingPlotButton","CLICKED");
+    			            OsmMapActivity.this.stopDrawingPlot();
+    			            addPlotButton.setVisibility(View.VISIBLE);
+    						finishAddingPlotButton.setVisibility(View.GONE);
+    			        }           
+    			    });
+    			    finishAddingPlotButton.setImageResource(android.R.drawable.star_big_on);
+    			    
+    			   
+    			    addPlotButton.setOnClickListener(new OnClickListener()
+    			    {
+    			        @Override
+    			        public void onClick(View v) {
+    			            Log.e("addPlotButton","CLICKED");
+    						OsmMapActivity.this.startDrawingPlot();
+    						addPlotButton.setVisibility(View.GONE);
+    						finishAddingPlotButton.setVisibility(View.VISIBLE);
+    			        }           
+    			    });
+    			    addPlotButton.setImageResource(android.R.drawable.star_big_off);
+    				openingMapHandler.sendEmptyMessage(0);
+    			} catch (Exception e) {
+    				openingMapHandler.sendEmptyMessage(1);
+    				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
+    	    				Environment.getExternalStorageDirectory().toString()
+    	    				+getResources().getString(R.string.logs_folder)
+    	    				+getResources().getString(R.string.logs_file_name)
+    	    				+System.currentTimeMillis()
+    	    				+getResources().getString(R.string.log_file_extension));
+    			} finally {
+    				pdOpeningMap.dismiss();	        				
+    			}
+    		}
+    	};
+    	openingMapThread.start();  
+	    
 		
-
-	    
-		ApplicationManager.mapActivity = this;
-		this.locRec = null;
- 
-		mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
-        mapView.setMultiTouchControls(true);
-        mapView.setClickable(true);
-        //mapView.setBackgroundColor(Color.RED);
-        mapView.setUseDataConnection(false);
-        mapView.getController().setZoom(MAP_DEFAULT_ZOOM);
-        mapView.getController().setCenter(new GeoPoint(MAP_DEFAULT_LATITUDE, MAP_DEFAULT_LONGITUDE));
-        mapView.setTileSource(TileSourceFactory.MAPNIK);
-        
-        RelativeLayout rl = (RelativeLayout)findViewById(R.id.rootMapView);
-        
-		ImageButton locateButton = (ImageButton) findViewById(R.id.locateButton);
-	    locateButton.setOnClickListener(new OnClickListener()
-	    {
-	        @Override
-	        public void onClick(View v) {
-	            Log.e("locateButton","CLICKED");
-	            OsmMapActivity.this.showCurrentLocation();
-	        }           
-	    });
-	    locateButton.setImageResource(android.R.drawable.ic_menu_mylocation);
-	    
-	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 50);
-	    //params.rightMargin = 10;
-	    //params.topMargin = 100;
-	    //rl.addView(locateButton, params);
-	    locateButton.setLayoutParams(params);
-	    
-	    ImageButton addPointButton = (ImageButton) findViewById(R.id.addPointButton);
-	    addPointButton.setOnClickListener(new OnClickListener()
-	    {
-	        @Override
-	        public void onClick(View v) {
-	            OsmMapActivity.this.startDrawingDot();
-	        }           
-	    });
-	    addPointButton.setImageResource(android.R.drawable.ic_menu_myplaces);
-	    
-	    ImageButton addLineButton = (ImageButton) findViewById(R.id.addLineButton);
-	    addLineButton.setOnClickListener(new OnClickListener()
-	    {
-	        @Override
-	        public void onClick(View v) {
-	            Log.e("addLineButton","CLICKED");
-				OsmMapActivity.this.startDrawingLine();
-	        }           
-	    });
-	    addLineButton.setImageResource(android.R.drawable.ic_menu_directions);
-	    
-	    addPlotButton = (ImageButton) findViewById(R.id.addPlotButton);
-	   	finishAddingPlotButton = (ImageButton) findViewById(R.id.finishAddingPlotButton);
-	    
-	    finishAddingPlotButton.setOnClickListener(new OnClickListener()
-	    {
-	        @Override
-	        public void onClick(View v) {
-	            Log.e("finishAddingPlotButton","CLICKED");
-	            OsmMapActivity.this.stopDrawingPlot();
-	            addPlotButton.setVisibility(View.VISIBLE);
-				finishAddingPlotButton.setVisibility(View.GONE);
-	        }           
-	    });
-	    finishAddingPlotButton.setImageResource(android.R.drawable.star_big_on);
-	    
-	   
-	    addPlotButton.setOnClickListener(new OnClickListener()
-	    {
-	        @Override
-	        public void onClick(View v) {
-	            Log.e("addPlotButton","CLICKED");
-				OsmMapActivity.this.startDrawingPlot();
-				addPlotButton.setVisibility(View.GONE);
-				finishAddingPlotButton.setVisibility(View.VISIBLE);
-	        }           
-	    });
-	    addPlotButton.setImageResource(android.R.drawable.star_big_off);
 	}
 	
 	public void onResume(){
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
-		
-		/*mapView.getSettings().setJavaScriptEnabled(true);
-		//webView.loadUrl("http://www.maps.google.com");
-		webView.loadUrl("file://sdcard/OSMexperiments/local_tiles.htm");
-		WebSettings webSettings = webView.getSettings();
-		webSettings.setJavaScriptEnabled(true);*/
+	    final ProgressDialog pdOpeningMap = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.openingMap));
+		final Handler openingMapHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				mapView.setBackgroundDrawable(getWallpaper());
+		        mapView.getOverlays().add(new MapGestureDetectorOverlay(OsmMapActivity.this, mapView));
+		        mapView.invalidate();
+			}
+		};
+    	Thread openingMapThread = new Thread() {
+    		@Override
+    		public void run() {
+    			try {
+    				super.run();
+    				/*mapView.getSettings().setJavaScriptEnabled(true);
+    				//webView.loadUrl("http://www.maps.google.com");
+    				webView.loadUrl("file://sdcard/OSMexperiments/local_tiles.htm");
+    				WebSettings webSettings = webView.getSettings();
+    				webSettings.setJavaScriptEnabled(true);*/
 
-        //Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_myplaces);
-        //addPolygon();
-        //drawLine(new GeoPoint(62.6, 29.7),new GeoPoint(62.9, 29.9));
-        //showCurrentLocation();
-        mapView.setBackgroundDrawable(getWallpaper());
-        mapView.getOverlays().add(new MapGestureDetectorOverlay(this, mapView));
-		/*ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();                
-        OverlayItem olItem1 = new OverlayItem("2", "Title2", "Description2",  new GeoPoint(62.61,29.79));
-        //OverlayItem olItem2 = new OverlayItem("1", "Title1", "Description1", new GeoPoint(62.62,29.8));
-        //OverlayItem olItem3 = new OverlayItem("3", "Title3", "Description3", new GeoPoint(62.63,29.81));        
-        overlayItemArray.add(olItem1);
-        //overlayItemArray.add(olItem2);
-        //overlayItemArray.add(olItem3);
-        
-        PlotMarker overlay = new PlotMarker(this, overlayItemArray);
-        mapView.getOverlays().add(overlay);*/
-        
-        DataManager dataManager = new DataManager(this,(CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
-        List<CollectRecord> savedRecordsSummaries = dataManager.loadSummaries();
-        ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
-        
-    	for (CollectRecord savedRecordSummary : savedRecordsSummaries){
-    		Log.e("savedrecord","id=="+savedRecordSummary.getId());
-    		Log.e("currentrecord","id=="+ApplicationManager.currentRecord.getId());
-    		if (savedRecordSummary.getId().equals(ApplicationManager.currentRecord.getId())){//it is currently opened plot
-	        	CollectRecord savedRecord = dataManager.loadRecord(savedRecordSummary.getId());
-	        	List<Node<? extends NodeDefinition>> plotsList = savedRecord.getRootEntity().getAll(getResources().getString(R.string.plotEntityField));
-	        	for (Node<? extends NodeDefinition> plot : plotsList){
-	        		Entity plotEntity = (Entity)plot;
-	        		Coordinate plotCenter = (Coordinate) plotEntity.getValue(getResources().getString(R.string.plotCoordinatesField), 0);
-	        		if (plotCenter!=null){
-	        			Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
-		        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
-		        		Log.e("savedRecord.getId()","=="+savedRecord.getId());
-		        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), "Y: "+plotCenter.getY()+"\r\nX:"+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
-		        		Log.e("olItem.getUid()","=="+olItem.getUid());
-		            	overlayItemArray.add(olItem);	
-	        		}	        		
-	        	}        	
-		        PlotMarker overlay = new PlotMarker(this, overlayItemArray);
-		        mapView.getOverlays().add(overlay);
-		        break;
+    		        //Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_myplaces);
+    		        //addPolygon();
+    		        //drawLine(new GeoPoint(62.6, 29.7),new GeoPoint(62.9, 29.9));
+    		        //showCurrentLocation();
+    		        /*mapView.setBackgroundDrawable(getWallpaper());
+    		        mapView.getOverlays().add(new MapGestureDetectorOverlay(OsmMapActivity.this, mapView));*/
+    				/*ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();                
+    		        OverlayItem olItem1 = new OverlayItem("2", "Title2", "Description2",  new GeoPoint(62.61,29.79));
+    		        //OverlayItem olItem2 = new OverlayItem("1", "Title1", "Description1", new GeoPoint(62.62,29.8));
+    		        //OverlayItem olItem3 = new OverlayItem("3", "Title3", "Description3", new GeoPoint(62.63,29.81));        
+    		        overlayItemArray.add(olItem1);
+    		        //overlayItemArray.add(olItem2);
+    		        //overlayItemArray.add(olItem3);
+    		        
+    		        PlotMarker overlay = new PlotMarker(this, overlayItemArray);
+    		        mapView.getOverlays().add(overlay);*/
+    		        
+    		        DataManager dataManager = new DataManager(OsmMapActivity.this,(CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
+    		        List<CollectRecord> savedRecordsSummaries = dataManager.loadSummaries();
+    		        ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
+    		        
+    		    	for (CollectRecord savedRecordSummary : savedRecordsSummaries){
+    		    		Log.e("savedrecord","id=="+savedRecordSummary.getId());
+    		    		Log.e("currentrecord","id=="+ApplicationManager.currentRecord.getId());
+    		    		if (savedRecordSummary.getId().equals(ApplicationManager.currentRecord.getId())){//it is currently opened plot
+    			        	CollectRecord savedRecord = dataManager.loadRecord(savedRecordSummary.getId());
+    			        	List<Node<? extends NodeDefinition>> plotsList = savedRecord.getRootEntity().getAll(getResources().getString(R.string.plotEntityField));
+    			        	for (Node<? extends NodeDefinition> plot : plotsList){
+    			        		Entity plotEntity = (Entity)plot;
+    			        		Coordinate plotCenter = (Coordinate) plotEntity.getValue(getResources().getString(R.string.plotCoordinatesField), 0);
+    			        		if (plotCenter!=null){
+    			        			Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
+    				        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
+    				        		Log.e("savedRecord.getId()","=="+savedRecord.getId());
+    				        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), "Y: "+plotCenter.getY()+"\r\nX:"+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
+    				        		Log.e("olItem.getUid()","=="+olItem.getUid());
+    				            	overlayItemArray.add(olItem);	
+    			        		}	        		
+    			        	}        	
+    				        PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+    				        mapView.getOverlays().add(overlay);
+    				        break;
+    		    		}
+    		    	}
+    		        
+    		        //mapView.getOverlays().add(new PlotOverlay(this));
+    		        //mapView.getOverlays().add(new MapGestureDetectorOverlay(this, mapView));
+    		        //drawUserMarker(new Location(""));
+    		    	
+    		    	//draw user shapes on map from previous map session
+    		    	int pointsNo = ApplicationManager.points.size();
+    				int linesNo = ApplicationManager.lineEnds.size();
+    				int plotsNo = ApplicationManager.plots.size();
+    				Log.e("pointsNo","=="+pointsNo);
+    				Log.e("linesNo","=="+linesNo);
+    				Log.e("plotsNo","=="+plotsNo);
+    						
+    				if ((pointsNo+linesNo+plotsNo)>0){
+    					Integer recordId = ApplicationManager.currentRecord.getId();
+    					for (int i=0;i<pointsNo;i++){
+    						if (ApplicationManager.points.get(i).getLeft()==recordId){
+    							GeoPoint point = ApplicationManager.points.get(i).getRight();
+    							OsmMapActivity.this.drawPointMarker(point);	
+    						}				
+    					}
+    					for (int i=0;i<linesNo;i++){
+    						if (ApplicationManager.lineEnds.get(i).getLeft()==recordId){
+    							GeoPoint startPoint = ApplicationManager.lineEnds.get(i++).getRight();
+    							/*Log.e("startPoint",startPoint.getLatitudeE6()/1E6+"=="+startPoint.getLongitudeE6()/1E6);
+    							OverlayItem olItem = new OverlayItem("3", "LINE","",  startPoint);
+    							ArrayList<OverlayItem> overlayLineArray = new ArrayList<OverlayItem>();
+    							overlayLineArray.add(olItem);
+    							PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+    							mapView.getOverlays().add(overlay);
+    							*/
+    							GeoPoint endPoint = ApplicationManager.lineEnds.get(i).getRight();
+    							/*olItem = new OverlayItem("3", "LINE","",  endPoint);
+    							overlayLineArray = new ArrayList<OverlayItem>();
+    							overlayLineArray.add(olItem);
+    							overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+    							mapView.getOverlays().add(overlay);
+    							PathOverlay myOverlay= new PathOverlay(Color.BLUE, this);
+    							myOverlay.addPoint(endPoint);
+    							mapView.getOverlays().add(myOverlay);
+    							mapView.invalidate();*/
+    							OsmMapActivity.this.drawLine(startPoint, endPoint, Color.BLUE);
+    							OsmMapActivity.this.drawPointMarker(startPoint);
+    							OsmMapActivity.this.drawPointMarker(endPoint);	
+    						}				
+    					}
+    					
+    					for (int i=0;i<plotsNo;i++){
+    						if (ApplicationManager.plots.get(i).get(0).getLeft()==recordId){
+    							List<Pair<Integer, GeoPoint>> plotCornersWithRecordId = ApplicationManager.plots.get(i);
+    							List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
+    							for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
+    								plotCorners.add(pair.getRight());
+    							}
+    							//List<GeoPoint> plotCorners =  ApplicationManager.plots.get(i);
+    							int plotCornersNo = plotCorners.size();
+    							GeoPoint previousCorner = null;
+    							for (int j=0;j<plotCornersNo;j++){
+    								GeoPoint point = plotCorners.get(j);
+    								OsmMapActivity.this.drawPointMarker(point);
+    								if (previousCorner!=null){
+    									OsmMapActivity.this.drawLine(previousCorner, point, Color.RED);
+    								}
+    								previousCorner = point;
+    							}
+    							if (previousCorner!=null){
+    								OsmMapActivity.this.drawLine(previousCorner, plotCorners.get(0), Color.RED);
+    							}	
+    						}				
+    					}
+    					
+    				}
+    		        //mapView.invalidate();
+    				openingMapHandler.sendEmptyMessage(0);
+    			} catch (Exception e) {
+    				openingMapHandler.sendEmptyMessage(1);
+    				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
+    	    				Environment.getExternalStorageDirectory().toString()
+    	    				+getResources().getString(R.string.logs_folder)
+    	    				+getResources().getString(R.string.logs_file_name)
+    	    				+System.currentTimeMillis()
+    	    				+getResources().getString(R.string.log_file_extension));
+    			} finally {
+    				pdOpeningMap.dismiss();	        				
+    			}
     		}
-    	}
-        
-        //mapView.getOverlays().add(new PlotOverlay(this));
-        //mapView.getOverlays().add(new MapGestureDetectorOverlay(this, mapView));
-        //drawUserMarker(new Location(""));
-    	
-    	//draw user shapes on map from previous map session
-    	int pointsNo = ApplicationManager.points.size();
-		int linesNo = ApplicationManager.lineEnds.size();
-		int plotsNo = ApplicationManager.plots.size();
-		Log.e("pointsNo","=="+pointsNo);
-		Log.e("linesNo","=="+linesNo);
-		Log.e("plotsNo","=="+plotsNo);
-				
-		if ((pointsNo+linesNo+plotsNo)>0){
-			Integer recordId = ApplicationManager.currentRecord.getId();
-			for (int i=0;i<pointsNo;i++){
-				if (ApplicationManager.points.get(i).getLeft()==recordId){
-					GeoPoint point = ApplicationManager.points.get(i).getRight();
-					this.drawPointMarker(point);	
-				}				
-			}
-			for (int i=0;i<linesNo;i++){
-				if (ApplicationManager.lineEnds.get(i).getLeft()==recordId){
-					GeoPoint startPoint = ApplicationManager.lineEnds.get(i++).getRight();
-					/*Log.e("startPoint",startPoint.getLatitudeE6()/1E6+"=="+startPoint.getLongitudeE6()/1E6);
-					OverlayItem olItem = new OverlayItem("3", "LINE","",  startPoint);
-					ArrayList<OverlayItem> overlayLineArray = new ArrayList<OverlayItem>();
-					overlayLineArray.add(olItem);
-					PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
-					mapView.getOverlays().add(overlay);
-					*/
-					GeoPoint endPoint = ApplicationManager.lineEnds.get(i).getRight();
-					/*olItem = new OverlayItem("3", "LINE","",  endPoint);
-					overlayLineArray = new ArrayList<OverlayItem>();
-					overlayLineArray.add(olItem);
-					overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
-					mapView.getOverlays().add(overlay);
-					PathOverlay myOverlay= new PathOverlay(Color.BLUE, this);
-					myOverlay.addPoint(endPoint);
-					mapView.getOverlays().add(myOverlay);
-					mapView.invalidate();*/
-					this.drawLine(startPoint, endPoint, Color.BLUE);
-					this.drawPointMarker(startPoint);
-					this.drawPointMarker(endPoint);	
-				}				
-			}
-			
-			for (int i=0;i<plotsNo;i++){
-				if (ApplicationManager.plots.get(i).get(0).getLeft()==recordId){
-					List<Pair<Integer, GeoPoint>> plotCornersWithRecordId = ApplicationManager.plots.get(i);
-					List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
-					for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
-						plotCorners.add(pair.getRight());
-					}
-					//List<GeoPoint> plotCorners =  ApplicationManager.plots.get(i);
-					int plotCornersNo = plotCorners.size();
-					GeoPoint previousCorner = null;
-					for (int j=0;j<plotCornersNo;j++){
-						GeoPoint point = plotCorners.get(j);
-						this.drawPointMarker(point);
-						if (previousCorner!=null){
-							this.drawLine(previousCorner, point, Color.RED);
-						}
-						previousCorner = point;
-					}
-					if (previousCorner!=null){
-						this.drawLine(previousCorner, plotCorners.get(0), Color.RED);
-					}	
-				}				
-			}
-			
-		}
-        mapView.invalidate();
+    	};
+    	openingMapThread.start();  
+		
 	}	
 	
 	@Override
@@ -352,7 +402,7 @@ public class OsmMapActivity extends Activity {
 		
 		Drawable marker=getResources().getDrawable(android.R.drawable.ic_menu_mylocation);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
-		ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
+		//ResourceProxy resourceProxy = new DefaultResourceProxyImpl(getApplicationContext());
 		List<Overlay> overlays = mapView.getOverlays();
 		for (int i=0;i<overlays.size();i++){
 			if (overlays.get(i) instanceof UserMarker){

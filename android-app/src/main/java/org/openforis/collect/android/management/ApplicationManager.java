@@ -247,8 +247,8 @@ public class ApplicationManager extends BaseActivity {
 	    	
 	    	ApplicationManager.this.setScreenOrientation();
 	    	
-            Intent enableBtIntent = new Intent(ApplicationManager.this, BluetoothActivity.class);
-		    startActivity(enableBtIntent);
+            //Intent enableBtIntent = new Intent(ApplicationManager.this, BluetoothActivity.class);
+		    //startActivity(enableBtIntent);
 	    	
         	creationThread.start();
         	

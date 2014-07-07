@@ -7,14 +7,8 @@ import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.messages.ToastMessage;
 import org.openforis.collect.android.misc.SearchTaxonActivity;
 import org.openforis.collect.android.screens.FormScreen;
-import org.openforis.collect.android.service.ServiceFactory;
-import org.openforis.collect.model.NodeChangeSet;
 import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.metamodel.TaxonAttributeDefinition;
-import org.openforis.idm.model.Entity;
-import org.openforis.idm.model.Node;
-import org.openforis.idm.model.TaxonAttribute;
-import org.openforis.idm.model.TaxonOccurrence;
 
 import android.content.Context;
 import android.content.Intent;
@@ -491,14 +485,14 @@ public class TaxonField extends InputField {
 				langVariant = null;
 			}
 		
-		Entity parentEntity = this.findParentEntity(path);
+		/*Entity parentEntity = this.findParentEntity(path);
 		Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
 		NodeChangeSet nodeChangeSet = null;
 		if (node!=null){
 			nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((TaxonAttribute)node, new TaxonOccurrence(code, sciName, vernName, vernLang, langVariant));
 		} else {
 			nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new TaxonOccurrence(code, sciName, vernName, vernLang, langVariant), null, null);
-		}
+		}*/
 	}
 
 	private void startSearchScreen(String strContent, String strCriteria){

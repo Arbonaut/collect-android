@@ -95,15 +95,9 @@ public abstract class DatabaseHelper {
 	        }
 			throw new RuntimeException(e);
 		} finally {
-			/*if (c != null) {
-				try {
-					c.close();
-				} catch (SQLException e) {}
-			}*/
 			try {
 				database.close();
 			} catch (DatabaseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

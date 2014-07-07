@@ -2,17 +2,16 @@ package org.openforis.collect.android.maps;
 
 import org.osmdroid.util.GeoPoint;
 
-import android.location.Location;
 import android.location.LocationManager;
 
 public class LocationReceiver {
 	
 	private LocationManager lm;
 	private LocationChangeListener ll;
-	private Location loc;
+	//private Location loc;
 	
 	public LocationReceiver(LocationManager lm){
-		this.loc = null;
+		//this.loc = null;
 		this.lm = lm;		
 	}
 	

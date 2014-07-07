@@ -1,10 +1,7 @@
 package org.openforis.collect.android.maps;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.openforis.collect.android.management.ApplicationManager;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -16,7 +13,7 @@ import android.content.DialogInterface;
 class UserMarker extends ItemizedIconOverlay<OverlayItem>{ 
 	protected Context ctx;
 
-	private List<OverlayItem> locations = new ArrayList<OverlayItem>();
+	//private List<OverlayItem> locations = new ArrayList<OverlayItem>();
 	//private Drawable marker;
 
 	public UserMarker(final Context context, final List<OverlayItem> aList/*Drawable defaultMarker, double latitude, double longitude, ResourceProxy pResourceProxy*/, double latitude, double longitude) {

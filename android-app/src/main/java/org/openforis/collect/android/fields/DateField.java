@@ -224,4 +224,39 @@ public class DateField extends InputField {
 	public void afterTextChanged(Editable s) {
 		this.setValue(0, s.toString(), DateField.this.form.getFormScreenId(),true);
 	}*/
+	
+	public static String formatDate(Date dateValue){
+    	String formattedDateValue = "";
+    	String year = String.valueOf(dateValue.getYear());
+    	String month = String.valueOf(dateValue.getMonth());
+    	if (month!=null){
+    		if (month.length()==1){
+    			month = "0"+month;
+    		}
+    	}
+    	String day = String.valueOf(dateValue.getDay());
+    	if (day!=null){
+    		if (day.length()==1){
+    			day = "0"+day;
+    		}
+    	}
+		if (dateValue.getMonth()==null && dateValue.getDay()==null && dateValue.getYear()==null){
+			formattedDateValue = "";
+		} else if (dateValue.getMonth()==null && dateValue.getDay()==null){
+			formattedDateValue = year+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator);		    							
+		} else if (dateValue.getMonth()==null && dateValue.getYear()==null){
+			formattedDateValue = ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+day;
+		} else if (dateValue.getDay()==null && dateValue.getYear()==null){
+			formattedDateValue = ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+month+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator);
+		} else if (dateValue.getMonth()==null){
+			formattedDateValue = year+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+day;		    							
+		} else if (dateValue.getDay()==null){
+			formattedDateValue = year+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+month+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator);
+		} else if (dateValue.getYear()==null){
+			formattedDateValue = ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+month+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+day;
+		} else {
+			formattedDateValue = year+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+month+ApplicationManager.mainActivity.getResources().getString(R.string.dateSeparator)+day;
+		}
+		return formattedDateValue;
+    }
 }

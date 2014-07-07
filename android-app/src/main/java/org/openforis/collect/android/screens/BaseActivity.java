@@ -42,7 +42,6 @@ public class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);       
         Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //this.setScreenOrientation();
 	}
 	
     @Override
@@ -81,8 +80,34 @@ public class BaseActivity extends Activity {
         switch (item.getItemId())
         {
 			case R.id.menu_map:
-			    startActivity(new Intent(BaseActivity.this, OsmMapActivity.class));
-			    return true;
+			    final ProgressDialog pdOpeningMap = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.openingMap));
+				final Handler openingMapHandler = new Handler() {
+					@Override
+					public void handleMessage(Message msg) {						
+					}
+				};
+	        	Thread openingMapThread = new Thread() {
+	        		@Override
+	        		public void run() {
+	        			try {
+	        				super.run();
+	        				startActivity(new Intent(BaseActivity.this, OsmMapActivity.class));
+	        				openingMapHandler.sendEmptyMessage(0);
+	        			} catch (Exception e) {
+	        				openingMapHandler.sendEmptyMessage(1);
+	        				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
+	        	    				Environment.getExternalStorageDirectory().toString()
+	        	    				+getResources().getString(R.string.logs_folder)
+	        	    				+getResources().getString(R.string.logs_file_name)
+	        	    				+System.currentTimeMillis()
+	        	    				+getResources().getString(R.string.log_file_extension));
+	        			} finally {
+	        				pdOpeningMap.dismiss();	        				
+	        			}
+	        		}
+	        	};
+	        	openingMapThread.start();  
+	        	return true;
 			case R.id.menu_exit:
 				AlertMessage.createPositiveNegativeDialog(BaseActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.exitAppTitle), getResources().getString(R.string.exitAppMessage),

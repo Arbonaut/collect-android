@@ -1,6 +1,5 @@
 package org.openforis.collect.android.gestures;
 
-import android.app.Activity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,12 +11,12 @@ import android.view.View;
  */
 public class ScrollViewSwipeDetector implements View.OnTouchListener {
 
-	private Activity activity;
+	//private Activity activity;
 	static final int MIN_DISTANCE = 100;
 	private float downX, downY, upX, upY;
 
-	public ScrollViewSwipeDetector(final Activity activity) {
-		this.activity = activity;
+	public ScrollViewSwipeDetector(/*final Activity activity*/) {
+		//this.activity = activity;
 	}
 
  public final void onRightToLeftSwipe() {

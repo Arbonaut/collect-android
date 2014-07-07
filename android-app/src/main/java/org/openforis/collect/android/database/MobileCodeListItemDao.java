@@ -16,7 +16,6 @@ import org.openforis.idm.metamodel.SurveyObject;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 
 public class MobileCodeListItemDao extends org.openforis.collect.persistence.CodeListItemDao {

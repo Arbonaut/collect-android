@@ -44,7 +44,7 @@ public class DataManager {
 	private CollectSurvey survey;
 	private String rootEntity;
 	private User user;
-	private Context context;
+	//private Context context;
 	
 	private DataMarshaller dataMarshaller;
 	private DataUnmarshaller dataUnmarshaller;
@@ -53,7 +53,7 @@ public class DataManager {
 		this.survey = survey;
 		this.rootEntity = rootEntity;
 		this.user = loggedInUser;
-		this.context = ctx;
+		//this.context = ctx;
 		
 		this.dataMarshaller = new DataMarshaller();
 		HashMap<String,User> users = new HashMap<String, User>();
