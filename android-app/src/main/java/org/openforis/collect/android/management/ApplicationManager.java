@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.openforis.collect.android.R;
-import org.openforis.collect.android.bluetooth.BluetoothActivity;
 import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.fields.UIElement;
@@ -210,7 +209,7 @@ public class ApplicationManager extends BaseActivity {
 			editor.putInt(getResources().getString(R.string.backgroundColor), backgroundColor);
 
 			int gpsTimeout = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.gpsTimeout), getResources().getInteger(R.integer.gpsTimeoutInMs));
-			editor = ApplicationManager.appPreferences.edit();
+			//editor = ApplicationManager.appPreferences.edit();
 			editor.putInt(getResources().getString(R.string.gpsTimeout), gpsTimeout);
             
 	    	Map<String, ?> settings = ApplicationManager.appPreferences.getAll();
@@ -222,7 +221,7 @@ public class ApplicationManager extends BaseActivity {
 	    		editor.putBoolean(getResources().getString(R.string.showSoftKeyboardOnTextField), false);	    	
 			
 			String formDefinitionPath = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
-			editor = ApplicationManager.appPreferences.edit();
+			//editor = ApplicationManager.appPreferences.edit();
 			editor.putString(getResources().getString(R.string.formDefinitionPath), formDefinitionPath);
 			
 			String survey_id = ApplicationManager.appPreferences.getString(getResources().getString(R.string.surveyId), getResources().getString(R.string.defaultSurveyId));
@@ -242,6 +241,15 @@ public class ApplicationManager extends BaseActivity {
 			
 			String fontSize = String.valueOf(ApplicationManager.appPreferences.getString(getResources().getString(R.string.fontSize), getResources().getString(R.string.defaultFontSize)));
 			editor.putString(getResources().getString(R.string.fontSize), fontSize);
+			
+			String userLocationLat = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLat), getResources().getString(R.string.defaultUserLocationLat));
+			editor.putString(getResources().getString(R.string.userLocationLat), userLocationLat);
+
+			String userLocationLon = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLon), getResources().getString(R.string.defaultUserLocationLon));
+			editor.putString(getResources().getString(R.string.userLocationLon), userLocationLon);
+			
+			int selectedZoomLevel = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.zoomLevel), getResources().getInteger(R.integer.defaultZoomLevel));
+			editor.putInt(getResources().getString(R.string.zoomLevel), selectedZoomLevel);
 			
 	    	editor.commit();
 	    	

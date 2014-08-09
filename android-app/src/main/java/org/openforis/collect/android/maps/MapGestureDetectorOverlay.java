@@ -2,8 +2,10 @@ package org.openforis.collect.android.maps;
 
 import java.util.ArrayList;
 
+import org.openforis.collect.android.R;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.misc.Pair;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
@@ -14,6 +16,7 @@ import org.osmdroid.views.overlay.PathOverlay;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
@@ -51,9 +54,50 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event, MapView mapView) {
-		if (gestureDetector.onTouchEvent(event)) {
-			return true;
+		/*Log.e("onTouch1","MAP"+event.getAction());
+		Log.e("ACTION_MOVE","MAP"+(MotionEvent.ACTION_MOVE==event.getAction()));
+		Log.e("ACTION_POINTER_DOWN","MAP"+(MotionEvent.ACTION_POINTER_DOWN==event.getAction()));
+		Log.e("ACTION_POINTER_UP","MAP"+(MotionEvent.ACTION_POINTER_UP==event.getAction()));
+		Log.e("ACTION_UP","MAP"+(MotionEvent.ACTION_UP==event.getAction()));*/
+		IGeoPoint userLocation = null;
+		switch (event.getAction()) {
+        case MotionEvent.ACTION_UP:
+        	Log.e("FINGER UP FROM","MAP");
+        	double lat = microDegreesToDegrees(mapView.getMapCenter().getLatitudeE6());
+            double lon = microDegreesToDegrees(mapView.getMapCenter().getLongitudeE6());
+            Log.e("position",lat+"=="+lon);
+            userLocation = mapView.getMapCenter();
+            /*if (onGestureListener != null) {
+				onGestureListener.onSingleTapUp(e);
+			}
+			Log.e("PLOTOVERLAY","oonnSingleTapConfirmed");
+			int clickX = (int)e.getX();
+			int clickY = (int)e.getY();
+			
+			Projection projection = mapView.getProjection();
+			GeoPoint tappedGeoPoint = (GeoPoint) projection.fromPixels(clickX, clickY);
+			double lat = microDegreesToDegrees(tappedGeoPoint.getLatitudeE6());
+			double lng = microDegreesToDegrees(tappedGeoPoint.getLongitudeE6());*/
+            break;
+        case MotionEvent.ACTION_MOVE:
+            Log.e("moving","MAP in progress");
+            lat = microDegreesToDegrees(mapView.getMapCenter().getLatitudeE6());
+            lon = microDegreesToDegrees(mapView.getMapCenter().getLongitudeE6());
+            Log.e("position",lat+"=="+lon);
+            userLocation = mapView.getMapCenter();
+            break;
+        }
+		SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
+		/*int selectedZoomLevel = mapView.getZoomLevel();
+		editor.putInt(this.context.getResources().getString(R.string.zoomLevel), selectedZoomLevel);*/
+		if (userLocation!=null){
+			//SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
+			editor.putString(this.context.getResources().getString(R.string.userLocationLat), String.valueOf(microDegreesToDegrees(mapView.getMapCenter().getLatitudeE6())));
+			editor.putString(this.context.getResources().getString(R.string.userLocationLon), String.valueOf(microDegreesToDegrees(mapView.getMapCenter().getLongitudeE6())));			
+	    	userLocation = null;
 		}
+    	editor.commit();
+
 		return false;
 	}
 	
@@ -195,13 +239,13 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 		}
 	}
 	
-	@Override
+	/*@Override
 	public boolean onSingleTapUp(MotionEvent e, final MapView mapView) {
 		Log.e("MapGestureDetectorOverlay","onSingleTapUp1");
 		if (onGestureListener != null) {
 			onGestureListener.onSingleTapUp(e);
 		}
-		Log.e("PLOTOVERLAY","onSingleTapConfirmed");
+		Log.e("PLOTOVERLAY","oonnSingleTapConfirmed");
 		int clickX = (int)e.getX();
 		int clickY = (int)e.getY();
 		
@@ -212,7 +256,7 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 		Log.e("PLOTOVERLAY","lat"+microDegreesToDegrees(tappedGeoPoint.getLatitudeE6())+"=="+lat);
 		Log.e("PLOTOVERLAY","lng"+microDegreesToDegrees(tappedGeoPoint.getLongitudeE6())+"=="+lng);
 		return false;
-	}
+	}*/
 	 
 	private static double microDegreesToDegrees(int microDegrees) {
 		return microDegrees / 1E6;
