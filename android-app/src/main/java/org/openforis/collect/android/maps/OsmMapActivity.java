@@ -21,6 +21,10 @@ import org.openforis.idm.model.Coordinate;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.IntegerValue;
 import org.openforis.idm.model.Node;
+import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -50,10 +54,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -70,9 +72,9 @@ public class OsmMapActivity extends Activity {
 
     //private double MAP_DEFAULT_LATITUDE = 60.2483128;
     //private double MAP_DEFAULT_LATITUDE = 60.4788815;//Naantali
-    private double MAP_DEFAULT_LATITUDE = 1.3011456;
+    //private double MAP_DEFAULT_LATITUDE = 1.3011456;
     //private double MAP_DEFAULT_LONGITUDE = 25.0179958;    
-    private double MAP_DEFAULT_LONGITUDE = 103.7879403;
+    //private double MAP_DEFAULT_LONGITUDE = 103.7879403;
     //private double MAP_DEFAULT_LONGITUDE = 22.0927365;//Naantali
     LocationReceiver locRec;
     
@@ -83,21 +85,54 @@ public class OsmMapActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
 		setContentView(R.layout.osm_map);
+		
+		
+	    
 	    final ProgressDialog pdOpeningMap = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.openingMap));
 		final Handler openingMapHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				/*RoadManager roadManager = new OSRMRoadManager();
 			    ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-			    GeoPoint startPoint = new GeoPoint(1, 103);
+			    GeoPoint startPoint = new GeoPoint(1.3387225,103.7056935);
 			    waypoints.add(startPoint);
-			    GeoPoint endPoint = new GeoPoint(2, 102);
+			    GeoPoint endPoint = new GeoPoint(1.2983551,103.7886895);
 			    waypoints.add(endPoint);
 			    Road road = roadManager.getRoad(waypoints);
 			    Polyline roadOverlay = RoadManager.buildRoadOverlay(road, OsmMapActivity.this);
 			    mapView.getOverlays().add(roadOverlay);
+			    Log.e("road",road.mDuration+"=="+road.mLength);
 			    mapView.invalidate();
 			    Log.e("drawing","DIRECTIONS");*/
+				RoadManager roadManager = new OSRMRoadManager();
+			    ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+			    GeoPoint startPoint = new GeoPoint(1.3387225,103.7056935);
+			    waypoints.add(startPoint);
+			    GeoPoint endPoint = new GeoPoint(1.281321,103.83897);
+			    waypoints.add(endPoint);
+			    Road road = roadManager.getRoad(waypoints);
+			    /*Polyline roadOverlay = RoadManager.buildRoadOverlay(road, OsmMapActivity.this);
+			    mapView.getOverlays().add(roadOverlay);*/
+			    Log.e("road",road.mDuration+"=="+road.mLength);
+			    Log.e("road",road.mLegs.size()+"=="+road.mNodes.size());
+			    for (int i=0;i<road.mNodes.size()-1;i++){
+			    	OsmMapActivity.this.drawLine(road.mNodes.get(i).mLocation, road.mNodes.get(i+1).mLocation, Color.BLUE);
+			    }
+			    /*OsmMapActivity.this.drawLine(road.mNodes.get(0).mLocation, road.mNodes.get(1).mLocation, Color.RED);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(1).mLocation, road.mNodes.get(2).mLocation, Color.BLUE);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(2).mLocation, road.mNodes.get(3).mLocation, Color.BLACK);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(3).mLocation, road.mNodes.get(4).mLocation, Color.RED);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(4).mLocation, road.mNodes.get(5).mLocation, Color.BLUE);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(5).mLocation, road.mNodes.get(6).mLocation, Color.BLACK);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(6).mLocation, road.mNodes.get(7).mLocation, Color.RED);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(7).mLocation, road.mNodes.get(8).mLocation, Color.BLUE);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(8).mLocation, road.mNodes.get(9).mLocation, Color.BLACK);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(9).mLocation, road.mNodes.get(10).mLocation, Color.RED);
+			    OsmMapActivity.this.drawLine(road.mNodes.get(10).mLocation, road.mNodes.get(11).mLocation, Color.BLUE);
+			    */mapView.invalidate();
+			    Log.e("drawing","DIRECTIONS");
+			    	    
+			    OsmMapActivity.this.drawLine(startPoint, endPoint, Color.GREEN);
 			}
 		};
     	Thread openingMapThread = new Thread() {
@@ -105,7 +140,7 @@ public class OsmMapActivity extends Activity {
     		public void run() {
     			try {
     				super.run();
-    				ApplicationManager.mapActivity = OsmMapActivity.this;
+    				/*ApplicationManager.mapActivity = OsmMapActivity.this;
     				OsmMapActivity.this.locRec = null;
     		 
     				mapView = (MapView) findViewById(R.id.mapview);
@@ -120,8 +155,25 @@ public class OsmMapActivity extends Activity {
     		        String userLocationLat = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLat), getResources().getString(R.string.defaultUserLocationLat));
     		        String userLocationLon = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLon), getResources().getString(R.string.defaultUserLocationLon));
     		        mapView.getController().setCenter(new GeoPoint(Double.valueOf(userLocationLat), Double.valueOf(userLocationLon)));
+    		        mapView.setTileSource(TileSourceFactory.MAPNIK);*/
+    				ApplicationManager.mapActivity = OsmMapActivity.this;
+    				OsmMapActivity.this.locRec = null;
+    				mapView = (MapView) findViewById(R.id.mapview);
+    		        mapView.setBuiltInZoomControls(true);
+    		        mapView.setMultiTouchControls(true);
+    		        mapView.setClickable(true);
+    		        //mapView.setBackgroundColor(Color.RED);
+    		        mapView.setUseDataConnection(false);
+    		        int selectedZoomLevel = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.zoomLevel), getResources().getInteger(R.integer.defaultZoomLevel));
+    		        mapView.getController().setZoom(selectedZoomLevel);
+    		        //mapView.getController().setCenter(new GeoPoint(MAP_DEFAULT_LATITUDE, MAP_DEFAULT_LONGITUDE));
+    		        String userLocationLat = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLat), getResources().getString(R.string.defaultUserLocationLat));
+    		        String userLocationLon = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLon), getResources().getString(R.string.defaultUserLocationLon));
+    		        mapView.getController().setCenter(new GeoPoint(Double.valueOf(userLocationLat), Double.valueOf(userLocationLon)));
     		        mapView.setTileSource(TileSourceFactory.MAPNIK);
     		        
+    		        
+
     		        /*mapView.setOnTouchListener(new OnTouchListener() {
 
     		            public boolean onTouch(View v, MotionEvent event) {

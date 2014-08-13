@@ -62,10 +62,10 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 		IGeoPoint userLocation = null;
 		switch (event.getAction()) {
         case MotionEvent.ACTION_UP:
-        	Log.e("FINGER UP FROM","MAP");
+        	//Log.e("FINGER UP FROM","MAP");
         	double lat = microDegreesToDegrees(mapView.getMapCenter().getLatitudeE6());
             double lon = microDegreesToDegrees(mapView.getMapCenter().getLongitudeE6());
-            Log.e("position",lat+"=="+lon);
+            //Log.e("position",lat+"=="+lon);
             userLocation = mapView.getMapCenter();
             /*if (onGestureListener != null) {
 				onGestureListener.onSingleTapUp(e);
@@ -80,10 +80,10 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 			double lng = microDegreesToDegrees(tappedGeoPoint.getLongitudeE6());*/
             break;
         case MotionEvent.ACTION_MOVE:
-            Log.e("moving","MAP in progress");
+            //Log.e("moving","MAP in progress");
             lat = microDegreesToDegrees(mapView.getMapCenter().getLatitudeE6());
             lon = microDegreesToDegrees(mapView.getMapCenter().getLongitudeE6());
-            Log.e("position",lat+"=="+lon);
+            //Log.e("position",lat+"=="+lon);
             userLocation = mapView.getMapCenter();
             break;
         }
@@ -123,7 +123,7 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 		if (onGestureListener != null) {
 			onGestureListener.onLongPress(e);
 		}
-		Log.e("MapGestureDetectorOverlay","onLongPress");
+		//Log.e("MapGestureDetectorOverlay","onLongPress");
 		int clickX = (int)e.getX();
 		int clickY = (int)e.getY();
 		
@@ -132,8 +132,8 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 		this.lat = microDegreesToDegrees(tappedGeoPoint.getLatitudeE6());
 		this.lng = microDegreesToDegrees(tappedGeoPoint.getLongitudeE6());
 		
-		Log.e("PLOTOVERLAY","lat"+microDegreesToDegrees(tappedGeoPoint.getLatitudeE6())+"=="+lat);
-		Log.e("PLOTOVERLAY","lng"+microDegreesToDegrees(tappedGeoPoint.getLongitudeE6())+"=="+lng);
+		//Log.e("PLOTOVERLAY","lat"+microDegreesToDegrees(tappedGeoPoint.getLatitudeE6())+"=="+lat);
+		//Log.e("PLOTOVERLAY","lng"+microDegreesToDegrees(tappedGeoPoint.getLongitudeE6())+"=="+lng);
 		if (ApplicationManager.isPlotDrawingStarted){
 			AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
 			builder.setTitle("MENU (add plot corner)");
