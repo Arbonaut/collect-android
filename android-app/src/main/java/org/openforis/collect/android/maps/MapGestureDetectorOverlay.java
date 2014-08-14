@@ -2,8 +2,10 @@ package org.openforis.collect.android.maps;
 
 import java.util.ArrayList;
 
+
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.misc.Pair;
+
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
@@ -14,6 +16,7 @@ import org.osmdroid.views.overlay.PathOverlay;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
@@ -51,9 +54,52 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		if (gestureDetector.onTouchEvent(event)) {
 			return true;
 		}
+
+
 		return false;
 	}
 	
@@ -212,6 +258,7 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 		Log.e("PLOTOVERLAY","lat"+microDegreesToDegrees(tappedGeoPoint.getLatitudeE6())+"=="+lat);
 		Log.e("PLOTOVERLAY","lng"+microDegreesToDegrees(tappedGeoPoint.getLongitudeE6())+"=="+lng);
 		return false;
+
 	}
 	 
 	private static double microDegreesToDegrees(int microDegrees) {

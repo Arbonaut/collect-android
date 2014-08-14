@@ -112,8 +112,8 @@ public class BaseActivity extends Activity {
 			    return true;
 	        case R.id.menu_save:
 	        	CollectSurvey collectSurveySave = (CollectSurvey)ApplicationManager.getSurvey();	        	
-	        	DataManager dataManagerSave = new DataManager(collectSurveySave,collectSurveySave.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
-	        	boolean isSuccess = dataManagerSave.saveRecord(this);
+	        	DataManager dataManagerSave = new DataManager(BaseActivity.this,collectSurveySave,collectSurveySave.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+	        	boolean isSuccess = dataManagerSave.saveRecord();
 	        	if (isSuccess){
 	        		AlertMessage.createPositiveDialog(BaseActivity.this, true, null,
 							getResources().getString(R.string.savingDataTitle), 
@@ -178,7 +178,7 @@ public class BaseActivity extends Activity {
 	        			try {
 	        				super.run();
 	        				CollectSurvey collectSurveyExport = (CollectSurvey)ApplicationManager.getSurvey();	        	
-	        	        	DataManager dataManagerExport = new DataManager(collectSurveyExport,collectSurveyExport.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+	        	        	DataManager dataManagerExport = new DataManager(BaseActivity.this,collectSurveyExport,collectSurveyExport.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
 	        	        	dataManagerExport.saveRecordToXml(ApplicationManager.currentRecord, Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder));
 	        	        	savingRecordToXmlHandler.sendEmptyMessage(0);
 	        			} catch (Exception e) {
@@ -235,7 +235,7 @@ public class BaseActivity extends Activity {
 	        				super.run();
 	        				Log.i(getResources().getString(R.string.app_name),TAG+":run");
 	        				CollectSurvey collectSurveyExportAll = (CollectSurvey)ApplicationManager.getSurvey();	        	
-	        	        	DataManager dataManagerExportAll = new DataManager(collectSurveyExportAll,collectSurveyExportAll.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+	        	        	DataManager dataManagerExportAll = new DataManager(BaseActivity.this,collectSurveyExportAll,collectSurveyExportAll.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
 	        	        	dataManagerExportAll.saveAllRecordsToFile(Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder));
 	        	        	dataBackupHandler.sendEmptyMessage(0);
 	        			} catch (Exception e) {
