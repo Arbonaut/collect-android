@@ -21,6 +21,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import android.util.Log;
+
 /**
  * 
  * @author K. Waga
@@ -115,12 +117,13 @@ public class ServerInterface {
                 form = new UrlEncodedFormEntity(nameValuePairs);
                         form.setContentEncoding(HTTP.UTF_8);
                 HttpPost httppost = new HttpPost(url);
-
+                Log.e("POST","=="+url);
                 httppost.setEntity(form);
 
                 HttpResponse response = (HttpResponse) httpclient .execute(httppost);
                 HttpEntity resEntity = response.getEntity();  
                 String resp = EntityUtils.toString(resEntity);
+                Log.e("POSTresp","=="+resp);
                 return resp;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

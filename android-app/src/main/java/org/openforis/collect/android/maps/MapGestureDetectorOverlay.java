@@ -134,9 +134,10 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 		this.lat = microDegreesToDegrees(tappedGeoPoint.getLatitudeE6());
 		this.lng = microDegreesToDegrees(tappedGeoPoint.getLongitudeE6());
 		
-		Log.e("PLOTOVERLAY","lat"+microDegreesToDegrees(tappedGeoPoint.getLatitudeE6())+"=="+lat);
-		Log.e("PLOTOVERLAY","lng"+microDegreesToDegrees(tappedGeoPoint.getLongitudeE6())+"=="+lng);
+		//Log.e("PLOTOVERLAY","lat"+microDegreesToDegrees(tappedGeoPoint.getLatitudeE6())+"=="+lat);
+		//Log.e("PLOTOVERLAY","lng"+microDegreesToDegrees(tappedGeoPoint.getLongitudeE6())+"=="+lng);
 		if (ApplicationManager.isPlotDrawingStarted){
+			Log.e("drawing","PLOT");
 			AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
 			builder.setTitle("MENU (add plot corner)");
 			builder.setNegativeButton("add corner here", new DialogInterface.OnClickListener() {
@@ -175,6 +176,7 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 			});
 			builder.show();
 		} else if (ApplicationManager.isLineDrawingStarted){
+			Log.e("drawing","LINE");
 			AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
 			builder.setTitle("MENU (add line)");
 			builder.setNegativeButton("add line here", new DialogInterface.OnClickListener() {
@@ -205,12 +207,13 @@ public class MapGestureDetectorOverlay extends Overlay implements OnGestureListe
 			builder.show();
 		} else if (ApplicationManager.isDotDrawingStarted){
 			AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
+			Log.e("drawing","POINT");
 			builder.setTitle("MENU (add point)");
 			builder.setNegativeButton("add point here", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				Log.e("drawing dot marker",lat+"=="+lng);
 				GeoPoint currentPoint = new GeoPoint(lat,lng);
-				OverlayItem olItem = new OverlayItem("2", "123",lat+","+lng,  currentPoint);
+				OverlayItem olItem = new OverlayItem("2", "newplot",lat+","+lng,  currentPoint);
 				ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
 				overlayItemArray.add(olItem);
 				PlotMarker overlay = new PlotMarker(MapGestureDetectorOverlay.this.context, overlayItemArray);

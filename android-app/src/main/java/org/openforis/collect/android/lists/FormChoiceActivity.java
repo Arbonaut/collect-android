@@ -5,11 +5,13 @@ import java.util.List;
 import org.openforis.collect.android.R;
 import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
+import org.openforis.collect.android.management.DataManager;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.screens.BaseListActivity;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.model.CollectSurvey;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,9 +19,15 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -42,6 +50,10 @@ public class FormChoiceActivity extends BaseListActivity {
 	
     private ListView lv;
     private LinearLayout mainLayout;  
+    
+    private static ProgressDialog pd;
+    
+    private String[] formsList;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -256,4 +268,150 @@ public class FormChoiceActivity extends BaseListActivity {
 			addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
 		}*/
     }
+    
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {    	
+        AdapterContextMenuInfo adapInfo = (AdapterContextMenuInfo) item
+                .getMenuInfo();
+        final int position = (int)adapInfo.id;
+        Log.e("selectedPosition","=="+position);
+        switch (item.getItemId()) {
+        case R.id.view:
+        	if (this.surveysList.size()==0){
+    			Intent resultHolder = new Intent();
+    			resultHolder.putExtra(getResources().getString(R.string.formId), -1);	
+    			setResult(getResources().getInteger(R.integer.formDefinitionChoiceSuccessful),resultHolder);
+    			FormChoiceActivity.this.finish();	
+    		} else {
+    			if (position!=this.surveysList.size()){
+    				Intent resultHolder = new Intent();
+    				if (position<this.surveysList.size()){
+    					ApplicationManager.setSurvey(this.surveysList.get(position));
+    					SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
+    					String language = ApplicationManager.appPreferences.getString(getResources().getString(R.string.selectedLanguage), getResources().getString(R.string.defaultLanguage));			
+    					boolean languageFound = false;
+    					List<String> languageList = ApplicationManager.getSurvey().getLanguages();
+    					if (ApplicationManager.getSurvey()!=null){	        		        
+    			    		for (int i=0;i<languageList.size();i++){
+    			    			if (languageList.get(i).equals(language)){
+    			    				languageFound = true;
+    			    			}
+    			    		}
+    			        }
+    					if (!languageFound){
+    						if (languageList.size()>0){
+    							language = languageList.get(0);
+    						} else {
+    							language = "null";
+    						}
+    					}
+    					editor = ApplicationManager.appPreferences.edit();
+    					editor.putString(getResources().getString(R.string.selectedLanguage), language);
+    					editor.commit();
+    					ApplicationManager.selectedLanguage = language;
+    					resultHolder.putExtra(getResources().getString(R.string.formId), this.surveysList.get(position).getId());	
+    				} else {					
+    					resultHolder.putExtra(getResources().getString(R.string.formId), -1);					
+    				}			
+    				setResult(getResources().getInteger(R.integer.formDefinitionChoiceSuccessful),resultHolder);
+    				FormChoiceActivity.this.finish();	
+    			}
+    		}
+            return true;
+        case R.id.delete:
+        	AlertMessage.createPositiveNegativeDialog(FormChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
+    				getResources().getString(R.string.deleteFormTitle), getResources().getString(R.string.deleteForm),
+    				getResources().getString(R.string.yes), getResources().getString(R.string.no),
+    	    		new DialogInterface.OnClickListener() {
+    					@Override
+    					public void onClick(DialogInterface dialog, int which) {
+    						FormChoiceActivity.pd = ProgressDialog.show(FormChoiceActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.deletingRecord));
+    						deleteForm(position);
+    					}
+    				},
+    	    		new DialogInterface.OnClickListener() {
+    					@Override
+    					public void onClick(DialogInterface dialog, int which) {
+    						
+    					}
+    				},
+    				null).show();
+            return true;
+        }
+        return false;
+    }
+    
+    private void deleteForm(final int position){
+		 final Handler handler = new Handler(){
+			    @Override
+			    public void handleMessage(Message msg) {
+			    	refreshFormsList();
+			    }};
+		  new Thread(new Runnable() {
+			    public void run() {
+			    	List<CollectSurvey> formsList = ServiceFactory.getSurveyManager().getAll();
+					Log.e("1ServiceFactory.getSurveyManager()==null","=="+(ServiceFactory.getSurveyManager()==null));
+					Log.e("1formID","=="+formsList.get(position).getId());
+					ApplicationManager.setSurvey(formsList.get(position));
+			    	DataManager dataManager = new DataManager(FormChoiceActivity.this,(CollectSurvey)ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+					dataManager.deleteForm(position);
+					//ApplicationManager.recordsList.remove(position);					
+					Message msg = Message.obtain();
+			        msg.what = 1;
+					handler.sendMessage(msg);
+			    }
+			  }).start();
+	}
+    
+    public void refreshFormsList(){
+		 final Handler handler = new Handler(){
+			    @Override
+			    public void handleMessage(Message msg) {
+			    	int layout = (backgroundColor!=Color.WHITE)?R.layout.localclusterrow_white:R.layout.localclusterrow_black;
+			        FormChoiceActivity.this.adapter = new ArrayAdapter<String>(FormChoiceActivity.this, layout, R.id.plotlabel, formsList);
+			        FormChoiceActivity.this.setListAdapter(FormChoiceActivity.this.adapter);
+					
+				    if (FormChoiceActivity.this.formsList[0].equals("")){
+				    	FormChoiceActivity.this.lv.setVisibility(View.GONE);
+				    } else {
+				    	FormChoiceActivity.this.lv.setVisibility(View.VISIBLE);
+				    }
+					
+					ApplicationManager.setSurvey(null);
+				    FormChoiceActivity.pd.dismiss();
+			    }};
+		  new Thread(new Runnable() {
+			    public void run() {	    	
+			    	ServiceFactory.getSurveyManager().init();
+			    	FormChoiceActivity.this.surveysList = ServiceFactory.getSurveyManager().getAll();
+					//String[] formsList;
+					if (FormChoiceActivity.this.surveysList.size()==0){
+						formsList = new String[1];
+						formsList[0] = "";
+					} else {
+						formsList = new String[surveysList.size()/*+2*/];
+					}
+					for (int i=0;i<surveysList.size();i++){
+						CollectSurvey survey = surveysList.get(i);
+						formsList[i] = survey.getName();
+					}
+					/*if (this.surveysList.size()==0){			
+						formsList[0]=getResources().getString(R.string.addNewSurvey)+selectedFormDefinitionFile;
+					} else {
+						formsList[surveysList.size()]="";
+						formsList[surveysList.size()+1]=getResources().getString(R.string.addNewSurvey)+selectedFormDefinitionFile;
+					}*/
+					
+					
+					
+					Message msg = Message.obtain();
+			        msg.what = 1;
+					handler.sendMessage(msg);
+			    }
+			  }).start();
+	}
 }

@@ -92,6 +92,7 @@ public class UploadActivity extends Activity{
     			    	//CheckBox overwrite;
     			    	pd = ProgressDialog.show(UploadActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.uploadingDataToServerMessage));
     			    	for (int i=0;i<adapter.getCount();i++){
+    			    		Log.e("filesToSend", adapter.getCount()+"=="+filesCount);
     			    		//LinearLayout ll = (LinearLayout)lv.getChildAt(i);
     			    		//upload = (CheckBox)ll.getChildAt(1);
     			    		//overwrite = (CheckBox)ll.getChildAt(2);
@@ -295,7 +296,7 @@ public class UploadActivity extends Activity{
          */
         protected void onPostExecute(Object objResult) {
         	filesCount--;
-
+        	Log.e("file","SENT");
             if(objResult != null && objResult instanceof String) {
                 String result = (String) objResult;
 
@@ -312,7 +313,7 @@ public class UploadActivity extends Activity{
             }
             if (filesCount==0){
             	pd.dismiss();
-    			/*AlertMessage.createPositiveDialog(UploadActivity.this, true, null,
+    			AlertMessage.createPositiveDialog(UploadActivity.this, true, null,
     					getResources().getString(R.string.uploadToServerSuccessfulTitle), 
     					getResources().getString(R.string.uploadToServerSuccessfulMessage),
     						getResources().getString(R.string.okay),
@@ -322,7 +323,7 @@ public class UploadActivity extends Activity{
     								
     							}
     						},
-    						null).show();	*/
+    						null).show();
             }            	
         }
      

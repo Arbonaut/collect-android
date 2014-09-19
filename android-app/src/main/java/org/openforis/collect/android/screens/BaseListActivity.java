@@ -204,11 +204,14 @@ public class BaseListActivity extends ListActivity {
 						+getResources().getString(R.string.lblProgramVersionName)+versionName
 						+"\n";
 				if (ApplicationManager.getSurvey()!=null){
-					String formVersionName = ApplicationManager.getSurvey().getProjectName(null)+" "+ApplicationManager.getSurvey().getVersions().get(ApplicationManager.getSurvey().getVersions().size()-1).getName();
+					String formVersionName = ApplicationManager.getSurvey().getProjectName(null);
+					if (ApplicationManager.getSurvey().getVersions().size()>=1){
+						formVersionName +=" "+ApplicationManager.getSurvey().getVersions().get(ApplicationManager.getSurvey().getVersions().size()-1).getName();	
+					}					
 					if (formVersionName!=null){
 						about+= getResources().getString(R.string.lblFormVersionName)+formVersionName;
 					}	
-				}				
+				}
 				AlertMessage.createPositiveDialog(BaseListActivity.this, true, null,
 						getResources().getString(R.string.aboutTabTitle), 
 						about,

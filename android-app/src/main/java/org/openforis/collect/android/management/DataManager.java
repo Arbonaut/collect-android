@@ -171,13 +171,9 @@ public class DataManager {
 		//filename = Environment.getExternalStorageDirectory().toString()+"/ofcm/data/imported/"+filename;
 		CollectRecord loadedRecord = null;
 		try {
-			Log.e("parse","STARTS"+filename);
 			ParseRecordResult result = this.dataUnmarshaller.parse(filename);
-			Log.e("loadedRecord","STARTS"+filename);
 			loadedRecord = result.getRecord();
-			Log.e("saveRecord","STARTS"+filename);
 			this.saveRecord(loadedRecord);
-			Log.e("saveRecord","ENDS"+filename);
 		} catch (NullPointerException e){
 			e.printStackTrace();
 		} catch (DataUnmarshallerException e) {
@@ -193,6 +189,27 @@ public class DataManager {
 			List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
 			ServiceFactory.getRecordManager().delete(recordsList.get(position).getId());			
 		} catch (RecordPersistenceException e) {
+			e.printStackTrace();
+		} finally {
+			DatabaseHelper.closeConnection();
+		}		
+	}
+	
+	public void deleteForm(int position){
+		try {
+			List<CollectSurvey> formsList = ServiceFactory.getSurveyManager().getAll();
+			Log.e("ServiceFactory.getSurveyManager()==null","=="+(ServiceFactory.getSurveyManager()==null));
+			Log.e("formID","=="+formsList.get(position).getId());
+			ApplicationManager.setSurvey(formsList.get(position));
+			if (ApplicationManager.getSurvey()!=null){
+				Log.e("survey","!isNUULL");
+			} else {
+				Log.e("survey","isNUULL");
+			}
+			ServiceFactory.getSurveyManager().deleteSurvey(formsList.get(position).getId());
+			//List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
+			//ServiceFactory.getRecordManager().delete(recordsList.get(position).getId());	
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			DatabaseHelper.closeConnection();

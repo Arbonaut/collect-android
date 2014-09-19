@@ -98,6 +98,7 @@ public class ApplicationManager extends BaseActivity {
 	public static boolean addNewEntity;
 	
 	public static List<CollectRecord> recordsList;
+	//public static List<CollectSurvey> formsList;
 	public static boolean isRecordListUpToDate;
 	
 	public static float dpiScale;

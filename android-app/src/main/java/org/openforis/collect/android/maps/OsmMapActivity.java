@@ -21,9 +21,6 @@ import org.openforis.idm.model.Coordinate;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.IntegerValue;
 import org.openforis.idm.model.Node;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -84,9 +81,7 @@ public class OsmMapActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
 		setContentView(R.layout.osm_map);
-		
-		
-	    
+			    
 	    final ProgressDialog pdOpeningMap = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.openingMap));
 		final Handler openingMapHandler = new Handler() {
 			@Override
@@ -288,6 +283,74 @@ public class OsmMapActivity extends Activity {
 		        String userLocationLat = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLat), getResources().getString(R.string.defaultUserLocationLat));
 		        String userLocationLon = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLon), getResources().getString(R.string.defaultUserLocationLon));
 		        mapView.getController().setCenter(new GeoPoint(Double.valueOf(userLocationLat), Double.valueOf(userLocationLon)));
+		        
+		      //draw user shapes on map from previous map session
+		    	int pointsNo = ApplicationManager.points.size();
+				int linesNo = ApplicationManager.lineEnds.size();
+				int plotsNo = ApplicationManager.plots.size();
+				Log.e("pointsNo","=="+pointsNo);
+				Log.e("linesNo","=="+linesNo);
+				Log.e("plotsNo","=="+plotsNo);
+						
+				if ((pointsNo+linesNo+plotsNo)>0){
+					Integer recordId = ApplicationManager.currentRecord.getId();
+					for (int i=0;i<pointsNo;i++){
+						if (ApplicationManager.points.get(i).getLeft()==recordId){
+							GeoPoint point = ApplicationManager.points.get(i).getRight();
+							OsmMapActivity.this.drawPointMarker(point);	
+						}				
+					}
+					for (int i=0;i<linesNo;i++){
+						if (ApplicationManager.lineEnds.get(i).getLeft()==recordId){
+							GeoPoint startPoint = ApplicationManager.lineEnds.get(i++).getRight();
+							/*Log.e("startPoint",startPoint.getLatitudeE6()/1E6+"=="+startPoint.getLongitudeE6()/1E6);
+							OverlayItem olItem = new OverlayItem("3", "LINE","",  startPoint);
+							ArrayList<OverlayItem> overlayLineArray = new ArrayList<OverlayItem>();
+							overlayLineArray.add(olItem);
+							PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+							mapView.getOverlays().add(overlay);
+							*/
+							GeoPoint endPoint = ApplicationManager.lineEnds.get(i).getRight();
+							/*olItem = new OverlayItem("3", "LINE","",  endPoint);
+							overlayLineArray = new ArrayList<OverlayItem>();
+							overlayLineArray.add(olItem);
+							overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+							mapView.getOverlays().add(overlay);
+							PathOverlay myOverlay= new PathOverlay(Color.BLUE, this);
+							myOverlay.addPoint(endPoint);
+							mapView.getOverlays().add(myOverlay);
+							mapView.invalidate();*/
+							OsmMapActivity.this.drawLine(startPoint, endPoint, Color.BLUE);
+							OsmMapActivity.this.drawPointMarker(startPoint);
+							OsmMapActivity.this.drawPointMarker(endPoint);	
+						}				
+					}
+					
+					for (int i=0;i<plotsNo;i++){
+						if (ApplicationManager.plots.get(i).get(0).getLeft()==recordId){
+							List<Pair<Integer, GeoPoint>> plotCornersWithRecordId = ApplicationManager.plots.get(i);
+							List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
+							for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
+								plotCorners.add(pair.getRight());
+							}
+							//List<GeoPoint> plotCorners =  ApplicationManager.plots.get(i);
+							int plotCornersNo = plotCorners.size();
+							GeoPoint previousCorner = null;
+							for (int j=0;j<plotCornersNo;j++){
+								GeoPoint point = plotCorners.get(j);
+								OsmMapActivity.this.drawPointMarker(point);
+								if (previousCorner!=null){
+									OsmMapActivity.this.drawLine(previousCorner, point, Color.RED);
+								}
+								previousCorner = point;
+							}
+							if (previousCorner!=null){
+								OsmMapActivity.this.drawLine(previousCorner, plotCorners.get(0), Color.RED);
+							}	
+						}				
+					}
+					
+				}
 		        mapView.invalidate();
 			}
 		};
@@ -351,73 +414,7 @@ public class OsmMapActivity extends Activity {
     		        //mapView.getOverlays().add(new MapGestureDetectorOverlay(this, mapView));
     		        //drawUserMarker(new Location(""));
     		    	
-    		    	//draw user shapes on map from previous map session
-    		    	int pointsNo = ApplicationManager.points.size();
-    				int linesNo = ApplicationManager.lineEnds.size();
-    				int plotsNo = ApplicationManager.plots.size();
-    				Log.e("pointsNo","=="+pointsNo);
-    				Log.e("linesNo","=="+linesNo);
-    				Log.e("plotsNo","=="+plotsNo);
-    						
-    				if ((pointsNo+linesNo+plotsNo)>0){
-    					Integer recordId = ApplicationManager.currentRecord.getId();
-    					for (int i=0;i<pointsNo;i++){
-    						if (ApplicationManager.points.get(i).getLeft()==recordId){
-    							GeoPoint point = ApplicationManager.points.get(i).getRight();
-    							OsmMapActivity.this.drawPointMarker(point);	
-    						}				
-    					}
-    					for (int i=0;i<linesNo;i++){
-    						if (ApplicationManager.lineEnds.get(i).getLeft()==recordId){
-    							GeoPoint startPoint = ApplicationManager.lineEnds.get(i++).getRight();
-    							/*Log.e("startPoint",startPoint.getLatitudeE6()/1E6+"=="+startPoint.getLongitudeE6()/1E6);
-    							OverlayItem olItem = new OverlayItem("3", "LINE","",  startPoint);
-    							ArrayList<OverlayItem> overlayLineArray = new ArrayList<OverlayItem>();
-    							overlayLineArray.add(olItem);
-    							PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
-    							mapView.getOverlays().add(overlay);
-    							*/
-    							GeoPoint endPoint = ApplicationManager.lineEnds.get(i).getRight();
-    							/*olItem = new OverlayItem("3", "LINE","",  endPoint);
-    							overlayLineArray = new ArrayList<OverlayItem>();
-    							overlayLineArray.add(olItem);
-    							overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
-    							mapView.getOverlays().add(overlay);
-    							PathOverlay myOverlay= new PathOverlay(Color.BLUE, this);
-    							myOverlay.addPoint(endPoint);
-    							mapView.getOverlays().add(myOverlay);
-    							mapView.invalidate();*/
-    							OsmMapActivity.this.drawLine(startPoint, endPoint, Color.BLUE);
-    							OsmMapActivity.this.drawPointMarker(startPoint);
-    							OsmMapActivity.this.drawPointMarker(endPoint);	
-    						}				
-    					}
-    					
-    					for (int i=0;i<plotsNo;i++){
-    						if (ApplicationManager.plots.get(i).get(0).getLeft()==recordId){
-    							List<Pair<Integer, GeoPoint>> plotCornersWithRecordId = ApplicationManager.plots.get(i);
-    							List<GeoPoint> plotCorners = new ArrayList<GeoPoint>();
-    							for (Pair<Integer,GeoPoint> pair : plotCornersWithRecordId){
-    								plotCorners.add(pair.getRight());
-    							}
-    							//List<GeoPoint> plotCorners =  ApplicationManager.plots.get(i);
-    							int plotCornersNo = plotCorners.size();
-    							GeoPoint previousCorner = null;
-    							for (int j=0;j<plotCornersNo;j++){
-    								GeoPoint point = plotCorners.get(j);
-    								OsmMapActivity.this.drawPointMarker(point);
-    								if (previousCorner!=null){
-    									OsmMapActivity.this.drawLine(previousCorner, point, Color.RED);
-    								}
-    								previousCorner = point;
-    							}
-    							if (previousCorner!=null){
-    								OsmMapActivity.this.drawLine(previousCorner, plotCorners.get(0), Color.RED);
-    							}	
-    						}				
-    					}
-    					
-    				}
+    		    	
     		        //mapView.invalidate();
     				openingMapHandler.sendEmptyMessage(0);
     			} catch (Exception e) {

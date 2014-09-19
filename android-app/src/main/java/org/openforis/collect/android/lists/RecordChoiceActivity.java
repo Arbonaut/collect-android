@@ -348,27 +348,37 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						clusterList = new String[recordsList.size()/*+2*/];
 					}									
 					for (int i=0;i<recordsList.size();i++){
-						CollectRecord record = recordsList.get(i);		
+						CollectRecord record = recordsList.get(i);
 						List<String> keyValues = record.getRootEntityKeyValues();
-						clusterList[i] = /*record.getId()+"=="+*/(i+1)+" "+record.getCreatedBy().getName()
+						Log.e("keyValuesSIZE","=="+keyValues.size());
+						for (int g=0;g<keyValues.size();g++){
+							//Log.e("attr"+g,"=="+keyAttr.get(g).getName());
+							Log.e("value"+g,"=="+keyValues.get(g));
+						}
+						clusterList[i] = /*record.getId()+"=="+*/(i+1)//+" "+record.getCreatedBy().getName()
 								+"\r\n"+record.getCreationDate();
+						if (record.getModifiedDate()!=null){
+							clusterList[i] += "\r\n"+record.getModifiedDate();
+						}
 						CollectRecord currentRecord = null;
 						List<AttributeDefinition> attrDefs = null;
 						if (keyValues.size()>0){
+							Log.e("moreKEYS","=="+keyValues.size());
 							currentRecord = dataManager.loadRecord(record.getId());
 							attrDefs = currentRecord.getRootEntity().getDefinition().getKeyAttributeDefinitions();
+							Log.e("attrDefs.size","=="+attrDefs.size());
 						}
 						for (int j=0;j<keyValues.size();j++){
 							String key = keyValues.get(j);
+							Log.e("value","=="+key);
 							if (key!=null){
-								String label = attrDefs.get(j).getLabel(Type.INSTANCE, ApplicationManager.selectedLanguage);	
+								String label = attrDefs.get(j).getLabel(Type.INSTANCE, ApplicationManager.selectedLanguage);
+								Log.e("label","=="+label);
 								if (label!=null)
 									clusterList[i] += "\r\n"+label+": "+key;
 							}				
 						}
-						if (record.getModifiedDate()!=null){
-							clusterList[i] += "\r\n"+record.getModifiedDate();
-						}
+						
 					}
 					/*if (RecordChoiceActivity.this.recordsList.size()==0){		
 						clusterList[0]=getResources().getString(R.string.addNewRecord)+" "+ApplicationManager.getLabel(RecordChoiceActivity.this.rootEntityDef);;

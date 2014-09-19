@@ -55,7 +55,13 @@ public class PlotMarker extends ItemizedIconOverlay<OverlayItem> {
            });
            builder.setNegativeButton("OPEN", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    ApplicationManager.mapActivity.openPlotData(Integer.valueOf(uid),Integer.valueOf(item.getTitle()));
+                	Log.e("Integer.valueOf(uid)",item.getTitle()+"=="+Integer.valueOf(uid));
+                	if (!item.getTitle().equals("newplot")){
+                		ApplicationManager.mapActivity.openPlotData(Integer.valueOf(uid),Integer.valueOf(item.getTitle()));	
+                	} else {
+                		//open plot that was newly added to the map
+                		Log.e("opening","newly added plot");
+                	}
                }
            });
             builder.show();
