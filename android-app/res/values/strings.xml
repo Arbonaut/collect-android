@@ -50,6 +50,8 @@
     <string name="editingMemoField">Editing</string>
     <string name="deleteRecordTitle">Deleting&#8230;</string>
     <string name="deleteRecord">Do you want to delete the record?</string>
+    <string name="deleteFormTitle">Deleting&#8230;</string>
+    <string name="deleteForm">Do you want to delete the form definition?</string>
     <string name="deleteEntityTitle">Deleting&#8230;</string>
     <string name="deleteEntity">Do you want to delete the entity?</string>
     <string name="deleteAttributeTitle">Deleting&#8230;</string>

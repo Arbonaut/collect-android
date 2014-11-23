@@ -123,8 +123,10 @@ public class FileImportActivity extends Activity{
 		
 		dataFilesList = new ArrayList<DataFile>();
 		File dataFilesFolder = new File(path);
+		//Log.e("dataFilesFolder","=="+path);
 		File[] dataFiles = dataFilesFolder.listFiles();
 		int filesNo = dataFiles.length;
+		//Log.e("numberOFFiles","=="+filesNo);
 		for (int i=0;i<filesNo;i++) {
 	        //filesList[i] = serverFiles.get(i);
 	        dataFilesList.add(new DataFile(dataFiles[i].getName(),"xml_icon"));
