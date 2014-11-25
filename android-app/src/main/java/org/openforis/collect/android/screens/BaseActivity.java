@@ -69,6 +69,7 @@ public class BaseActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater menuInflater = getMenuInflater();
+        Log.e("onCreateOptionsMenu","menu");
         menuInflater.inflate(R.layout.menu, menu);
         return true;
     }
@@ -91,7 +92,7 @@ public class BaseActivity extends Activity {
 	        		public void run() {
 	        			try {
 	        				super.run();
-	        				startActivity(new Intent(BaseActivity.this, OsmMapActivity.class));
+	        				startActivity(new Intent(BaseActivity.this,OsmMapActivity.class));
 	        				openingMapHandler.sendEmptyMessage(0);
 	        			} catch (Exception e) {
 	        				openingMapHandler.sendEmptyMessage(1);

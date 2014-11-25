@@ -71,6 +71,8 @@ public class DownloadActivity extends Activity{
     int downloadedSize = 0;
     int totalSize = 0;
     TextView cur_val;
+    
+    private boolean isConnectedToInternet;
     //String dwnload_file_path = "http://ar5.arbonaut.com/awfdatademo/planned/";
 	
     @Override
@@ -85,14 +87,16 @@ public class DownloadActivity extends Activity{
         try{
         	this.activityLabel = (TextView)findViewById(R.id.lblList); 
         	this.columnLabel = (TextView)findViewById(R.id.lblHeaders);
-        	if (isNetworkAvailable()){
+        	this.lv = (ListView)findViewById(R.id.file_list);
+        	isConnectedToInternet = isNetworkAvailable();
+        	if (isConnectedToInternet){
         		      		
             	this.activityLabel.setText(getResources().getString(R.string.dataToDownload));
             	
             	
             	this.columnLabel.setText(getResources().getString(R.string.dataToDownlaodColumnHeaders));
             	
-            	this.lv = (ListView)findViewById(R.id.file_list);
+            	
             	
             	//path = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder);            
             	
@@ -185,7 +189,7 @@ public class DownloadActivity extends Activity{
 		
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 		changeBackgroundColor(backgroundColor);
-		
+	
 		/*File dataFilesFolder = new File(path);
 		File[] dataFiles = dataFilesFolder.listFiles();
 		int filesNo = dataFiles.length;
@@ -214,7 +218,8 @@ public class DownloadActivity extends Activity{
 		List<String> serverFiles = ServerInterface.getFilesList(ApplicationManager.appPreferences.getString(getResources().getString(R.string.recordsDownloadPath), getResources().getString(R.string.defaultRecordsDownloadPath)));
 		int filesNo;
 		if (serverFiles==null){
-	    	Toast.makeText(this, getResources().getString(R.string.dataToDownloadNotExisting), Toast.LENGTH_LONG).show();
+			if (isConnectedToInternet)
+				Toast.makeText(this, getResources().getString(R.string.dataToDownloadNotExisting), Toast.LENGTH_LONG).show();
 	    	filesNo = 0;
 		} else {
 			filesNo = serverFiles.size();

@@ -1080,8 +1080,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				rightBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_right_black:R.drawable.arrow_right_white);
 			}
 		}
-		
-		if (!(this.mainLayout.getChildAt(4) instanceof ScrollView)){
+
+		if (!(this.mainLayout.getChildAt(4) instanceof ScrollView)&&!(this.mainLayout.getChildAt(4)==null)){		
 			RelativeLayout rLayout = (RelativeLayout)this.mainLayout.getChildAt(4);
 			viewsNo = rLayout.getChildCount();
 			Button leftBtn = (Button)rLayout.getChildAt(0);

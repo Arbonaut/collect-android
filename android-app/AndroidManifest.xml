@@ -3,7 +3,7 @@
     package="org.openforis.collect.android"
     android:installLocation="auto"
     android:versionCode="3"
-    android:versionName="3.0.3.12" >
+    android:versionName="3.0.3.14" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -35,17 +35,16 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="org.openforis.collect.android.management.BaseActivity"
+            android:name="org.openforis.collect.android.screens.BaseActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="org.openforis.collect.android.management.BaseListActivity"
+            android:name="org.openforis.collect.android.screens.BaseListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
         </activity>

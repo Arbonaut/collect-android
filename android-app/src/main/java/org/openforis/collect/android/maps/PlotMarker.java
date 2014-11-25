@@ -55,6 +55,7 @@ public class PlotMarker extends ItemizedIconOverlay<OverlayItem> {
            });
            builder.setNegativeButton("OPEN", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                	Log.e("ApplicationManager.mapActivity==null","=="+(ApplicationManager.mapActivity==null));
                 	Log.e("Integer.valueOf(uid)",item.getTitle()+"=="+Integer.valueOf(uid));
                 	if (!item.getTitle().equals("newplot")){
                 		ApplicationManager.mapActivity.openPlotData(Integer.valueOf(uid),Integer.valueOf(item.getTitle()));	

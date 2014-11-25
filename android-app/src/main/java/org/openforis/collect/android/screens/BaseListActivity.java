@@ -76,13 +76,14 @@ public class BaseListActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater menuInflater = getMenuInflater();
+        Log.e("onCreateOptionsMenu","list_menu");
         menuInflater.inflate(R.layout.list_menu, menu);
         return true;
     }
     
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
-    	menu.findItem(R.id.menu_import_from_file).setVisible(ApplicationManager.getSurvey()!=null);
+    	//menu.findItem(R.id.menu_import_from_file).setVisible(ApplicationManager.getSurvey()!=null);
         return true;
     }
  
