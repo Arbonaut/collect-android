@@ -161,7 +161,7 @@ public class OsmMapActivity extends Activity {
     		        mapView.getController().setZoom(selectedZoomLevel);
     		        //mapView.getController().setCenter(new GeoPoint(MAP_DEFAULT_LATITUDE, MAP_DEFAULT_LONGITUDE));
     		        
-    		        String userLocationLat =ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLat), getResources().getString(R.string.defaultUserLocationLat));
+    		        String userLocationLat = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLat), getResources().getString(R.string.defaultUserLocationLat));
     		        String userLocationLon = ApplicationManager.appPreferences.getString(getResources().getString(R.string.userLocationLon), getResources().getString(R.string.defaultUserLocationLon));
     		        mapView.getController().setCenter(new GeoPoint(Double.valueOf(userLocationLat), Double.valueOf(userLocationLon)));
     		        mapView.setTileSource(TileSourceFactory.MAPNIK);
@@ -177,7 +177,7 @@ public class OsmMapActivity extends Activity {
     		            public boolean onScroll(ScrollEvent arg0) {
     		                return false;
     		            }
-    		        } );
+    		        });
     		        //mapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
     		        /*mapView.setTileSource(new XYTileSource("MapQuest",
     		                ResourceProxy.string.mapquest_osm, 0, 18, 256, ".jpg", new String[] {
@@ -209,7 +209,12 @@ public class OsmMapActivity extends Activity {
     			    {
     			        @Override
     			        public void onClick(View v) {
-    			            OsmMapActivity.this.showCurrentLocation();
+    			        	Log.e("isGpsOn","=="+ApplicationManager.isGpsOn);
+    			        	if (ApplicationManager.isGpsOn){
+    			        		OsmMapActivity.this.stopGPS();
+    			        	} else {
+    			        		OsmMapActivity.this.showCurrentLocation();	
+    			        	}    			            
     			        }           
     			    });
     			    locateButton.setImageResource(android.R.drawable.ic_menu_mylocation);
@@ -411,18 +416,36 @@ public class OsmMapActivity extends Activity {
     		    		Log.e("savedrecord","id=="+savedRecordSummary.getId());
     		    		Log.e("currentrecord","id=="+ApplicationManager.currentRecord.getId());
     		    		if (savedRecordSummary.getId().equals(ApplicationManager.currentRecord.getId())){//it is currently opened plot
+    		    			Log.e("currently opened","PLOT");
+    		    			//searching for coordinate fields
+    		    			
+    		    			//opening plot based on strict structure of form
     			        	CollectRecord savedRecord = dataManager.loadRecord(savedRecordSummary.getId());
     			        	List<Node<? extends NodeDefinition>> plotsList = savedRecord.getRootEntity().getAll(getResources().getString(R.string.plotEntityField));
+    			        	Log.e("plot_details_fields","=="+plotsList.size());
     			        	for (Node<? extends NodeDefinition> plot : plotsList){
     			        		Entity plotEntity = (Entity)plot;
     			        		Coordinate plotCenter = (Coordinate) plotEntity.getValue(getResources().getString(R.string.plotCoordinatesField), 0);
+    			        		Log.e("plotCenter==null","=="+(plotCenter==null));
     			        		if (plotCenter!=null){
     			        			Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
+    			        			Log.e("plotEntity==null","=="+(plotEntity==null));    			        			
     				        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
+    				        		if (plotNo!=null)
+    				        			Log.e("plotNo","=="+plotNo.getValue());
+    				        		else 
+    				        			Log.e("plotNo","==null");
     				        		Log.e("savedRecord.getId()","=="+savedRecord.getId());
+    				        		if (plotNo!=null)
+    				        			Log.e("plotNo.getValue()","=="+plotNo.getValue());
+    				        		Log.e("plotCenter.get(Y)","=="+plotCenter.getY());
+    				        		Log.e("plotCenter.get(X)","=="+plotCenter.getX());   
+    				        		if (plotNo==null)
+    				        			plotNo = new IntegerValue(-1,null);
     				        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), "Y: "+plotCenter.getY()+"\r\nX:"+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
     				        		Log.e("olItem.getUid()","=="+olItem.getUid());
     				            	overlayItemArray.add(olItem);	
+    				            	Log.e("item","ADDED");
     			        		}	        		
     			        	}        	
     				        PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
@@ -597,6 +620,7 @@ public class OsmMapActivity extends Activity {
 	public void navigateToPlot(GeoPoint plotLocation){
 		Log.e("navigation","started"+plotLocation.getLatitudeE6()+"=="+plotLocation.getLongitudeE6());
 		this.turnGPSOn();
+		ApplicationManager.isGpsOn = true;
 		locRec = new LocationReceiver((LocationManager) getSystemService(Context.LOCATION_SERVICE));
 		locRec.startNavigating(plotLocation);
 		//mapView.getOverlays().remove(mapView.getOverlays().size()-1);
@@ -610,10 +634,10 @@ public class OsmMapActivity extends Activity {
 		this.turnGPSOff();
 	    mapView.getOverlays().remove(mapView.getOverlays().size()-1);
 	    mapView.invalidate();
+	    ApplicationManager.isGpsOn = false;
 	}
 	
 	public void stopGPS(){
-		Log.e("stopGPS","===STOPPED");
 		if (locRec!=null)
 			locRec.stopListeningForLocationUpdates();
 		this.turnGPSOff();
@@ -706,7 +730,12 @@ public class OsmMapActivity extends Activity {
 				this.startDrawingLine();
 			    return true;			    
 			case R.id.menu_map_refresh_location:
-				this.showCurrentLocation();
+				Log.e("isGpsOn","=="+ApplicationManager.isGpsOn);
+				if (ApplicationManager.isGpsOn){
+					this.stopGPS();
+				} else {
+					this.showCurrentLocation();	
+				}				
 			    return true;
 			case R.id.menu_map_save_to_kml:
 				int savingResult = this.saveShapesToKML();
@@ -778,10 +807,10 @@ public class OsmMapActivity extends Activity {
 	
 	public void turnGPSOn()
 	{
-	     Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
-	     intent.putExtra("enabled", true);
-	     this.sendBroadcast(intent);
-
+	    Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+	    intent.putExtra("enabled", true);
+	    this.sendBroadcast(intent);
+	    
 	    String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
 	    if(!provider.contains("gps")){ //if gps is disabled
 	        final Intent poke = new Intent();
@@ -789,21 +818,36 @@ public class OsmMapActivity extends Activity {
 	        poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
 	        poke.setData(Uri.parse("3")); 
 	        this.sendBroadcast(poke);
-
-
 	    }
+	    ApplicationManager.isGpsOn = true;
 	}
 
 	public void turnGPSOff()
 	{
 	    String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+	    Log.e("provider.contains(gps)","=="+provider.contains("gps"));
 	    if(provider.contains("gps")){ //if gps is enabled
+	    	Log.e("GPS","turning off");
 	        final Intent poke = new Intent();
 	        poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
 	        poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
 	        poke.setData(Uri.parse("3")); 
 	        this.sendBroadcast(poke);
 	    }
+	    ApplicationManager.isGpsOn = false;
+	}
+	
+	private void turnGPSOn1(){
+	    String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+
+	    if(!provider.contains("gps")){ //if gps is disabled
+	        final Intent poke = new Intent();
+	        poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider"); 
+	        poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+	        poke.setData(Uri.parse("3")); 
+	        sendBroadcast(poke);
+	    }
+	    ApplicationManager.isGpsOn = true;
 	}
 	
 	public void startDrawingPlot(){

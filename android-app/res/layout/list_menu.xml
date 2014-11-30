@@ -12,11 +12,13 @@
     <item android:id="@+id/menu_add_survey"
     	  android:title="@string/menu_add_survey"> 
  	      <menu>
- 	      	<item android:id="@+id/menu_import_from_file"
-    	  android:title="@string/menu_import_from_xml_file" /> 
+
+    	  
+ 	      	<item android:id="@+id/menu_add_new_survey"
+	    	  android:title="@string/addNewSurvey" />
     	  
 			<item android:id="@+id/menu_import_database_from_file"
-    	  android:title="@string/menu_import_database_from_file" />
+    	 	 android:title="@string/menu_import_database_from_file" />
 			
 		</menu>
     </item>
@@ -26,9 +28,12 @@
  	      <menu>
 	    <item android:id="@+id/menu_backup_database"
 	    	  android:title="@string/menu_backup_database" />   
-	    
-	    <item android:id="@+id/menu_add_new_survey"
-	    	  android:title="@string/addNewSurvey" />
+	    <item android:id="@+id/menu_export_all"
+				android:title="@string/menu_export_all_to_zip" />			
+	   	<!--<item android:id="@+id/menu_export"
+				android:title="@string/export_to_xml" />-->
+ 	      	<!--<item android:id="@+id/menu_import_from_file"
+    	  android:title="@string/menu_import_from_xml_file" />--> 
 	    </menu>  
     </item>
     

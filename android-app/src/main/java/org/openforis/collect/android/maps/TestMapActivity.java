@@ -45,10 +45,8 @@ public class TestMapActivity extends Activity {
 
         myUselessButton.setText("Click");
 
-
-
         final RelativeLayout relativeLayout = new RelativeLayout(this);
-
+        
         final RelativeLayout.LayoutParams mapViewLayoutParams = new RelativeLayout.LayoutParams(
 
                         RelativeLayout.LayoutParams.FILL_PARENT,RelativeLayout.LayoutParams.FILL_PARENT);

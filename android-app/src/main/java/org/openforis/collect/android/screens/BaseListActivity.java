@@ -10,10 +10,13 @@ import org.openforis.collect.android.lists.DownloadActivity;
 import org.openforis.collect.android.lists.FileImportActivity;
 import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
+import org.openforis.collect.android.management.DataManager;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.service.ServiceFactory;
+import org.openforis.collect.model.CollectSurvey;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -23,6 +26,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Menu;
@@ -84,6 +89,7 @@ public class BaseListActivity extends ListActivity {
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
     	//menu.findItem(R.id.menu_import_from_file).setVisible(ApplicationManager.getSurvey()!=null);
+    	menu.findItem(R.id.menu_export_all).setVisible(ApplicationManager.getSurvey()!=null);
         return true;
     }
  
@@ -91,7 +97,7 @@ public class BaseListActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item)
     { 
         switch (item.getItemId())
-        {      
+        {
         	case R.id.menu_exit:
 				AlertMessage.createPositiveNegativeDialog(BaseListActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
 	 					getResources().getString(R.string.exitAppTitle), getResources().getString(R.string.exitAppMessage),
@@ -124,7 +130,7 @@ public class BaseListActivity extends ListActivity {
 	        	Thread backupThread = new Thread() {
 	        		@Override
 	        		public void run() {
-	        			try {
+	        			try {s
 	        				super.run();
 	        				Log.i(getResources().getString(R.string.app_name),TAG+":run");
 	        				CollectSurvey collectSurveyExportAll = (CollectSurvey)ApplicationManager.getSurvey();	        	
@@ -150,9 +156,9 @@ public class BaseListActivity extends ListActivity {
 			case R.id.menu_download:
 				startActivity(new Intent(BaseListActivity.this, DownloadActivity.class));
 			    return true;*/
-			case R.id.menu_download:
+			/*case R.id.menu_download:
 				startActivity(new Intent(BaseListActivity.this, DownloadActivity.class));
-			    return true;    
+			    return true;*/
 			case R.id.menu_import_from_file:
 				startActivity(new Intent(BaseListActivity.this, FileImportActivity.class));
 			    return true;
@@ -183,8 +189,121 @@ public class BaseListActivity extends ListActivity {
 		 		    		null,
 		 					null).show();
 				}
-				
 			    return true;
+			    
+			/*case R.id.menu_export:        	
+	        	final ProgressDialog pdSavingRecordToXml = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.backupingData));
+				final Handler savingRecordToXmlHandler = new Handler() {
+					@Override
+					public void handleMessage(Message msg) {
+						if (msg.what==0){//success
+			        		AlertMessage.createPositiveDialog(BaseListActivity.this, true, null,
+									getResources().getString(R.string.savingDataTitle), 
+									getResources().getString(R.string.savingDataSuccessMessage),
+										getResources().getString(R.string.okay),
+							    		new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+												
+											}
+										},
+										null).show();
+						} else {
+			        		AlertMessage.createPositiveDialog(BaseListActivity.this, true, null,
+									getResources().getString(R.string.savingDataTitle), 
+									getResources().getString(R.string.savingDataFailureMessage),
+										getResources().getString(R.string.okay),
+							    		new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+												
+											}
+										},
+										null).show();
+						}
+					}
+				};
+	        	Thread savingRecordToXmlThread = new Thread() {
+	        		@Override
+	        		public void run() {
+	        			try {
+	        				super.run();
+	        				CollectSurvey collectSurveyExport = (CollectSurvey)ApplicationManager.getSurvey();	        	
+	        	        	DataManager dataManagerExport = new DataManager(BaseListActivity.this,collectSurveyExport,collectSurveyExport.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+	        	        	dataManagerExport.saveRecordToXml(ApplicationManager.currentRecord, Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder));
+	        	        	savingRecordToXmlHandler.sendEmptyMessage(0);
+	        			} catch (Exception e) {
+	        				savingRecordToXmlHandler.sendEmptyMessage(1);
+	        				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
+	        	    				Environment.getExternalStorageDirectory().toString()
+	        	    				+getResources().getString(R.string.logs_folder)
+	        	    				+getResources().getString(R.string.logs_file_name)
+	        	    				+System.currentTimeMillis()
+	        	    				+getResources().getString(R.string.log_file_extension));
+	        			} finally {
+	        				pdSavingRecordToXml.dismiss();	        				
+	        			}
+	        		}
+	        	};
+	        	savingRecordToXmlThread.start();  
+	        	return true;*/
+	        case R.id.menu_export_all:
+	        	final ProgressDialog pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.backupingData));
+				final Handler dataBackupHandler = new Handler() {
+					@Override
+					public void handleMessage(Message msg) {
+						if (msg.what==0){//success
+			        		AlertMessage.createPositiveDialog(BaseListActivity.this, true, null,
+									getResources().getString(R.string.savingDataTitle), 
+									getResources().getString(R.string.backingupDataSuccessMessage),
+										getResources().getString(R.string.okay),
+							    		new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+												
+											}
+										},
+										null).show();
+						} else {
+			        		AlertMessage.createPositiveDialog(BaseListActivity.this, true, null,
+									getResources().getString(R.string.savingDataTitle), 
+									getResources().getString(R.string.backingupDataFailureMessage),
+										getResources().getString(R.string.okay),
+							    		new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+												
+											}
+										},
+										null).show();
+						}
+					}
+				};
+	        	Thread backupThread = new Thread() {
+	        		@Override
+	        		public void run() {
+	        			try {
+	        				super.run();
+	        				Log.i(getResources().getString(R.string.app_name),TAG+":run");
+	        				CollectSurvey collectSurveyExportAll = (CollectSurvey)ApplicationManager.getSurvey();	        	
+	        	        	DataManager dataManagerExportAll = new DataManager(BaseListActivity.this,collectSurveyExportAll,collectSurveyExportAll.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
+	        	        	dataManagerExportAll.saveAllRecordsToFile(Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder));
+	        	        	dataBackupHandler.sendEmptyMessage(0);
+	        			} catch (Exception e) {
+	        				dataBackupHandler.sendEmptyMessage(1);
+	        				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
+	        	    				Environment.getExternalStorageDirectory().toString()
+	        	    				+getResources().getString(R.string.logs_folder)
+	        	    				+getResources().getString(R.string.logs_file_name)
+	        	    				+System.currentTimeMillis()
+	        	    				+getResources().getString(R.string.log_file_extension));
+	        			} finally {
+	        				pd.dismiss();
+	        			}
+	        		}
+	        	};
+	        	backupThread.start();	        	
+	        	return true;    
 			case R.id.menu_add_new_survey:
 				Intent formFileIntent = new Intent(BaseListActivity.this, FileChooser.class);
 				formFileIntent.putExtra(getResources().getString(R.string.fileNameRequestType), getResources().getInteger(R.integer.chooseFormFile));

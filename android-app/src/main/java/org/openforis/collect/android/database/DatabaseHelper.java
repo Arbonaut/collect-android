@@ -25,6 +25,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 //import android.util.Log;
+import android.util.Log;
 
 /**
  * 
@@ -163,11 +164,10 @@ public abstract class DatabaseHelper {
 	
 	public static void backupDatabase(String pathToDestinationFolderOnSdcard, String destFileName) throws IOException{		
 		String dbFileName = DB_PATH + DB_NAME;		
-		File file = new File(dbFileName);
+		File file = new File(dbFileName);		
 		if(file.exists()){
 			InputStream databaseFileStream = new FileInputStream(dbFileName);			
 			OutputStream destinationFileStream = new FileOutputStream(pathToDestinationFolderOnSdcard+destFileName);
-			
 			byte[] buffer = new byte[1024];
 			int length;
 			while ((length = databaseFileStream.read(buffer))>0){

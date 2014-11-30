@@ -111,6 +111,7 @@ public class ApplicationManager extends BaseActivity {
 	public static boolean isPlotDrawingStarted;
 	public static boolean isLineDrawingStarted;
 	public static boolean isDotDrawingStarted;
+	public static boolean isGpsOn;
 	
 	private Thread creationThread = new Thread() {
 		@Override
@@ -181,6 +182,7 @@ public class ApplicationManager extends BaseActivity {
 	            ApplicationManager.plots = new ArrayList<List<Pair<Integer,GeoPoint>>>();
 	            ApplicationManager.lineEnds = new ArrayList<Pair<Integer,GeoPoint>>();
 	            ApplicationManager.points = new ArrayList<Pair<Integer,GeoPoint>>();
+	            ApplicationManager.isGpsOn = false;
 	            showFormsListScreen();
 			} catch (Exception e) {
 				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
