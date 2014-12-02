@@ -14,7 +14,9 @@ import org.openforis.collect.android.lists.FormChoiceActivity;
 import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.lists.RootEntityChoiceActivity;
 import org.openforis.collect.android.logs.RunnableHandler;
+import org.openforis.collect.android.maps.MapGestureDetectorOverlay;
 import org.openforis.collect.android.maps.OsmMapActivity;
+import org.openforis.collect.android.maps.PlotMarker;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.CodeListItemsStorage;
 import org.openforis.collect.android.misc.Pair;
@@ -33,8 +35,11 @@ import org.openforis.idm.metamodel.NodeLabel.Type;
 import org.openforis.idm.metamodel.Survey;
 import org.openforis.idm.model.Entity;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.PathOverlay;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -462,8 +467,9 @@ public class ApplicationManager extends BaseActivity {
             		} else {
             			survey.setName("defaultSurveyName");
             		}
+            		Log.e("surveyNAME","=="+survey.getName());
             		CollectSurvey loadedSurvey = surveyManager.get(survey.getName());
-            		if (loadedSurvey==null){
+            		if (loadedSurvey==null){            			
     					survey = surveyManager.importModel(idmlFile, survey.getName(), false);
             			//Debug.startMethodTracing("loadingSURVEY");
             			//surveyManager.importModel(survey);
@@ -472,7 +478,7 @@ public class ApplicationManager extends BaseActivity {
             		} else {
             			survey = loadedSurvey;
             		}
-            		/*            		if (loadedSurvey==null){
+            		/*if (loadedSurvey==null){
     					//survey = surveyManager.importModel(idmlFile, survey.getName(), false);
             			//Debug.startMethodTracing("loadingSURVEY");
             			changeMessage("reading file");
@@ -500,9 +506,10 @@ public class ApplicationManager extends BaseActivity {
     			} catch (Exception e){
     				e.printStackTrace();
     				survey = null;
+    				return e.getLocalizedMessage();
     			}
-    			Log.e("survey==null","=="+(survey==null));
-            	if (survey!=null){
+
+            	/*if (survey!=null){
             		ApplicationManager.pd.dismiss();
             		SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
 					String language = ApplicationManager.appPreferences.getString(getResources().getString(R.string.selectedLanguage), getResources().getString(R.string.defaultLanguage));			
@@ -530,18 +537,7 @@ public class ApplicationManager extends BaseActivity {
             	} else {
             		ApplicationManager.pd.dismiss();
             		showFormsListScreen();
-            		/*AlertMessage.createPositiveDialog(ApplicationManager.this, false, getResources().getDrawable(R.drawable.warningsign),
-		 					getResources().getString(R.string.loadFormDefinitionTitle), getResources().getString(R.string.loadFormDefinitionMessage),
-		 					getResources().getString(R.string.okay),
-		 		    		new DialogInterface.OnClickListener() {
-		 						@Override
-		 						public void onClick(DialogInterface dialog, int which) {
-		 							//ApplicationManager.this.finish();
-		 							showFormsListScreen();
-		 						}
-		 					},
-		 					null).show();*/
-            	}
+            	}*/
 	            
 			} catch (Exception e) {
 				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
@@ -556,7 +552,55 @@ public class ApplicationManager extends BaseActivity {
 
         @Override
         protected void onPostExecute(String result) {
-              
+			AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationManager.this);
+			builder.setTitle(getResources().getString(R.string.adding_survey_from_file_failure));
+			builder.setMessage(result);
+			builder.setNegativeButton(getResources().getString(R.string.okay), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					}
+			});
+			builder.show();
+
+			if (survey!=null){
+        		ApplicationManager.pd.dismiss();
+        		SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
+				String language = ApplicationManager.appPreferences.getString(getResources().getString(R.string.selectedLanguage), getResources().getString(R.string.defaultLanguage));			
+				boolean languageFound = false;
+				List<String> languageList = ApplicationManager.getSurvey().getLanguages();
+				if (ApplicationManager.getSurvey()!=null){	        		        
+		    		for (int i=0;i<languageList.size();i++){
+		    			if (languageList.get(i).equals(language)){
+		    				languageFound = true;
+		    			}
+		    		}
+		        }
+				if (!languageFound){
+					if (languageList.size()>0){
+						language = languageList.get(0);
+					} else {
+						language = "null";
+					}
+				}
+				editor = ApplicationManager.appPreferences.edit();
+				editor.putString(getResources().getString(R.string.selectedLanguage), language);
+				editor.commit();
+				ApplicationManager.selectedLanguage = language;
+        		showRootEntitiesListScreen();		    	            
+        	} else {
+        		ApplicationManager.pd.dismiss();
+        		showFormsListScreen();
+        		/*AlertMessage.createPositiveDialog(ApplicationManager.this, false, getResources().getDrawable(R.drawable.warningsign),
+	 					getResources().getString(R.string.loadFormDefinitionTitle), getResources().getString(R.string.loadFormDefinitionMessage),
+	 					getResources().getString(R.string.okay),
+	 		    		new DialogInterface.OnClickListener() {
+	 						@Override
+	 						public void onClick(DialogInterface dialog, int which) {
+	 							//ApplicationManager.this.finish();
+	 							showFormsListScreen();
+	 						}
+	 					},
+	 					null).show();*/
+        	}
         }
 
         @Override

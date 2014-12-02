@@ -120,6 +120,7 @@
     <string name="exit">Exit</string>
     <string name="addNewRecord">Add new</string>
     <string name="addNewSurvey">Add new survey from file /sdcard</string>
+    <string name="adding_survey_from_file_failure">Adding survey from file failed</string>
     <string name="settingsScreenTitle">SETTINGS</string>
     <string name="showSoftKeyboardOnNumeric">Show soft-keyboard on numeric fields</string>
     <string name="showSoftKeyboardOnText">Show soft-keyboard on text fields</string>

@@ -30,7 +30,7 @@ public class TestMapActivity extends Activity {
 
         setContentView(mapView); //displaying the MapView
 
-        mapView.getController().setZoom(14); //set initial zoom-level, depends on your need
+        mapView.getController().setZoom(1); //set initial zoom-level, depends on your need
 
         mapView.getController().setCenter(new GeoPoint(62.617786, 29.814448)); //This point is in Enschede, Netherlands. You should select a point in your map or get it from user's location.
         mapView.setTileSource(TileSourceFactory.MAPNIK);
