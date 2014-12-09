@@ -43,10 +43,11 @@ public class ValidationManager {
 				attribute = (RealAttribute)node;
 			}
 			validator = new Validator();
+			Log.e("attribute",attribute.getClass()+"=="+attribute.getName());
 			results = validator.validate(attribute); 
-			/*Log.e("VALIDATION FOR NUMBER FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
+			Log.e("VALIDATION FOR NUMBER FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
 			Log.d("VALIDATION FOR NUMBER FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString());
-			Log.e("VALIDATION FOR NUMBER FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());*/		
+			Log.e("VALIDATION FOR NUMBER FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());		
 		}else if (nodeDef instanceof CoordinateAttributeDefinition){
 			attribute = (CoordinateAttribute)node;
 			validator = new Validator();

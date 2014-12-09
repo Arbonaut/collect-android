@@ -203,6 +203,18 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			if (!error){
 				EntityInstancesScreen.this.parentEntitySingleAttribute = tempEntity;
 			}
+			Entity parent = EntityInstancesScreen.this.parentEntitySingleAttribute;
+			Log.e("2iloscDzieci","=="+parent.getChildren().size());
+			for (int i=0;i<parent.getChildren().size();i++){
+				Log.e("2child"+i,"=="+parent.getChildren().get(i).getName());
+			}	
+			
+			parent = (Entity) parent.get("tally_trees", 0);
+			Log.e("3iloscDzieci","=="+parent.getChildren().size());
+			for (int i=0;i<parent.getChildren().size();i++){
+				Log.e("2child"+i,"=="+parent.getChildren().get(i).getName());
+			}
+			
 	/*		try{
 				Log.e("count","=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getCount(entityDef.getName()));
 				Log.e("nodeDefEntityInstance",nodeDef.getId()+"=="+nodeDef.getName());

@@ -153,8 +153,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
 		try{
+			Log.e("screenID","=="+FormScreen.this.getFormScreenId());
 			FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId());
-
+			Log.e("FormScreen.this.parentEntitySingleAttribute==null","=="+(FormScreen.this.parentEntitySingleAttribute==null));
 			FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity(FormScreen.this.parentFormScreenId);
 			Log.e("foundparentEntityMultipleAttribute",FormScreen.this.getFormScreenId()+"=="+FormScreen.this.parentFormScreenId);
 			Log.e("foundparentEntityMultipleAttribute1",parentEntityMultipleAttribute.getName()+"=="+FormScreen.this.parentFormScreenId);
@@ -1170,8 +1171,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		return relativeButtonsLayout;
     }
     
-    public String getFormScreenId(){
-    	
+    public String getFormScreenId(){    	
     	if (this.parentFormScreenId.equals("")){
     		return removeDuplicates(this.idmlId+getResources().getString(R.string.valuesSeparator1)+this.currInstanceNo);
     	} else {

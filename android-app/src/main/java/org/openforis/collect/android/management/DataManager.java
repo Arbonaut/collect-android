@@ -62,6 +62,10 @@ public class DataManager {
 		this.dataUnmarshaller = new DataUnmarshaller(dataHandler);
 	}
 	
+	public User getUser(){
+		return this.user;
+	}
+	
 	public boolean saveRecord() {
 		boolean isSuccess = true;
 		try {

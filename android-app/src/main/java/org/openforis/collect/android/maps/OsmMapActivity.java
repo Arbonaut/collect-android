@@ -215,7 +215,7 @@ public class OsmMapActivity extends Activity {
     			        	} else {
     			        		OsmMapActivity.this.showCurrentLocation();	
     			        	}    			            
-    			        }           
+    			        }
     			    });
     			    locateButton.setImageResource(android.R.drawable.ic_menu_mylocation);
     			    

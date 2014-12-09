@@ -14,9 +14,7 @@ import org.openforis.collect.android.lists.FormChoiceActivity;
 import org.openforis.collect.android.lists.RecordChoiceActivity;
 import org.openforis.collect.android.lists.RootEntityChoiceActivity;
 import org.openforis.collect.android.logs.RunnableHandler;
-import org.openforis.collect.android.maps.MapGestureDetectorOverlay;
 import org.openforis.collect.android.maps.OsmMapActivity;
-import org.openforis.collect.android.maps.PlotMarker;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.CodeListItemsStorage;
 import org.openforis.collect.android.misc.Pair;
@@ -34,9 +32,8 @@ import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.metamodel.NodeLabel.Type;
 import org.openforis.idm.metamodel.Survey;
 import org.openforis.idm.model.Entity;
+import org.openforis.idm.model.Node;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.PathOverlay;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -320,13 +317,22 @@ public class ApplicationManager extends BaseActivity {
 	 	    		int recordId = data.getIntExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));
 	 	    		if (recordId==getResources().getInteger(R.integer.unsavedRecordId)){//new record
 	 	    			String versionName = survey.getVersions().isEmpty() ? null: survey.getVersions().get(survey.getVersions().size()-1).getName();
-						ApplicationManager.currentRecord = new CollectRecord(ApplicationManager.survey, versionName);//null;	 	    			
-	 					Entity rootEntity = ApplicationManager.currentRecord.createRootEntity(ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName());
+	 	    			ApplicationManager.currentRecord = ServiceFactory.getRecordManager().create(survey, ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(), ApplicationManager.dataManager.getUser(), versionName);
+	 	    			Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 	 					rootEntity.setId(ApplicationManager.currRootEntityId);
+//	 	    			Log.e("currentRecord.rootEntity",currentRecord.getRootEntity().getId()+"=="+currentRecord.getRootEntity().getName());
+//	 	    			List<Node<? extends NodeDefinition>> list = ApplicationManager.currentRecord.getRootEntity().getChildren();
+//	 	    			Log.e("iloscDzieci","=="+list.size());
+//		 	   			for (int i=0;i<list.size();i++){
+//		 	   				Log.e("root_child"+i,"=="+list.get(i).getName());
+//		 	   			} 
+						/*ApplicationManager.currentRecord = new CollectRecord(ApplicationManager.survey, versionName);//null;	 	    			
+	 					Entity rootEntity = ApplicationManager.currentRecord.createRootEntity(ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName());
+	 					rootEntity.setId(ApplicationManager.currRootEntityId);*/
 	 	    		} else {//record from database
 	 	    			CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			        	//DataManager dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
-	 	    			Log.e("selectedRecordId","=="+recordId);
+	 	    			//Log.e("selectedRecordId","=="+recordId);
 	 	    			ApplicationManager.dataManager = new DataManager(this,collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
 			        	ApplicationManager.currentRecord = dataManager.loadRecord(recordId);
 			        	Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();

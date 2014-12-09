@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -96,7 +97,9 @@ public class NumberField extends InputField {
 		//and remove all non-digit characters
 		this.txtBox.addTextChangedListener(new TextWatcher(){
 		   
-			public void afterTextChanged(Editable s) {}
+			public void afterTextChanged(Editable s) {
+				//validateResult();
+			}
 			public void beforeTextChanged(CharSequence s, int start,  int count, int after) {}				 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if (s.length() > 0){
@@ -116,9 +119,15 @@ public class NumberField extends InputField {
 		});
 	}
 	
-	private void validateResult(){
+	public void validateResult(){
+		Log.e("validate","numberField");
 		String value = NumberField.this.txtBox.getText().toString();
 		if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
+			Log.e("form.getFormScreenId()","=="+form.getFormScreenId());
+			Log.e("NumberField.this.findParentEntity(form.getFormScreenId())==null","=="+(NumberField.this.findParentEntity(form.getFormScreenId())==null));
+			Log.e("findParentEntity(form.getFormScreenId())","=="+NumberField.this.findParentEntity(form.getFormScreenId()).getName());
+			Log.e("nodeDefinition.getName()","=="+NumberField.this.nodeDefinition.getName());
+			Log.e("form.currInstanceNo","=="+form.currInstanceNo);
 			Node<? extends NodeDefinition> node = NumberField.this.findParentEntity(form.getFormScreenId()).get(NumberField.this.nodeDefinition.getName(), form.currInstanceNo);
 			ValidationResults results = ValidationManager.validateField(node);
 			if(results.getErrors().size() > 0 || results.getFailed().size() > 0){
@@ -133,6 +142,7 @@ public class NumberField extends InputField {
 	
 	public void setValue(int position, String value, String path, boolean isTextChanged)
 	{		
+		Log.e("setVALUE","=="+value);
 		try{
 			if (!isTextChanged)
 				this.txtBox.setText(value);
@@ -177,8 +187,8 @@ public class NumberField extends InputField {
 			validateField(nodeChangeSet);
 
 		} catch (Exception e){
-			//Log.e("Number value got exception", "Value is: " + value);
-			//e.printStackTrace();
+			Log.e("Number value got exception", "Value is: " + value);
+			e.printStackTrace();
 		}		
 	}
 	
