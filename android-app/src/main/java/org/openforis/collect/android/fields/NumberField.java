@@ -141,14 +141,15 @@ public class NumberField extends InputField {
 	}
 	
 	public void setValue(int position, String value, String path, boolean isTextChanged)
-	{		
+	{
 		Log.e("setVALUE","=="+value);
+		NodeChangeSet nodeChangeSet = null;
 		try{
 			if (!isTextChanged)
 				this.txtBox.setText(value);
 			//Validate and add/update attribute
 			Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
-			NodeChangeSet nodeChangeSet = null;
+			
 			Entity parentEntity = this.findParentEntity(path);
 			if (node!=null){
 				if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
@@ -188,7 +189,7 @@ public class NumberField extends InputField {
 
 		} catch (Exception e){
 			Log.e("Number value got exception", "Value is: " + value);
-			e.printStackTrace();
+			//e.printStackTrace();
 		}		
 	}
 	

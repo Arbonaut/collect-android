@@ -171,14 +171,14 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 					Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
 					
 					if (foundNode==null){
-						EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
+						//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
 					}
 				} catch (IllegalArgumentException e){
 					//Log.e("illegalargumentexception","parenEntity=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getParent());
 					EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.parentEntitySingleAttribute.getParent();
 					Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
 					if (foundNode==null){
-						EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
+						//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
 					}
 					//e.printStackTrace();
 				} catch (NullPointerException e){
@@ -203,18 +203,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			if (!error){
 				EntityInstancesScreen.this.parentEntitySingleAttribute = tempEntity;
 			}
-			Entity parent = EntityInstancesScreen.this.parentEntitySingleAttribute;
-			Log.e("2iloscDzieci","=="+parent.getChildren().size());
-			for (int i=0;i<parent.getChildren().size();i++){
-				Log.e("2child"+i,"=="+parent.getChildren().get(i).getName());
-			}	
-			
-			parent = (Entity) parent.get("tally_trees", 0);
-			Log.e("3iloscDzieci","=="+parent.getChildren().size());
-			for (int i=0;i<parent.getChildren().size();i++){
-				Log.e("2child"+i,"=="+parent.getChildren().get(i).getName());
-			}
-			
+			//Entity parent = EntityInstancesScreen.this.parentEntitySingleAttribute;			
 	/*		try{
 				Log.e("count","=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getCount(entityDef.getName()));
 				Log.e("nodeDefEntityInstance",nodeDef.getId()+"=="+nodeDef.getName());
@@ -223,7 +212,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 //				e.printStackTrace();
 			}*/
 			EntityDefinition entityDef = (EntityDefinition)nodeDef;
-
+			Log.e("iloscInstancji",entityDef.getName()+"=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getCount(entityDef.getName()));
 			for (int e=0;e<EntityInstancesScreen.this.parentEntitySingleAttribute.getCount(entityDef.getName());e++){
 				SummaryList summaryListView = new SummaryList(EntityInstancesScreen.this, entityDef, 45, EntityInstancesScreen.this,e);
 				summaryListView.setOnClickListener(EntityInstancesScreen.this);
@@ -251,7 +240,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			//setContentView(EntityInstancesScreen.this.sv);
 			EntityInstancesScreen.this.mainLayout.addView(sv);	
 			setContentView(EntityInstancesScreen.this.mainLayout);
-
 			
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);		
 			changeBackgroundColor(backgroundColor);
@@ -487,11 +475,13 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 									//Log.e("pathTOSearchForParent","=="+path);
 									parentEntity = EntityInstancesScreen.this.findParentEntity(path);
 									try{
+										Log.e("EntityInstancesScreen","1ADDING ENTITY");
 										EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(EntityInstancesScreen.this.idmlId).getName());
 										//Log.e("entity","added without exception");
 									} catch (IllegalArgumentException e){
 										//Log.e("entity","added in exception");
 										parentEntity = parentEntity.getParent();
+										Log.e("EntityInstancesScreen","2ADDING ENTITY");
 										EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(EntityInstancesScreen.this.idmlId).getName());
 									}
 									//Log.e("foundParentEntity","=="+parentEntity.getName());
@@ -1912,8 +1902,11 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 		 								*///Node<?> tempNode = tempEntity.get(EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), 0).getName(), position);
 		 								Node<?> tempNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), position);
 		 								//Log.e("tempNode==null","=="+(tempNode==null));
-		 								if (tempNode==null && (position==0))
-		 									EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute/*tempEntity*/, parentNodeDefinition.getName());		 								
+		 								if ((tempNode==null) && (position==0)){
+		 									Log.e("EntityInstancesScreen","3ADDING ENTITY");
+		 									//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute/*tempEntity*/, parentNodeDefinition.getName());
+		 								}
+		 											 								
 		 							} else {
 		 								Log.e("null",nodeDef.getName()+"=="+position);
 		 							}

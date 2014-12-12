@@ -883,6 +883,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());		 								
 	 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
 	 								if ((tempNode==null)&&(FormScreen.this.currInstanceNo==0))
+	 									Log.e("FormScreen","0ADDING ENTITY");
 	 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
 	 							}
  								refreshEntityScreen(2);
@@ -1426,14 +1427,21 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		}
 		
 		//refreshing values of fields in the entity 
-		Entity parentEntity = this.findParentEntity(this.getFormScreenId());
+		Entity parentEntity = this.findParentEntity(this.getFormScreenId());	
+		if (parentEntity==null){
+			Log.e("FormScreen","ADDING ENTITY");
+		} else {
+			Log.e("FormScreen","NOT ADDING ENTITY");
+		}
 		if (parentEntity==null){
 			String path = this.getFormScreenId().substring(0,this.getFormScreenId().lastIndexOf(getResources().getString(R.string.valuesSeparator2)));
 			parentEntity = this.findParentEntity(path);
 			try{
+				Log.e("FormScreen","4ADDING ENTITY");
 				EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
 			} catch (IllegalArgumentException e){
 				parentEntity = parentEntity.getParent();
+				Log.e("FormScreen","5ADDING ENTITY");
 				EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
 			}
 			parentEntity = this.findParentEntity(this.getFormScreenId());
@@ -2526,8 +2534,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     private void addEntityDefinitionNode(NodeDefinition nodeDef){
 		if (ApplicationManager.currentRecord.getRootEntity().getId()!=nodeDef.getId()){
 			Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0/*FormScreen.this.currInstanceNo*/);
-			if (foundNode==null){
-				EntityBuilder.addEntity(FormScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
+			if (foundNode==null&&(nodeDef.isMultiple())){
+				//EntityBuilder.addEntity(FormScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
 			}
 		}		
 		EntityDefinition entityDef = (EntityDefinition)nodeDef;

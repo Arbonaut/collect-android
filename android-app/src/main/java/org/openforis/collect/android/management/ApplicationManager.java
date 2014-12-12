@@ -320,15 +320,16 @@ public class ApplicationManager extends BaseActivity {
 	 	    			ApplicationManager.currentRecord = ServiceFactory.getRecordManager().create(survey, ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(), ApplicationManager.dataManager.getUser(), versionName);
 	 	    			Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 	 					rootEntity.setId(ApplicationManager.currRootEntityId);
-//	 	    			Log.e("currentRecord.rootEntity",currentRecord.getRootEntity().getId()+"=="+currentRecord.getRootEntity().getName());
-//	 	    			List<Node<? extends NodeDefinition>> list = ApplicationManager.currentRecord.getRootEntity().getChildren();
-//	 	    			Log.e("iloscDzieci","=="+list.size());
-//		 	   			for (int i=0;i<list.size();i++){
-//		 	   				Log.e("root_child"+i,"=="+list.get(i).getName());
-//		 	   			} 
+
 						/*ApplicationManager.currentRecord = new CollectRecord(ApplicationManager.survey, versionName);//null;	 	    			
 	 					Entity rootEntity = ApplicationManager.currentRecord.createRootEntity(ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName());
 	 					rootEntity.setId(ApplicationManager.currRootEntityId);*/
+	 	    			Log.e("currentRecord.rootEntity",currentRecord.getRootEntity().getId()+"=="+currentRecord.getRootEntity().getName());
+	 	    			List<Node<? extends NodeDefinition>> list = ApplicationManager.currentRecord.getRootEntity().getChildren();
+	 	    			Log.e("iloscDzieci","=="+list.size());
+		 	   			for (int i=0;i<list.size();i++){
+		 	   				Log.e("root_child"+i,"=="+list.get(i).getName());
+		 	   			}
 	 	    		} else {//record from database
 	 	    			CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			        	//DataManager dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());

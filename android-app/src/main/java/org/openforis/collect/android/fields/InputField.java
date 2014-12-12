@@ -94,7 +94,7 @@ public class InputField extends Field implements TextWatcher {
 	 * @param nodeChangeSet
 	 */
 	public void validateField(NodeChangeSet nodeChangeSet){
-		Log.e("validate","inputField"+nodeChangeSet.size());
+		//Log.e("validate","inputField"+nodeChangeSet.size());
     	List<NodeChange<?>> nodeChangesList = nodeChangeSet.getChanges();
     	Log.d("Validation starts. Size of NodeChangeList","== " + nodeChangesList.size());
     	for (NodeChange<?> nodeChange : nodeChangesList){
