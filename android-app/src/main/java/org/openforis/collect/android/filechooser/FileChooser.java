@@ -11,6 +11,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -33,13 +34,18 @@ public class FileChooser extends ListActivity {
         super.onCreate(savedInstanceState);
         currentDir = new File(Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.application_folder));
         this.selectedFileType = getIntent().getIntExtra(getResources().getString(R.string.fileNameRequestType), -1);
+        Log.e("selectedFileType"+this.selectedFileType,"fileChose");
         if (this.selectedFileType==getResources().getInteger(R.integer.chooseFormFile)){
         	this.selectedFile = getResources().getString(R.string.formFileName);
         	this.fileChosen = getResources().getInteger(R.integer.formFileChosen);
         } else if (this.selectedFileType==getResources().getInteger(R.integer.chooseDatabaseFile)){
         	this.selectedFile = getResources().getString(R.string.databaseFileName);
         	this.fileChosen = getResources().getInteger(R.integer.databaseFileChosen);
+        } else if (this.selectedFileType==getResources().getInteger(R.integer.chooseSpeciesListFile)){
+        	this.selectedFile = getResources().getString(R.string.speciesListFileName);
+        	this.fileChosen = getResources().getInteger(R.integer.speciesListFileChosen);
         }
+        Log.e("selectedFile"+this.selectedFile,"fileChose"+this.fileChosen);
         fill(currentDir);
     }
     

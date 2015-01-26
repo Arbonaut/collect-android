@@ -2,6 +2,7 @@ package org.openforis.collect.android.database;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,7 +161,7 @@ public abstract class DatabaseHelper {
 
 		myInput.close();
 		 
-		}
+	}
 	
 	public static void backupDatabase(String pathToDestinationFolderOnSdcard, String destFileName) throws IOException{		
 		String dbFileName = DB_PATH + DB_NAME;		
@@ -179,5 +180,20 @@ public abstract class DatabaseHelper {
 		}
 		
 		
+	}
+	
+	public static void importSpeciesFileList(String pathToFileOnSdcard) throws IOException{
+		Log.e("DatabaseHelper","importing species list from file to database"+pathToFileOnSdcard);
+		InputStream myInput = new FileInputStream(pathToFileOnSdcard);
+
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = myInput.read(buffer))>0){
+			//myOutput.write(buffer, 0, length);
+			Log.e("line"+length,"=="+buffer);
+		}
+		Log.e("length","=="+length);
+		myInput.close();	
+		 
 	}
 }

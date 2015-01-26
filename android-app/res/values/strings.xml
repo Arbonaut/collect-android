@@ -69,7 +69,9 @@
     <string name="downloadToDeviceSuccessfulTitle">Download completed</string>
     <string name="downloadToDeviceSuccessfulMessage">Downloading data the device successfully finished.</string>
     <string name="copyingDatabaseTitle">Copying database&#8230;</string>
+    <string name="importingSpeciesListTitle">Importing species&#8230;</string>
     <string name="copyingDatabaseWrongFileExtensionMessage">Selected file does not seem to be database file (its extension is not .db)</string>
+    <string name="importingSpeciesListWrongFileExtensionMessage">Selected file does not seem to be species list file (its extension is not .csv)</string>
     <string name="backupingDatabaseTitle">Exporting database&#8230;</string>
     <string name="backupingDatabaseMessageSuccess">Database file exported.</string>
     <string name="backupingDatabaseMessageFileNotFound">Database file could not be exported, because no database was found.</string>

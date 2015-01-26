@@ -83,7 +83,9 @@
     
     <!-- REQUEST CODES FOR ACTIVITIES -->
     <integer name="chooseDatabaseFile">69</integer>
+    <integer name="chooseSpeciesListFile">68</integer>
     <integer name="databaseFileChosen">44</integer>
+    <integer name="speciesListFileChosen">43</integer>
     <integer name="chooseFormFile">691</integer>
     <integer name="formFileChosen">692</integer>
     <integer name="clusterSelection">789</integer>
@@ -127,6 +129,7 @@
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
     <string name="databaseFileName">databaseFileName</string>
+    <string name="speciesListFileName">speciesListFileName</string>
     <string name="databaseFileNameRequest">databaseFileNameRequest</string>
     <string name="formFileName">formFileName</string>
     <string name="formFileNameRequest">formFileNameRequest</string>

@@ -150,6 +150,12 @@ public class NumberField extends InputField {
 			//Validate and add/update attribute
 			Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
 			
+			IntegerAttribute intAttr = (IntegerAttribute)node;
+			Log.e("node","=="+node.getClass());
+			Log.e("intAttr","=="+intAttr.getClass());
+			IntegerValue intValue = new IntegerValue(Integer.valueOf(value),null);
+			Log.e("intValue","=="+intValue.getClass());
+			
 			Entity parentEntity = this.findParentEntity(path);
 			if (node!=null){
 				if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){

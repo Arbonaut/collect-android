@@ -1,6 +1,9 @@
 package org.openforis.collect.android.screens;
 
 import org.openforis.collect.android.R;
+import org.openforis.collect.android.config.Configuration;
+import org.openforis.collect.android.database.DatabaseHelper;
+import org.openforis.collect.android.filechooser.FileChooser;
 import org.openforis.collect.android.lists.DownloadActivity;
 import org.openforis.collect.android.lists.FileImportActivity;
 import org.openforis.collect.android.lists.UploadActivity;
@@ -9,7 +12,7 @@ import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.DataManager;
 import org.openforis.collect.android.maps.OsmMapActivity;
 import org.openforis.collect.android.messages.AlertMessage;
-import org.openforis.collect.android.misc.ImportSpeciesFromCsvActivity;
+import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.model.CollectSurvey;
 
 import android.app.Activity;
@@ -73,7 +76,7 @@ public class BaseActivity extends Activity {
         menuInflater.inflate(R.layout.menu, menu);
         return true;
     }
-//  public boolean onMenuItemSelected(int featureId, MenuItem item)
+
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item)
     //public boolean onOptionsItemSelected(MenuItem item)
@@ -306,7 +309,10 @@ public class BaseActivity extends Activity {
 				}
 			    return true;*/
 			case R.id.menu_import_species_from_file:
-				startActivity(new Intent(BaseActivity.this, ImportSpeciesFromCsvActivity.class));
+				//startActivity(new Intent(BaseActivity.this, ImportSpeciesFromCsvActivity.class));
+				Intent speciesListFileIntent = new Intent(BaseActivity.this, FileChooser.class);
+				speciesListFileIntent.putExtra(getResources().getString(R.string.fileNameRequestType), getResources().getInteger(R.integer.chooseSpeciesListFile));
+				startActivityForResult(speciesListFileIntent, getResources().getInteger(R.integer.chooseSpeciesListFile));
 				return true;
 			case R.id.menu_settings:
 				startActivity(new Intent(BaseActivity.this,SettingsScreen.class));
@@ -346,6 +352,50 @@ public class BaseActivity extends Activity {
 		        return super.onOptionsItemSelected(item);
 	    }
 	}
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {    	
+	    super.onActivityResult(requestCode, resultCode, data);
+	    try{
+	    	Log.e("onActivityResult","BaseActivity");
+	    	Log.e("requestCode"+requestCode,"resultCode"+resultCode);
+	    	Log.e("P"+getResources().getInteger(R.integer.chooseFormFile),"K"+getResources().getInteger(R.integer.formFileChosen));
+	    	if (requestCode==getResources().getInteger(R.integer.chooseSpeciesListFile)
+	    			&&
+	    		resultCode==getResources().getInteger(R.integer.speciesListFileChosen)){
+				Log.e("choosing species list","=========================");
+				Log.e("CHOSEN FILE","=="+data.getStringExtra(getResources().getString(R.string.speciesListFileName)));
+				String selectedFileName = data.getStringExtra(getResources().getString(R.string.speciesListFileName));
+				if (selectedFileName.endsWith(".csv")){
+					/*DatabaseHelper.copyDataBase(selectedFileName);
+					Configuration config = Configuration.getDefault(BaseActivity.this);
+					ServiceFactory.init(config, false);*/
+					DatabaseHelper.importSpeciesFileList(selectedFileName);
+					Configuration config = Configuration.getDefault(BaseActivity.this);
+					ServiceFactory.init(config, false);
+				} else {
+					AlertMessage.createPositiveDialog(BaseActivity.this, true, null,
+							getResources().getString(R.string.importingSpeciesListTitle), 
+							getResources().getString(R.string.importingSpeciesListWrongFileExtensionMessage),
+								getResources().getString(R.string.okay),
+					    		new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										
+									}
+								},
+								null).show();
+				}
+			}
+	    } catch (Exception e){
+    		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onActivityResult",
+    				Environment.getExternalStorageDirectory().toString()
+    				+getResources().getString(R.string.logs_folder)
+    				+getResources().getString(R.string.logs_file_name)
+    				+System.currentTimeMillis()
+    				+getResources().getString(R.string.log_file_extension));
+	    }
+    }
     
     @Override
     public void onPause(){
