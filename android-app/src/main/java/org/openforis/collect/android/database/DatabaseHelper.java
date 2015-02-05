@@ -1,11 +1,12 @@
 package org.openforis.collect.android.database;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,6 +19,7 @@ import liquibase.exception.DatabaseException;
 import liquibase.logging.LogFactory;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
+import org.openforis.collect.android.R;
 import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.liquibase.AndroidLiquibaseLogger;
 import org.openforis.collect.android.service.ServiceFactory;
@@ -184,16 +186,24 @@ public abstract class DatabaseHelper {
 	
 	public static void importSpeciesFileList(String pathToFileOnSdcard) throws IOException{
 		Log.e("DatabaseHelper","importing species list from file to database"+pathToFileOnSdcard);
-		InputStream myInput = new FileInputStream(pathToFileOnSdcard);
-
-		byte[] buffer = new byte[1024];
-		int length;
-		while ((length = myInput.read(buffer))>0){
-			//myOutput.write(buffer, 0, length);
-			Log.e("line"+length,"=="+buffer);
-		}
-		Log.e("length","=="+length);
-		myInput.close();	
+		FileInputStream file = new FileInputStream(pathToFileOnSdcard);
 		 
+		//Construct BufferedReader from InputStreamReader
+		BufferedReader br = new BufferedReader(new InputStreamReader(file));
+	 
+		String line = null;
+		while ((line = br.readLine()) != null) {
+			String[] speciesData = line.split(DatabaseHelper.contex.getResources().getString(R.string.speciesListSeparator));
+			insertSpeciesToDatabase();
+		}
+	 
+		br.close();
+		 
+	}
+	
+	private static void insertSpeciesToDatabase(){
+		//SpeciesManager speciesManager = new SpeciesManager();
+		
+		
 	}
 }

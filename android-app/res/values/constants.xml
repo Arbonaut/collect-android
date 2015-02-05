@@ -135,6 +135,8 @@
     <string name="formFileNameRequest">formFileNameRequest</string>
     <string name="fileNameRequestType">fileNameRequestType</string>
     
+    <string name="speciesListSeparator">,</string>
+    
     <!-- BUTTONS IDs -->
     <integer name="leftButtonMultipleAttribute">11</integer>
     <integer name="rightButtonMultipleAttribute">22</integer>
