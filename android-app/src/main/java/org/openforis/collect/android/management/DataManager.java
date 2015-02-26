@@ -171,18 +171,15 @@ public class DataManager {
 		return 0;
 	}
 	
-	public CollectRecord loadRecordFromXml(String filename) {
+	public CollectRecord loadRecordFromXml(String filename) throws DataUnmarshallerException{
 		//filename = Environment.getExternalStorageDirectory().toString()+"/ofcm/data/imported/"+filename;
 		CollectRecord loadedRecord = null;
-		try {
-			ParseRecordResult result = this.dataUnmarshaller.parse(filename);
-			loadedRecord = result.getRecord();
-			this.saveRecord(loadedRecord);
-		} catch (NullPointerException e){
-			e.printStackTrace();
-		} catch (DataUnmarshallerException e) {
-			e.printStackTrace();
-		}			
+		ParseRecordResult result = this.dataUnmarshaller.parse(filename);
+		loadedRecord = result.getRecord();
+		if (loadedRecord==null)
+			throw new DataUnmarshallerException();
+		this.saveRecord(loadedRecord);
+				
 		return loadedRecord;
 	}
 	

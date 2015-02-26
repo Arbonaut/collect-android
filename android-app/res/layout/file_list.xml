@@ -8,7 +8,8 @@
         android:id="@+id/file_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:paddingTop="20sp" >
+        android:paddingTop="20sp"
+        android:cacheColorHint="#00000000" >
     </ListView>
     
 </LinearLayout>

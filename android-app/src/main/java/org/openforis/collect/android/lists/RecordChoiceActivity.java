@@ -93,6 +93,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 			RecordChoiceActivity.this.lv = new ListView(RecordChoiceActivity.this);
 			RecordChoiceActivity.this.lv.setLayoutParams(lp);
 			RecordChoiceActivity.this.lv.setId(android.R.id.list);
+			RecordChoiceActivity.this.lv.setCacheColorHint(0);
 			registerForContextMenu(lv);
 			
 			RecordChoiceActivity.this.mainLayout = new LinearLayout(RecordChoiceActivity.this);

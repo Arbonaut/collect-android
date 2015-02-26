@@ -195,7 +195,7 @@ public class NumberField extends InputField {
 
 		} catch (Exception e){
 			Log.e("Number value got exception", "Value is: " + value);
-			//e.printStackTrace();
+			e.printStackTrace();
 		}		
 	}
 	

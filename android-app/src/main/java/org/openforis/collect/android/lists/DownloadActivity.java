@@ -17,6 +17,7 @@ import org.openforis.collect.android.management.DataManager;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.ServerInterface;
 import org.openforis.collect.model.CollectSurvey;
+import org.openforis.collect.persistence.xml.DataUnmarshallerException;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -467,16 +468,18 @@ public class DownloadActivity extends Activity{
     						},
     						null).show();*/
             }            	
-        } catch (final MalformedURLException e) {
+        } catch (MalformedURLException e) {
             showError("Error : MalformedURLException " + e);       
             e.printStackTrace();
             pd.dismiss();
-        } catch (final IOException e) {
+        } catch (IOException e) {
             showError("Error : IOException " + e);         
             e.printStackTrace();
             pd.dismiss();
-        }
-        catch (final Exception e) {
+        } catch (DataUnmarshallerException e){
+        	showError("Parsing error: " + e);
+            pd.dismiss();
+        } catch (Exception e) {
             showError("Error : Please check your internet connection " + e);
             pd.dismiss();
         }      
@@ -498,6 +501,17 @@ public class DownloadActivity extends Activity{
                 //Toast.makeText(DownloadActivity.this, err, Toast.LENGTH_LONG).show();
             	Log.e("showError","=="+err);
                 //dialog.dismiss();
+            	AlertMessage.createPositiveDialog(DownloadActivity.this, true, null,
+						"Error downloading the file(s)", 
+						err,
+						getResources().getString(R.string.okay),
+			    		new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								DownloadActivity.this.finish();
+							}
+						},
+						null).show();
             }
         });
     }
