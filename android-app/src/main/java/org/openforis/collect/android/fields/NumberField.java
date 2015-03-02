@@ -150,12 +150,6 @@ public class NumberField extends InputField {
 			//Validate and add/update attribute
 			Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
 			
-
-
-
-
-
-
 			Entity parentEntity = this.findParentEntity(path);
 			if (node!=null){
 				if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
@@ -195,7 +189,7 @@ public class NumberField extends InputField {
 
 		} catch (Exception e){
 			Log.e("Number value got exception", "Value is: " + value);
-			//e.printStackTrace();
+			e.printStackTrace();
 		}		
 	}
 	

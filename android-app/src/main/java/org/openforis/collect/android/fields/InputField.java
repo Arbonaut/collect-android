@@ -97,33 +97,39 @@ public class InputField extends Field implements TextWatcher {
 		//Log.e("validate","inputField"+nodeChangeSet.size());
     	List<NodeChange<?>> nodeChangesList = nodeChangeSet.getChanges();
     	Log.d("Validation starts. Size of NodeChangeList","== " + nodeChangesList.size());
+    	//Log.e("NODE CHANGE SET","==============");
     	for (NodeChange<?> nodeChange : nodeChangesList){
     			//HERE WE CHECK DOES IT HAVE ANY ERRORS or WARNINGS
+    			Log.e("nazwa pola",nodeChange.getNode().getClass().toString()+"=="+nodeChange.getNode().getName());
     			if (nodeChange instanceof AttributeChange) {
+    				
     				ValidationResults results = ((AttributeChange)nodeChange).getValidationResults();
+    				
     				Log.e("VALIDATION FOR FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
-    				Log.d("VALIDATION FOR FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString()); 			
+    				Log.d("VALIDATION FOR FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString());    			
     				//Make background color red or yellow if there is any errors/warnings 				
     				String validationMsg = "";
     				if (results.getErrors().size() > 0){
-    					setBackgroundColor(Color.RED);
-    					for (int i=0;i<results.getErrors().size();i++){
-    						ValidationResult error = results.getErrors().get(i);
-    						if (i<results.getErrors().size()-1)
-    							validationMsg += ValidationMessageBuilder.createInstance().getValidationMessage((Attribute<?, ?>)nodeChange.getNode(), error) + "\r\n";
-    						else
-    							validationMsg += ValidationMessageBuilder.createInstance().getValidationMessage((Attribute<?, ?>)nodeChange.getNode(), error);
-    					}    				
-    					Log.d("Validation message is: ", validationMsg);
-    					//Show dialog 
-    					if (this instanceof TimeField || this instanceof DateField){
-    						//Just change background for first time
-    					}else{
-							/*AlertDialog alertDialog = getValidationMessageAlert("Error!", validationMsg);
-	    					alertDialog.show();*/
-    						this.extendedLabel.setVisibility(View.VISIBLE);
-    						this.extendedLabel.setText("Error: "+validationMsg);
-    					} 						
+    					if (!(results.getErrors().toString().contains("CodeValidator"))){
+    						setBackgroundColor(Color.RED);
+        					for (int i=0;i<results.getErrors().size();i++){
+        						ValidationResult error = results.getErrors().get(i);
+        						if (i<results.getErrors().size()-1)
+        							validationMsg += ValidationMessageBuilder.createInstance().getValidationMessage((Attribute<?, ?>)nodeChange.getNode(), error) + "\r\n";
+        						else
+        							validationMsg += ValidationMessageBuilder.createInstance().getValidationMessage((Attribute<?, ?>)nodeChange.getNode(), error);
+        					}    				
+        					Log.d("Validation message is: ", validationMsg);
+        					//Show dialog 
+        					if (this instanceof TimeField || this instanceof DateField){
+        						//Just change background for first time
+        					}else{
+    							/*AlertDialog alertDialog = getValidationMessageAlert("Error!", validationMsg);
+    	    					alertDialog.show();*/
+    							this.extendedLabel.setVisibility(View.VISIBLE);
+        						this.extendedLabel.setText("Error: "+validationMsg);					
+        					} 							
+    					}    					
     				}
     				else if (results.getWarnings().size() > 0){
     					setBackgroundColor(Color.YELLOW);
