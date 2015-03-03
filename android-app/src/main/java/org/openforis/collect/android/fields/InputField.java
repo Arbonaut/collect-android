@@ -99,8 +99,7 @@ public class InputField extends Field implements TextWatcher {
     	Log.d("Validation starts. Size of NodeChangeList","== " + nodeChangesList.size());
     	//Log.e("NODE CHANGE SET","==============");
     	for (NodeChange<?> nodeChange : nodeChangesList){
-    			//HERE WE CHECK DOES IT HAVE ANY ERRORS or WARNINGS
-    			Log.e("nazwa pola",nodeChange.getNode().getClass().toString()+"=="+nodeChange.getNode().getName());
+    			//HERE WE CHECK DOES IT HAVE ANY ERRORS or WARNINGS   
     			if (nodeChange instanceof AttributeChange) {
     				
     				ValidationResults results = ((AttributeChange)nodeChange).getValidationResults();

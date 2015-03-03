@@ -5,7 +5,7 @@ import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.database.MobileRecordDao;
 import org.openforis.collect.android.database.SQLDroidDataSource;
 import org.openforis.collect.android.management.TaxonManager;
-import org.openforis.collect.manager.RecordFileManager;
+//import org.openforis.collect.manager.RecordFileManager;
 import org.openforis.collect.manager.RecordManager;
 import org.openforis.collect.manager.SurveyManager;
 import org.openforis.collect.manager.UserManager;
@@ -29,7 +29,7 @@ import org.openforis.idm.model.expression.ExpressionFactory;
 public class ServiceFactory {
 
 	private static /*Mobile*/RecordManager recordManager;
-	private static RecordFileManager recordFileManager;
+	//private static RecordFileManager recordFileManager;
 	private static SurveyManager surveyManager;
 	private static UserManager userManager;
 	private static TaxonManager taxonManager;
@@ -73,7 +73,7 @@ public class ServiceFactory {
 	    	recordDao.setDataSource(dataSource);
 	    	recordManager.setRecordDao(recordDao);
 	    	
-	    	recordFileManager = new RecordFileManager();
+	    	//recordFileManager = new RecordFileManager();
 	    	
 			userManager = new UserManager();
 	    	UserDao userDao = new UserDao();
@@ -108,9 +108,9 @@ public class ServiceFactory {
 		return recordManager;
 	}
 	
-	public static RecordFileManager getRecordFileManager() {
+	/*public static RecordFileManager getRecordFileManager() {
 		return recordFileManager;
-	}
+	}*/
 	
 	public static org.openforis.collect.android.management.MobileCodeListManager getCodeListManager() {
 		return codeListManager;
