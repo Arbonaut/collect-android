@@ -120,7 +120,7 @@ public class InputField extends Field implements TextWatcher {
         							validationMsg += ValidationMessageBuilder.createInstance().getValidationMessage((Attribute<?, ?>)nodeChange.getNode(), error);
         					}    				
         					Log.d("Validation message is: ", validationMsg);
-        					//Show dialog 
+        					//Show dialog
         					if (this instanceof TimeField || this instanceof DateField){
         						//Just change background for first time
         					}else{
