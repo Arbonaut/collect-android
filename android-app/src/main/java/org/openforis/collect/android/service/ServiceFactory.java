@@ -4,12 +4,13 @@ import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.database.MobileRecordDao;
 import org.openforis.collect.android.database.SQLDroidDataSource;
+import org.openforis.collect.android.management.MobileCodeListManager;
+import org.openforis.collect.android.management.MobileRecordManager;
 import org.openforis.collect.android.management.TaxonManager;
-//import org.openforis.collect.manager.RecordFileManager;
-import org.openforis.collect.manager.RecordManager;
 import org.openforis.collect.manager.SurveyManager;
 import org.openforis.collect.manager.UserManager;
 import org.openforis.collect.model.CollectSurveyContext;
+import org.openforis.collect.persistence.CodeListItemDao;
 import org.openforis.collect.persistence.SurveyDao;
 import org.openforis.collect.persistence.SurveyWorkDao;
 import org.openforis.collect.persistence.TaxonDao;
@@ -19,6 +20,7 @@ import org.openforis.collect.persistence.UserDao;
 import org.openforis.collect.service.CollectCodeListService;
 import org.openforis.idm.metamodel.validation.Validator;
 import org.openforis.idm.model.expression.ExpressionFactory;
+//import org.openforis.collect.manager.RecordFileManager;
 
 /**
  * 
@@ -28,13 +30,13 @@ import org.openforis.idm.model.expression.ExpressionFactory;
  */
 public class ServiceFactory {
 
-	private static /*Mobile*/RecordManager recordManager;
+	private static MobileRecordManager recordManager;
 	//private static RecordFileManager recordFileManager;
 	private static SurveyManager surveyManager;
 	private static UserManager userManager;
 	private static TaxonManager taxonManager;
 	private static SQLDroidDataSource dataSource;
-	private static org.openforis.collect.android.management.MobileCodeListManager codeListManager;
+	private static MobileCodeListManager codeListManager;
 
 	public static void init(Configuration config) {
 		init(config, true);
@@ -47,10 +49,12 @@ public class ServiceFactory {
 	    	if ( updateDBSchema ) {
 	    		DatabaseHelper.updateDBSchema();
 	    	}
-	    	org.openforis.collect.android.database.MobileCodeListItemDao codeListItemDao = new org.openforis.collect.android.database.MobileCodeListItemDao();
+	    	
+	    	CodeListItemDao codeListItemDao = new CodeListItemDao();
 			codeListItemDao.setDataSource(dataSource);
 	    	codeListManager = new org.openforis.collect.android.management.MobileCodeListManager(codeListItemDao);	    	
-	    	
+			//codeListManager = new CodeListManager();
+			
 			CollectCodeListService codeListService = new CollectCodeListService();
 			codeListService.setCodeListManager(codeListManager);
 			
@@ -69,9 +73,10 @@ public class ServiceFactory {
 	    	surveyManager.setCodeListManager(codeListManager);
 	    	
 	    	MobileRecordDao recordDao = new MobileRecordDao();
-	    	recordManager = new /*Mobile*/RecordManager(false);	    	
+	    	recordManager = new MobileRecordManager(false);	    	
 	    	recordDao.setDataSource(dataSource);
 	    	recordManager.setRecordDao(recordDao);
+	    	recordManager.setCodeListManager(codeListManager);
 	    	
 	    	//recordFileManager = new RecordFileManager();
 	    	
@@ -104,7 +109,7 @@ public class ServiceFactory {
 		return dataSource;
 	}
 	
-	public static /*Mobile*/RecordManager getRecordManager() {
+	public static MobileRecordManager getRecordManager() {
 		return recordManager;
 	}
 	
@@ -112,7 +117,7 @@ public class ServiceFactory {
 		return recordFileManager;
 	}*/
 	
-	public static org.openforis.collect.android.management.MobileCodeListManager getCodeListManager() {
+	public static MobileCodeListManager getCodeListManager() {
 		return codeListManager;
 	}
 	
