@@ -317,13 +317,6 @@ public class ApplicationManager extends BaseActivity {
 	 	    		int recordId = data.getIntExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));
 	 	    		if (recordId==getResources().getInteger(R.integer.unsavedRecordId)){//new record
 	 	    			String versionName = survey.getVersions().isEmpty() ? null: survey.getVersions().get(survey.getVersions().size()-1).getName();
-	 	    			Log.e("ApplicationManager.dataManager==null","=="+(ApplicationManager.dataManager==null));
-	 	    			Log.e("ApplicationManager.dataManager.getUser()","=="+(ApplicationManager.dataManager.getUser()==null)); 
-	 	    			Log.e("ApplicationManager.getSurvey()==null","=="+(ApplicationManager.getSurvey()==null));
-	 	    			Log.e("ApplicationManager.getSurvey().getSchema()==null","=="+(ApplicationManager.getSurvey().getSchema()==null));
-	 	    			Log.e("getRootEntityDefinition(ApplicationManager.currRootEntityId)==null","=="+(ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId)==null));
-	 	    			Log.e("ApplicationManager.currRootEntityId","=="+ApplicationManager.currRootEntityId);
-	 	    			Log.e("ServiceFactory.getRecordManager()","=="+(ServiceFactory.getRecordManager()==null));
 	 	    			ApplicationManager.currentRecord = ServiceFactory.getRecordManager().create(survey, ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(), ApplicationManager.dataManager.getUser(), versionName);
 	 	    			Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 	 					rootEntity.setId(ApplicationManager.currRootEntityId);
@@ -464,7 +457,7 @@ public class ApplicationManager extends BaseActivity {
         			//String sdcardPath = Environment.getExternalStorageDirectory().toString();
     	        	String selectedFormDefinitionFile = params[0];//ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
  
-    	        	SurveyManager surveyManager = ServiceFactory.getSurveyManager();
+    	        	MobileSurveyManager surveyManager = ServiceFactory.getSurveyManager();
     	        	File idmlFile = new File(selectedFormDefinitionFile);
     	        	
     	        	//ApplicationManager.pd.setMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
@@ -640,7 +633,7 @@ public class ApplicationManager extends BaseActivity {
     	        	String selectedFormDefinitionFile = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
     	        	Log.e("loadingForm","=FROM=="+selectedFormDefinitionFile);
     	        	
-    	        	SurveyManager surveyManager = ServiceFactory.getSurveyManager();
+    	        	MobileSurveyManager surveyManager = ServiceFactory.getSurveyManager();
     	        	File idmlFile = new File(sdcardPath, selectedFormDefinitionFile);
     	        	
     	        	//ApplicationManager.pd.setMessage(getResources().getString(R.string.unmarshallingSurveyMessage));

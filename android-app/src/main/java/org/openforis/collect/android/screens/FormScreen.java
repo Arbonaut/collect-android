@@ -69,8 +69,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -2685,7 +2687,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 		        public void onTextChanged(CharSequence s, int start, int before, int count){}
 		    });
-			ApplicationManager.putUIElement(numberField.getId(), numberField);
+			
+			ApplicationManager.putUIElement(numberField.getId(), numberField);			
 			FormScreen.this.ll.addView(numberField);
 		} else if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){			
 			if (checkForNullNode){
@@ -2783,4 +2786,5 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			this.ll.addView(summaryTableView);
 		}
     }
+    
 }

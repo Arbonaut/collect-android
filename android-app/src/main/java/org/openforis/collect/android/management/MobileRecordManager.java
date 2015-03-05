@@ -10,15 +10,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.database.MobileRecordDao;
+import org.openforis.collect.manager.RecordConverter;
+import org.openforis.collect.manager.RecordLockManager;
 import org.openforis.collect.metamodel.ui.UIOptions;
 import org.openforis.collect.metamodel.ui.UIOptions.Layout;
 import org.openforis.collect.model.CollectRecord;
+import org.openforis.collect.model.CollectRecord.Step;
 import org.openforis.collect.model.CollectSurvey;
+import org.openforis.collect.model.RecordLock;
 import org.openforis.collect.model.RecordSummarySortField;
 import org.openforis.collect.model.User;
-import org.openforis.collect.model.CollectRecord.Step;
+import org.openforis.collect.persistence.MissingRecordKeyException;
+import org.openforis.collect.persistence.RecordLockedException;
 import org.openforis.collect.persistence.RecordPersistenceException;
 import org.openforis.idm.metamodel.AttributeDefinition;
 import org.openforis.idm.metamodel.CodeAttributeDefinition;
@@ -41,15 +47,28 @@ import android.util.Log;
 
 public class MobileRecordManager extends org.openforis.collect.manager.RecordManager {
 	
-	private MobileRecordDao recordDao;
+	private static final int DEFAULT_LOCK_TIMEOUT_MILLIS = 60000;
 	
+	private MobileRecordDao recordDao;
 	private MobileCodeListManager codeListManager;
 	
+	private RecordConverter recordConverter;
+	private long lockTimeoutMillis;
 	private boolean lockingEnabled;
+	private RecordLockManager lockManager;
 	
 	public MobileRecordManager(boolean lockingEnabled) {
-		super(lockingEnabled);
+		super();
 		this.lockingEnabled = lockingEnabled;
+		lockTimeoutMillis = DEFAULT_LOCK_TIMEOUT_MILLIS;
+		recordConverter = new RecordConverter();
+		lockManager = new RecordLockManager(lockTimeoutMillis);
+	}
+	
+	public CollectRecord load(CollectSurvey survey, int recordId, Step step) {
+		CollectRecord record = recordDao.load(survey, recordId, step.getStepNumber());
+		recordConverter.convertToLatestVersion(record);
+		return record;
 	}
 	
 	/*public MobileRecordManager(boolean lockingEnabled, RecordDao recordDao) {
@@ -78,7 +97,6 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 
 	public void setCodeListManager(MobileCodeListManager codeListManager) {
 		this.codeListManager = codeListManager;
-		Log.e("codelistManager!!!!!!!!!!!!!!","=="+(this.codeListManager==null));
 	}
 	
 	@Override
@@ -87,6 +105,10 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		return this.loadSummaries(survey, rootEntity, (String[]) null);
 	}
 	
+	@Transactional
+	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity, String... keys) {
+		return recordDao.loadSummaries(survey, rootEntity, keys);
+	}
 	
 	public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
 			List<RecordSummarySortField> sortFields, String... keyValues) {
@@ -248,5 +270,57 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 	
 	public CollectRecord create(CollectSurvey survey, String rootEntityName, User user, String modelVersionName) throws RecordPersistenceException {
 		return create(survey, rootEntityName, user, modelVersionName, (String) null);
+	}
+	
+	@Transactional
+	public void save(CollectRecord record, String sessionId) throws RecordPersistenceException {
+		User user = record.getModifiedBy();
+		
+		record.updateRootEntityKeyValues();
+		checkAllKeysSpecified(record);
+		
+		record.updateEntityCounts();
+
+		Integer id = record.getId();
+		if(id == null) {
+			recordDao.insert(record);
+			id = record.getId();
+			//todo fix: concurrency problem may occur..
+			if ( isLockingEnabled() ) {
+				lockManager.lock(id, user, sessionId);
+			}
+		} else {
+			if ( isLockingEnabled() ) {
+				lockManager.checkIsLocked(id, user, sessionId);
+			}
+			recordDao.update(record);
+		}
+	}
+
+	@Transactional
+	public void delete(int recordId) throws RecordPersistenceException {
+		if ( isLockingEnabled() && lockManager.isLocked(recordId) ) {
+			RecordLock lock = lockManager.getLock(recordId);
+			User lockUser = lock.getUser();
+			throw new RecordLockedException(lockUser.getName());
+		} else {
+			recordDao.delete(recordId);
+		}
+	}
+	
+	private void checkAllKeysSpecified(CollectRecord record) throws MissingRecordKeyException {
+		List<String> rootEntityKeyValues = record.getRootEntityKeyValues();
+		Entity rootEntity = record.getRootEntity();
+		EntityDefinition rootEntityDefn = rootEntity.getDefinition();
+		List<AttributeDefinition> keyAttributeDefns = rootEntityDefn.getKeyAttributeDefinitions();
+		for (int i = 0; i < keyAttributeDefns.size(); i++) {
+			AttributeDefinition keyAttrDefn = keyAttributeDefns.get(i);
+			if ( rootEntity.isRequired(keyAttrDefn.getName()) ) {
+				String keyValue = rootEntityKeyValues.get(i);
+				if ( StringUtils.isBlank(keyValue) ) {
+					throw new MissingRecordKeyException();
+				}
+			}
+		}
 	}
 }

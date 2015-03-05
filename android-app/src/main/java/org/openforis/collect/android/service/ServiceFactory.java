@@ -6,11 +6,14 @@ import org.openforis.collect.android.database.MobileRecordDao;
 import org.openforis.collect.android.database.SQLDroidDataSource;
 import org.openforis.collect.android.management.MobileCodeListManager;
 import org.openforis.collect.android.management.MobileRecordManager;
+import org.openforis.collect.android.management.MobileSamplingDesignManager;
+import org.openforis.collect.android.management.MobileSpeciesManager;
+import org.openforis.collect.android.management.MobileSurveyManager;
 import org.openforis.collect.android.management.TaxonManager;
-import org.openforis.collect.manager.SurveyManager;
 import org.openforis.collect.manager.UserManager;
 import org.openforis.collect.model.CollectSurveyContext;
 import org.openforis.collect.persistence.CodeListItemDao;
+import org.openforis.collect.persistence.SamplingDesignDao;
 import org.openforis.collect.persistence.SurveyDao;
 import org.openforis.collect.persistence.SurveyWorkDao;
 import org.openforis.collect.persistence.TaxonDao;
@@ -32,7 +35,7 @@ public class ServiceFactory {
 
 	private static MobileRecordManager recordManager;
 	//private static RecordFileManager recordFileManager;
-	private static SurveyManager surveyManager;
+	private static MobileSurveyManager surveyManager;
 	private static UserManager userManager;
 	private static TaxonManager taxonManager;
 	private static SQLDroidDataSource dataSource;
@@ -63,7 +66,7 @@ public class ServiceFactory {
 	    	CollectSurveyContext collectSurveyContext = new CollectSurveyContext(expressionFactory, validator);
 			collectSurveyContext.setCodeListService(codeListService);
 	    	
-	    	surveyManager = new SurveyManager();
+	    	surveyManager = new MobileSurveyManager();
 	    	surveyManager.setCollectSurveyContext(collectSurveyContext);
 	    	SurveyDao surveyDao = new SurveyDao();
 	    	surveyDao.setSurveyContext(collectSurveyContext);
@@ -79,6 +82,7 @@ public class ServiceFactory {
 	    	recordManager.setCodeListManager(codeListManager);
 	    	
 	    	//recordFileManager = new RecordFileManager();
+
 	    	
 			userManager = new UserManager();
 	    	UserDao userDao = new UserDao();
@@ -98,6 +102,17 @@ public class ServiceFactory {
 	    	taxonManager.setTaxonVernacularNameDao(taxonVernNameDao);
 	    	
 			surveyManager.init();
+	    	surveyManager.setRecordDao(recordDao);
+	    	
+	    	MobileSpeciesManager speciesManager = new MobileSpeciesManager();
+	    	speciesManager.setTaxonDao(taxonDao);
+	    	speciesManager.setTaxonomyDao(taxonomyDao);
+	    	speciesManager.setTaxonVernacularNameDao(taxonVernNameDao);
+	    	surveyManager.setSpeciesManager(speciesManager);
+	    	
+	    	MobileSamplingDesignManager samplingDesignManager = new MobileSamplingDesignManager();
+	    	samplingDesignManager.setSamplingDesignDao(new SamplingDesignDao());
+	    	surveyManager.setSamplingDesignManager(samplingDesignManager);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -121,7 +136,7 @@ public class ServiceFactory {
 		return codeListManager;
 	}
 	
-	public static SurveyManager getSurveyManager() {
+	public static MobileSurveyManager getSurveyManager() {
 		return surveyManager;
 	}
 	

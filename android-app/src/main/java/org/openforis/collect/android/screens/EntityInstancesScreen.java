@@ -163,9 +163,13 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			Log.e("screenId","=="+this.getFormScreenId());*/
 			
 			EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity(this.getFormScreenId());
+			
 			if (EntityInstancesScreen.this.parentEntitySingleAttribute==null){
-				EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity2(this.getFormScreenId());
+				EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity2(this.getFormScreenId());				
 			}
+//			Log.e("path","=="+this.getFormScreenId());
+//			Log.e("parentEntitySingleAttribute","=="+parentEntitySingleAttribute.getName());
+//			Log.e("node","=="+nodeDef.getName());
 			if (ApplicationManager.currentRecord.getRootEntity().getId()!=nodeDef.getId()){
 				try{
 					Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
@@ -175,11 +179,25 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 					}
 				} catch (IllegalArgumentException e){
 					//Log.e("illegalargumentexception","parenEntity=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getParent());
+					Log.e("path","=="+this.getFormScreenId());
+					Log.e("parentEntitySingleAttribute","=="+parentEntitySingleAttribute.getName());
+					Log.e("node","=="+nodeDef.getName());
+					Log.e("EntityInstancesScreen.this.parentEntitySingleAttribute==null","=="+(EntityInstancesScreen.this.parentEntitySingleAttribute==null));
+					if (!this.getFormScreenId().equals("2,0;157,0;153,0"))
 					EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.parentEntitySingleAttribute.getParent();
-					Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
-					if (foundNode==null){
-						//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
+					if (this.getFormScreenId().equals("2,0;157,0;153,0")&&!EntityInstancesScreen.this.parentEntitySingleAttribute.getName().equals("cepee_dref_3cm_a_9_9cm"))
+					{
+						EntityInstancesScreen.this.parentEntitySingleAttribute = (Entity)EntityInstancesScreen.this.parentEntitySingleAttribute.get("f3_dref_3cm_a_9_9cm", 0);
+						
 					}
+					Log.e("parentEntitySingleAttribute","=="+parentEntitySingleAttribute.getName());
+					if (!EntityInstancesScreen.this.parentEntitySingleAttribute.getName().equals(nodeDef.getName())){
+						Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
+						if (foundNode==null){
+							//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
+						}
+					}
+					
 					//e.printStackTrace();
 				} catch (NullPointerException e){
 					e.printStackTrace();
