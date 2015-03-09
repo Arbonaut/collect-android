@@ -15,8 +15,12 @@ import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.service.ServiceFactory;
+import org.openforis.idm.metamodel.BooleanAttributeDefinition;
+import org.openforis.idm.metamodel.CodeAttributeDefinition;
+import org.openforis.idm.metamodel.CoordinateAttributeDefinition;
 import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.NodeDefinition;
+import org.openforis.idm.model.Code;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.EntityBuilder;
 import org.openforis.idm.model.Node;
@@ -78,7 +82,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
         super.onCreate(savedInstanceState);
         try{
         	Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
-    		
         	ApplicationManager.formScreenActivityList.add(this);
         	
     		this.startingIntent = getIntent();
@@ -163,9 +166,13 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			Log.e("screenId","=="+this.getFormScreenId());*/
 			
 			EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity(this.getFormScreenId());
+			
 			if (EntityInstancesScreen.this.parentEntitySingleAttribute==null){
-				EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity2(this.getFormScreenId());
+				EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.findParentEntity2(this.getFormScreenId());				
 			}
+			Log.e("path","=="+this.getFormScreenId());
+			Log.e("parentEntitySingleAttribute","=="+parentEntitySingleAttribute.getName());
+			Log.e("node","=="+nodeDef.getName());
 			if (ApplicationManager.currentRecord.getRootEntity().getId()!=nodeDef.getId()){
 				try{
 					Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
@@ -174,12 +181,24 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 						//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
 					}
 				} catch (IllegalArgumentException e){
-					//Log.e("illegalargumentexception","parenEntity=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getParent());
-					EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.parentEntitySingleAttribute.getParent();
-					Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
-					if (foundNode==null){
-						//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
-					}
+					//Log.e("illegalargumentexception0","parenEntity=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getParent());
+					
+					//if (!this.getFormScreenId().equals("2,0;157,0;153,0")&&!EntityInstancesScreen.this.parentEntitySingleAttribute.getName().equals("plot"))
+						EntityInstancesScreen.this.parentEntitySingleAttribute = EntityInstancesScreen.this.parentEntitySingleAttribute.getParent();
+					/*if (this.getFormScreenId().equals("2,0;157,0;153,0")&&!EntityInstancesScreen.this.parentEntitySingleAttribute.getName().equals("cepee_dref_3cm_a_9_9cm"))
+					{
+						EntityInstancesScreen.this.parentEntitySingleAttribute = (Entity)EntityInstancesScreen.this.parentEntitySingleAttribute.get("f3_dref_3cm_a_9_9cm", 0);
+						
+					} */
+					//Log.e("illegalargumentexception1","parenEntity=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getParent());
+					Log.e("parentEntitySingleAttribute","=="+parentEntitySingleAttribute.getName());
+					/*if (!EntityInstancesScreen.this.parentEntitySingleAttribute.getName().equals(nodeDef.getName())){
+						Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
+						if (foundNode==null){
+							//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute, ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
+						}
+					}*/
+					
 					//e.printStackTrace();
 				} catch (NullPointerException e){
 					e.printStackTrace();
@@ -187,6 +206,14 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}
 			Entity tempEntity = EntityInstancesScreen.this.parentEntitySingleAttribute;
 			boolean error = false;
+			/*for (int p=0;p<this.parentEntitySingleAttribute.getChildren().size();p++){
+				Log.e("Achild"+p,parentEntitySingleAttribute.getChildren().get(p).getId()+"=="+parentEntitySingleAttribute.getChildren().get(p).getName());
+			}*/
+			Log.e("path","=="+this.getFormScreenId());
+			Log.e("node","=="+nodeDef.getName());			
+			Log.e("getDefinition==null","=="+(ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId())==null));
+			Log.e("parentEntitySingleAttribute==null","=="+(EntityInstancesScreen.this.parentEntitySingleAttribute==null));
+			Log.e("parentEntitySingleAttribute","=="+parentEntitySingleAttribute.getName());
 			try {
 				EntityInstancesScreen.this.parentEntitySingleAttribute = (Entity) EntityInstancesScreen.this.parentEntitySingleAttribute.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(nodeDef.getId()).getName(), 0);
 				error = false;
@@ -213,7 +240,8 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 			}*/
 			EntityDefinition entityDef = (EntityDefinition)nodeDef;
 			Log.e("iloscInstancji",entityDef.getName()+"=="+EntityInstancesScreen.this.parentEntitySingleAttribute.getCount(entityDef.getName()));
-			for (int e=0;e<EntityInstancesScreen.this.parentEntitySingleAttribute.getCount(entityDef.getName());e++){
+			int instanceNo = EntityInstancesScreen.this.parentEntitySingleAttribute.getCount(entityDef.getName());
+			for (int e=0;e<instanceNo;e++){
 				SummaryList summaryListView = new SummaryList(EntityInstancesScreen.this, entityDef, 45, EntityInstancesScreen.this,e);
 				summaryListView.setOnClickListener(EntityInstancesScreen.this);
 				summaryListView.setId(nodeDef.getId());
@@ -475,14 +503,22 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 									//Log.e("pathTOSearchForParent","=="+path);
 									parentEntity = EntityInstancesScreen.this.findParentEntity(path);
 									try{
-										Log.e("EntityInstancesScreen","1ADDING ENTITY");
-										EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(EntityInstancesScreen.this.idmlId).getName());
+										Log.e("EntityInstancesScreen","1ADDING ENTITY"+EntityInstancesScreen.this.idmlId);
+										Entity newlyAddedEntity = EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(EntityInstancesScreen.this.idmlId).getName());
+										Log.e("newlyAddedEntity",newlyAddedEntity.getChildren().size()+"=="+newlyAddedEntity.getName());
+										for (int g=0;g<newlyAddedEntity.getChildren().size();g++){
+											Log.e("newlyAddedEntity"+newlyAddedEntity.getName(),"=="+newlyAddedEntity.getChildren().get(g).getName());
+										}
 										//Log.e("entity","added without exception");
 									} catch (IllegalArgumentException e){
 										//Log.e("entity","added in exception");
 										parentEntity = parentEntity.getParent();
-										Log.e("EntityInstancesScreen","2ADDING ENTITY");
-										EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(EntityInstancesScreen.this.idmlId).getName());
+										Log.e("EntityInstancesScreen","2ADDING ENTITY"+EntityInstancesScreen.this.idmlId);								
+										Entity newlyAddedEntity = EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(EntityInstancesScreen.this.idmlId).getName());
+										Log.e("newlyAddedEntity",newlyAddedEntity.getChildren().size()+"=="+newlyAddedEntity.getName());
+										for (int g=0;g<newlyAddedEntity.getChildren().size();g++){
+											Log.e("newlyAddedEntity"+newlyAddedEntity.getName(),"=="+newlyAddedEntity.getChildren().get(g).getName());
+										}
 									}
 									//Log.e("foundParentEntity","=="+parentEntity.getName());
 									parentEntity = EntityInstancesScreen.this.findParentEntity(EntityInstancesScreen.this.getFormScreenId());
@@ -700,36 +736,76 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     }*/
 	
 	private Entity findParentEntity(String path){
-		//Log.e("pathENTITYINSTANCE","=="+path);
+		Log.e("findParentEntity","================");
+		Log.e("pathENTITYINSTANCE","=="+path);
 		Entity parentEntity = ApplicationManager.currentRecord.getRootEntity();
 		String screenPath = path;
 		String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
 		try{
-			/*Log.e("entityPath.length","=="+entityPath.length);
+			Log.e("entityPath.length","=="+entityPath.length);
 			for (int i=0;i<entityPath.length-1;i++){
 				Log.e("i"+i,"=="+entityPath[i]);
-			}*/
+			}
 			for (int m=1;m<entityPath.length;m++){
 				String[] instancePath = entityPath[m].split(getResources().getString(R.string.valuesSeparator1));				
 				int id = Integer.valueOf(instancePath[0]);
 				int instanceNo = Integer.valueOf(instancePath[1]);
-				//Log.e("id"+id,"instanceNo"+instanceNo);
-				
+				Log.e("id"+id,"instanceNo"+instanceNo);
 				/*try{
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
 				} catch (IllegalArgumentException e){
 					parentEntity = parentEntity.getParent();
 					parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
 				}*/
-				/*if (parentEntity!=null)
+				if (parentEntity!=null)
 					Log.e("1returned parententity"+(m-1),"=="+parentEntity.getName());
 				else
-					Log.e("2returned parententity"+(m-1),"==NULL");*/
-				parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
-				/*if (parentEntity!=null)
+					Log.e("2returned parententity"+(m-1),"==NULL");
+				Log.e("iloscDzieci1",parentEntity.getName()+"=="+parentEntity.getChildren().size());
+				if (parentEntity.getChildren().size()==0){
+					Log.e("addEntity","==================");
+					
+					Log.e("iloscDzieci0",parentEntity.getName()+"=="+parentEntity.getChildren().size());
+					for (int p=0;p<parentEntity.getChildren().size();p++){
+						Log.e("child"+p,parentEntity.getChildren().get(p).getId()+"=="+parentEntity.getChildren().get(p).getName());
+					}
+					
+					//parentEntity = EntityBuilder.addEntity(parentEntity.getParent(), parentEntity.getName());
+					//parentEntity = EntityBuilder.createEntity(parentEntity.getParent(), parentEntity.getName());
+				}
+				for (int y=0;y<parentEntity.getDefinition().getChildDefinitions().size();y++){
+					NodeDefinition tempNodeDef = parentEntity.getDefinition().getChildDefinitions().get(y);
+					Log.e("iloscDzieci4",tempNodeDef.getName()+"=="+tempNodeDef.getClass());
+					if (tempNodeDef instanceof EntityDefinition){
+						Log.e("iloscDzieci3",parentEntity.getName()+"=="+tempNodeDef.getName());
+						if (parentEntity.getAll(tempNodeDef.getName()).size()==0){
+							EntityBuilder.addEntity(parentEntity, tempNodeDef.getName(), 0);	
+						}					
+						
+					} /*else if (tempNodeDef instanceof BooleanAttributeDefinition) {
+						EntityBuilder.addValue(parentEntity, tempNodeDef.getName(), false);
+					} else if (tempNodeDef instanceof CodeAttributeDefinition) {
+						EntityBuilder.addValue(parentEntity, tempNodeDef.getName(), new Code(""));
+						
+					} else if (tempNodeDef instanceof CoordinateAttributeDefinition) {
+						//EntityBuilder.addValue(parentEntity, tempNodeDef.getName(), false);
+					}*/
+				}	
+				Log.e("iloscDzieci2",parentEntity.getName()+"=="+parentEntity.getChildren().size());
+				for (int p=0;p<parentEntity.getChildren().size();p++){
+					Log.e("child"+p,parentEntity.getChildren().get(p).getId()+"=="+parentEntity.getChildren().get(p).getName());
+				}
+				parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);				
+				Log.e("lookingFOR","=="+ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName());
+				if (parentEntity!=null)
 					Log.e("3returned parententity"+m,"=="+parentEntity.getName());
 				else
-					Log.e("4returned parententity"+m,"==NULL");*/
+					Log.e("4returned parententity"+m,"==NULL");
+				if (parentEntity!=null){
+					Log.e("rodzic",parentEntity.getName()+"==="+parentEntity.getChildren().size());
+				} else {
+					Log.e("rodzic","NULL");
+				}
 			}			
 		} catch (ClassCastException e){
 			
@@ -744,6 +820,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	}
 	
 	private Entity findParentEntity2(String path){
+		//Log.e("findParentEntity2","================");
 		//Log.e("pathENTITYINSTANCE","=="+path);
 		Entity parentEntity = ApplicationManager.currentRecord.getRootEntity();
 		String screenPath = path;
@@ -768,9 +845,13 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				/*if (parentEntity!=null)
 					Log.e("5returned parententity"+(m-1),"=="+parentEntity.getName());
 				else
-					Log.e("6returned parententity"+(m-1),"==NULL");*/
+					Log.e("6returned parententity"+(m-1),"==NULL");
+				for (int p=0;p<parentEntity.getChildren().size();p++){
+					Log.e("child"+p,parentEntity.getChildren().get(p).getId()+"=="+parentEntity.getChildren().get(p).getName());
+				}*/
 				parentEntity = (Entity) parentEntity.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
-				/*if (parentEntity!=null)
+				/*Log.e("lookingFOR","=="+ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName());
+				if (parentEntity!=null)
 					Log.e("7returned parententity"+m,"=="+parentEntity.getName());
 				else
 					Log.e("8returned parententity"+m,"==NULL");*/

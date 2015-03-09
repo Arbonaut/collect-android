@@ -145,22 +145,15 @@ public class SummaryList extends UIElement {
 					isAtLeastOneKeyValue = false;
 				}
 			} else {
-				
-				keysLine += (entityInstanceNo+1);
+				if (entityDef.isMultiple())
+					keysLine += (entityInstanceNo+1);
 			}
 			
 			Log.e("keysLine0",threshold+"=="+keysLine);
 			
 			if (keysLine.length()>threshold){
 				keysLine = keysLine.substring(0,threshold-3)+"...";
-			} /*else {
-				Log.e("keysLine3",threshold+"=="+keysLine);
-				if (!keysLine.equals("")&&keysLine.length()>1){
-					keysLine = keysLine.substring(0,keysLine.length()-1);	
-				}				
-			}*/
-			
-			Log.e("keysLine5","=="+keysLine);
+			}
 			
 			//fetching details and their values
 			List<NodeDefinition> detailNodeDefsList = entityDef.getChildDefinitions();

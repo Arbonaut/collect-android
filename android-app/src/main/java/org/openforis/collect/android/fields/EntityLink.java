@@ -6,6 +6,7 @@ import org.openforis.idm.metamodel.EntityDefinition;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -30,8 +31,20 @@ public class EntityLink extends UIElement {
 	
 	public EntityLink(Context context, EntityDefinition entityDef, int threshold,
 			OnClickListener listener) {
-		super(context, entityDef);
+		//super(context, entityDef);
+		super(context, entityDef/*, (entityDef.isMultiple())?false:(entityDef.getChildDefinitions().size()==1)?(entityDef.getChildDefinitions().get(0) instanceof EntityDefinition)?true:false:false*/);
 		
+		/*Log.e("passed entity","=="+entityDef.getName());
+		if (!entityDef.isMultiple()){
+			if (entityDef.getChildDefinitions().size()==1){
+				if (entityDef.getChildDefinitions().get(0) instanceof EntityDefinition){
+					EntityDefinition innerEntityDef = (EntityDefinition)entityDef.getChildDefinitions().get(0);
+					Log.e("ENTITY",entityDef.getName()+"NESTED IN ENTITY"+innerEntityDef.getName());
+					entityDef = innerEntityDef;
+				}
+			}
+		}
+		Log.e("assigned entity","=="+entityDef.getName());*/
 		this.entityDefinition = entityDef;
 		
 		this.relativeLayout = new RelativeLayout(context);

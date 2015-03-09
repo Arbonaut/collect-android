@@ -884,7 +884,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
 	 								if ((tempNode==null)&&(FormScreen.this.currInstanceNo==0))
 	 									Log.e("FormScreen","0ADDING ENTITY");
-	 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());		 								
+	 									Entity newlyAddedEntity = EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());
+	 									Log.e("newlyAddedEntity",newlyAddedEntity.getChildren().size()+"=="+newlyAddedEntity.getName());
+	 									for (int g=0;g<newlyAddedEntity.getChildren().size();g++){
+	 										Log.e("newlyAddedEntity"+newlyAddedEntity.getName(),"=="+newlyAddedEntity.getChildren().get(g).getName());
+	 									}
 	 							}
  								refreshEntityScreen(2);
  								Toast.makeText(FormScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
@@ -923,17 +927,29 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			}
 			
 		} else  if (arg0 instanceof EntityLink){
+			Log.e("clickedOn","EntityLink");
 			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
-			this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)arg0,-1));
+			this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)arg0,-1));	
 		}
 	}
 	
 	private Intent prepareIntentForEntityInstancesList(EntityLink entityLink, int plotId){
 		Intent intent = new Intent(this,EntityInstancesScreen.class);
+		EntityDefinition entityDef = entityLink.getEntityDefinition();
+		Log.e("prepareForEntityInstances","=="+entityDef.getName());
+		/*if (!entityDef.isMultiple()){
+			if (entityDef.getChildDefinitions().size()==1){
+				if (entityDef.getChildDefinitions().get(0) instanceof EntityDefinition){
+					EntityDefinition innerEntityDef = (EntityDefinition)entityDef.getChildDefinitions().get(0);
+					Log.e("ENTITY",entityDef.getName()+"NESTED IN ENTITY"+innerEntityDef.getName());
+					entityDef = innerEntityDef;
+				}
+			}
+		}*/
 		if (!this.breadcrumb.equals("")){
 			String title = "";
 			String entityTitle = "";
-			if (entityLink.getEntityDefinition().isMultiple()){
+			if (entityDef.isMultiple()){
 				title = this.breadcrumb+getResources().getString(R.string.breadcrumbSeparator)+entityLink.getTitle();//+" "+(this.currInstanceNo+1);
 				entityTitle = entityLink.getTitle();//+" "+(this.currInstanceNo+1);
 			} else {
@@ -946,11 +962,12 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			intent.putExtra(getResources().getString(R.string.breadcrumb), entityLink.getTitle());
 			intent.putExtra(getResources().getString(R.string.screenTitle), entityLink.getTitle());
 		}
+		
 		intent.putExtra(getResources().getString(R.string.intentType), getResources().getInteger(R.integer.multipleEntityIntent));
-		intent.putExtra(getResources().getString(R.string.idmlId), entityLink.getId());
+		intent.putExtra(getResources().getString(R.string.idmlId), entityDef.getId());
 		intent.putExtra(getResources().getString(R.string.plotId), plotId);
 		intent.putExtra(getResources().getString(R.string.parentFormScreenId), this.getFormScreenId());
-        List<NodeDefinition> entityAttributes = entityLink.getEntityDefinition().getChildDefinitions();
+        List<NodeDefinition> entityAttributes = entityDef./*entityLink.getEntityDefinition().*/getChildDefinitions();
         int counter = 0;
         for (NodeDefinition formField : entityAttributes){
 			intent.putExtra(getResources().getString(R.string.attributeId)+counter, formField.getId());
@@ -1437,12 +1454,20 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			String path = this.getFormScreenId().substring(0,this.getFormScreenId().lastIndexOf(getResources().getString(R.string.valuesSeparator2)));
 			parentEntity = this.findParentEntity(path);
 			try{
-				Log.e("FormScreen","4ADDING ENTITY");
-				EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
+				Log.e("FormScreen","4ADDING ENTITY"+this.idmlId);
+				Entity newlyAddedEntity = EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
+				Log.e("newlyAddedEntity",newlyAddedEntity.getChildren().size()+"=="+newlyAddedEntity.getName());
+				for (int g=0;g<newlyAddedEntity.getChildren().size();g++){
+					Log.e("newlyAddedEntity"+newlyAddedEntity.getName(),"=="+newlyAddedEntity.getChildren().get(g).getName());
+				}
 			} catch (IllegalArgumentException e){
 				parentEntity = parentEntity.getParent();
-				Log.e("FormScreen","5ADDING ENTITY");
-				EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
+				Log.e("FormScreen","5ADDING ENTITY"+this.idmlId);
+				Entity newlyAddedEntity = EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
+				Log.e("newlyAddedEntity",newlyAddedEntity.getChildren().size()+"=="+newlyAddedEntity.getName());
+				for (int g=0;g<newlyAddedEntity.getChildren().size();g++){
+					Log.e("newlyAddedEntity"+newlyAddedEntity.getName(),"=="+newlyAddedEntity.getChildren().get(g).getName());
+				}
 			}
 			parentEntity = this.findParentEntity(this.getFormScreenId());
 		}
@@ -2539,6 +2564,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			}
 		}		
 		EntityDefinition entityDef = (EntityDefinition)nodeDef;
+
 		EntityLink entityLinkView = new EntityLink(FormScreen.this, entityDef, calcNoOfCharsFitInOneLine(),FormScreen.this);
 		entityLinkView.setOnClickListener(FormScreen.this);
 		entityLinkView.setId(nodeDef.getId());

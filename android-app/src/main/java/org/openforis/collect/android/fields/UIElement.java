@@ -40,7 +40,7 @@ public class UIElement extends TableLayout{
 	private boolean isRequired;
 
 	
-	public UIElement(Context context, NodeDefinition nodeDef){
+	public UIElement(Context context, NodeDefinition nodeDef/*, boolean isNestedEntity*/){
 		super(context);
 		
 		this.elemDefId = nodeDef.getId();
