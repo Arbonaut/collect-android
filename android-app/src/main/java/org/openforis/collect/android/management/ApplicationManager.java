@@ -457,7 +457,7 @@ public class ApplicationManager extends BaseActivity {
         			//String sdcardPath = Environment.getExternalStorageDirectory().toString();
     	        	String selectedFormDefinitionFile = params[0];//ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
  
-    	        	SurveyManager surveyManager = ServiceFactory.getSurveyManager();
+    	        	MobileSurveyManager surveyManager = ServiceFactory.getSurveyManager();
     	        	File idmlFile = new File(selectedFormDefinitionFile);
     	        	
     	        	//ApplicationManager.pd.setMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
@@ -633,7 +633,7 @@ public class ApplicationManager extends BaseActivity {
     	        	String selectedFormDefinitionFile = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
     	        	Log.e("loadingForm","=FROM=="+selectedFormDefinitionFile);
     	        	
-    	        	SurveyManager surveyManager = ServiceFactory.getSurveyManager();
+    	        	MobileSurveyManager surveyManager = ServiceFactory.getSurveyManager();
     	        	File idmlFile = new File(sdcardPath, selectedFormDefinitionFile);
     	        	
     	        	//ApplicationManager.pd.setMessage(getResources().getString(R.string.unmarshallingSurveyMessage));

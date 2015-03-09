@@ -15,7 +15,6 @@ import org.jooq.TableField;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.misc.Pair;
 import org.openforis.collect.android.service.ServiceFactory;
-import org.openforis.collect.manager.dataexport.BackupProcess;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectRecord.Step;
 import org.openforis.collect.model.CollectSurvey;
@@ -124,15 +123,15 @@ public class DataManager {
 	
 	public void saveAllRecordsToFile(String folderToSave){
 		try{
-			/*BackupProcess backup = new BackupProcess(ServiceFactory.getSurveyManager(), ServiceFactory.getRecordManager(), 
+			MobileBackupProcess backup = new MobileBackupProcess(ServiceFactory.getSurveyManager(), ServiceFactory.getRecordManager(), 
 					this.dataMarshaller, new File(folderToSave),
-					this.survey, this.survey.getSchema().getDefinitionById(ApplicationManager.currRootEntityId).getName(), new int[]{1,2,3});*/
-			BackupProcess backup = new BackupProcess(ServiceFactory.getSurveyManager(),
+					this.survey, this.survey.getSchema().getDefinitionById(ApplicationManager.currRootEntityId).getName(), new int[]{1,2,3});
+			/*BackupProcess backup = new BackupProcess(ServiceFactory.getSurveyManager(),
 					ServiceFactory.getRecordManager(),ServiceFactory.getRecordFileManager(),
 					this.dataMarshaller, new File(folderToSave),
-					this.survey, this.survey.getSchema().getDefinitionById(ApplicationManager.currRootEntityId).getName());
+					this.survey, this.survey.getSchema().getDefinitionById(ApplicationManager.currRootEntityId).getName());*/
 			backup.init();
-			backup.setIncludeIdm(false);
+			//backup.setIncludeIdm(false);
 			backup.call();
 		} catch (Exception e){
 			e.printStackTrace();
@@ -201,11 +200,6 @@ public class DataManager {
 			Log.e("ServiceFactory.getSurveyManager()==null","=="+(ServiceFactory.getSurveyManager()==null));
 			Log.e("formID","=="+formsList.get(position).getId());
 			ApplicationManager.setSurvey(formsList.get(position));
-			if (ApplicationManager.getSurvey()!=null){
-				Log.e("survey","!isNUULL");
-			} else {
-				Log.e("survey","isNUULL");
-			}
 			ServiceFactory.getSurveyManager().deleteSurvey(formsList.get(position).getId());
 			//List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
 			//ServiceFactory.getRecordManager().delete(recordsList.get(position).getId());	
