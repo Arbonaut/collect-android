@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 
 /**
  * 
@@ -17,12 +18,14 @@ import android.os.Environment;
  */
 public class CameraScreen extends Activity
 {
+	private static final String TAG = "CameraScreen";
 	private String photoPath;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 	    super.onCreate(savedInstanceState);
+	    Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
 	    this.photoPath = null;
 	    startCameraActivity();
 	}
@@ -40,6 +43,8 @@ public class CameraScreen extends Activity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		Log.i(getResources().getString(R.string.app_name),TAG+":onActivityResult");
+		Log.e("cameraResultCode",requestCode+"=="+resultCode);
 	    switch( resultCode )
 	    {
 	    	case 0:
@@ -52,6 +57,7 @@ public class CameraScreen extends Activity
 	}
 	protected void onPhotoTaken()
 	{
+		Log.i(getResources().getString(R.string.app_name),TAG+":onPhotoTaken");
 		Intent resultHolder = new Intent();
 		resultHolder.putExtra(getResources().getString(R.string.photoPath), this.photoPath);
 		setResult(getResources().getInteger(R.integer.photoTaken),resultHolder);

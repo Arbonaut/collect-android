@@ -305,7 +305,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	
 			ApplicationManager.pd.dismiss();
 			
-	    	Log.e("entityinstancesscreen","plotId"+this.plotId);
 	    	//this.plotId=12;
 	    	if (this.plotId>-1){
 	    		//opening specific plot	    		
@@ -797,14 +796,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 							EntityBuilder.addEntity(parentEntity, tempNodeDef.getName(), 0);	
 						}					
 						
-					} /*else if (tempNodeDef instanceof BooleanAttributeDefinition) {
-						EntityBuilder.addValue(parentEntity, tempNodeDef.getName(), false);
-					} else if (tempNodeDef instanceof CodeAttributeDefinition) {
-						EntityBuilder.addValue(parentEntity, tempNodeDef.getName(), new Code(""));
-						
-					} else if (tempNodeDef instanceof CoordinateAttributeDefinition) {
-						//EntityBuilder.addValue(parentEntity, tempNodeDef.getName(), false);
-					}*/
+					}
 				}	
 				Log.e("iloscDzieci2",parentEntity.getName()+"=="+parentEntity.getChildren().size());
 				for (int p=0;p<parentEntity.getChildren().size();p++){

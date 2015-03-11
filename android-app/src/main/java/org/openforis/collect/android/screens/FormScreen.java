@@ -164,8 +164,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			if (FormScreen.this.parentEntitySingleAttribute==null){
 				FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.getFormScreenId());
 				if (FormScreen.this.parentEntityMultipleAttribute==null
-						||
-					FormScreen.this.parentEntitySingleAttribute.equals(FormScreen.this.parentEntityMultipleAttribute)){
+						/*||
+					FormScreen.this.parentEntitySingleAttribute.equals(FormScreen.this.parentEntityMultipleAttribute)*/){
 					FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.parentFormScreenId);
 					Log.e("foundparentEntityMultipleAttribute2",parentEntityMultipleAttribute.getName()+"=="+FormScreen.this.parentFormScreenId);
 				}
