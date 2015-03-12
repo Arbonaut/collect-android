@@ -1,6 +1,7 @@
 package org.openforis.collect.android.fields;
 
 import org.openforis.collect.android.R;
+import org.openforis.collect.android.screens.FormScreen;
 import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.model.EntityBuilder;
 import org.openforis.idm.model.File;
@@ -25,9 +26,12 @@ public class PhotoField extends FileField implements OnClickListener{
 	
 	ImageView image;
 	
+	private static FormScreen form;
+	
 	public PhotoField(Context context, NodeDefinition nodeDef) {
 		super(context, nodeDef);
 		
+		PhotoField.form = (FormScreen)context;
 		this.image = new ImageView(context);
 		this.image.setLayoutParams(new LayoutParams(0,ViewGroup.LayoutParams.WRAP_CONTENT,(float) 1));
 		this.image.setOnClickListener(this);  
@@ -36,7 +40,7 @@ public class PhotoField extends FileField implements OnClickListener{
 	
 	public void setValue(Integer position, String photoName, String path, boolean isPhotoChanged)
 	{		
-		Log.e("photoName","=="+photoName);
+		Log.e("photoName(field)","=="+photoName);
 		if (photoName==null)
 			photoName = "";
 		java.io.File imageFile = new java.io.File(photoName);
@@ -60,7 +64,10 @@ public class PhotoField extends FileField implements OnClickListener{
 
 	@Override
 	public void onClick(View arg0) {
-		this.form.currentPictureField = this;
-		this.form.startCamera(this);
+		if (PhotoField.form.currentPictureField!=null)
+			Log.e("onClick1","=="+PhotoField.form.currentPictureField.getLabelText());
+		PhotoField.form.currentPictureField = this;
+		Log.e("onClick2","=="+PhotoField.form.currentPictureField.getLabelText());
+		PhotoField.form.startCamera(this);
 	}
 }

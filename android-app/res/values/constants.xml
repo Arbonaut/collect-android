@@ -13,6 +13,7 @@
     <string name="application_folder">/ofcm</string>
     <string name="codelists_folder">/ofcm/codelists</string>
     <string name="data_folder">/ofcm/data</string>
+    <string name="photo_folder">/ofcm/data/photos</string>
     <string name="exported_data_folder">/ofcm/data/exported</string>
     <string name="imported_data_folder">/ofcm/data/imported</string>
     <string name="logs_folder">/ofcm/logs</string>

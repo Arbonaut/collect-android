@@ -127,4 +127,8 @@ public class UIElement extends TableLayout{
 		}
 		return null;
 	}
+	
+	public NodeDefinition getNodeDefinition(){
+		return this.nodeDefinition;
+	}
 }

@@ -43,32 +43,32 @@ public class ValidationManager {
 				attribute = (RealAttribute)node;
 			}
 			validator = new Validator();
-			Log.e("attribute",attribute.getClass()+"=="+attribute.getName());
+			//Log.e("attribute",attribute.getClass()+"=="+attribute.getName());
 			results = validator.validate(attribute); 
-			Log.e("VALIDATION FOR NUMBER FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
+			/*Log.e("VALIDATION FOR NUMBER FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
 			Log.d("VALIDATION FOR NUMBER FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString());
-			Log.e("VALIDATION FOR NUMBER FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());		
+			Log.e("VALIDATION FOR NUMBER FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());	*/	
 		}else if (nodeDef instanceof CoordinateAttributeDefinition){
 			attribute = (CoordinateAttribute)node;
 			validator = new Validator();
 			results = validator.validate(attribute); 
-			Log.e("VALIDATION FOR COORDINATE FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
+			/*Log.e("VALIDATION FOR COORDINATE FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
 			Log.d("VALIDATION FOR COORDINATE FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString());
-			Log.e("VALIDATION FOR COORDINATE FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());		
+			Log.e("VALIDATION FOR COORDINATE FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());	*/	
 		}else if (nodeDef instanceof DateAttributeDefinition){
 			attribute = (DateAttribute)node;
 			validator = new Validator();
 			results = validator.validate(attribute); 
-			Log.e("VALIDATION FOR DATE FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
+			/*Log.e("VALIDATION FOR DATE FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
 			Log.d("VALIDATION FOR DATE FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString());
-			Log.e("VALIDATION FOR DATE FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());			
+			Log.e("VALIDATION FOR DATE FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());	*/		
 		}else if (nodeDef instanceof TimeAttributeDefinition){
 			attribute = (TimeAttribute)node;
 			validator = new Validator();
 			results = validator.validate(attribute); 
-			Log.e("VALIDATION FOR TIME FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
+			/*Log.e("VALIDATION FOR TIME FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
 			Log.d("VALIDATION FOR TIME FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString());
-			Log.e("VALIDATION FOR TIME FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());			
+			Log.e("VALIDATION FOR TIME FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());	*/		
 		}else if (nodeDef instanceof RangeAttributeDefinition){
 			
 		}else if (nodeDef instanceof BooleanAttributeDefinition){
@@ -76,7 +76,7 @@ public class ValidationManager {
 		}else{
 			
 		}
-		Log.i("VALIDATION","Attribute: " + attribute.getName() + " Attribute value is: " + attribute.getValue());
+		//Log.i("VALIDATION","Attribute: " + attribute.getName() + " Attribute value is: " + attribute.getValue());
 		return results;
 	}
 

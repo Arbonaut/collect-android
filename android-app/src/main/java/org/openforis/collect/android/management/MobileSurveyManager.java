@@ -280,7 +280,7 @@ public class MobileSurveyManager {
 	
 	@Transactional
 	public void importModel(CollectSurvey survey, File idml, DataSource dataSource) throws SurveyImportException {
-		surveyDao.importModel(survey, idml, dataSource);
+		surveyDao.importModel(survey/*, idml, dataSource*/);
 		addToCache(survey);
 	}
 	

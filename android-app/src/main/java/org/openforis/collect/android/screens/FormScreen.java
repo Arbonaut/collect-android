@@ -29,6 +29,7 @@ import org.openforis.collect.android.messages.ToastMessage;
 import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.manager.CodeListManager;
+import org.openforis.idm.metamodel.AttributeDefinition;
 import org.openforis.idm.metamodel.BooleanAttributeDefinition;
 import org.openforis.idm.metamodel.CodeAttributeDefinition;
 import org.openforis.idm.metamodel.CodeList;
@@ -53,11 +54,13 @@ import org.openforis.idm.model.File;
 import org.openforis.idm.model.IntegerRange;
 import org.openforis.idm.model.IntegerValue;
 import org.openforis.idm.model.Node;
+import org.openforis.idm.model.NumberValue;
 import org.openforis.idm.model.RealRange;
 import org.openforis.idm.model.RealValue;
 import org.openforis.idm.model.TaxonOccurrence;
 import org.openforis.idm.model.TextValue;
 import org.openforis.idm.model.Time;
+import org.openforis.idm.model.Value;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -135,6 +138,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     		this.currentPictureField = null;
     		this.currentCoordinateField = null;
     		this.photoPath = null;
+    		
     		this.latitude = null;
     		this.longitude = null;
     		
@@ -155,12 +159,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
 		try{
-			Log.e("screenID","=="+FormScreen.this.getFormScreenId());
 			FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId());
-			Log.e("FormScreen.this.parentEntitySingleAttribute==null","=="+(FormScreen.this.parentEntitySingleAttribute==null));
 			FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity(FormScreen.this.parentFormScreenId);
-			Log.e("foundparentEntityMultipleAttribute",FormScreen.this.getFormScreenId()+"=="+FormScreen.this.parentFormScreenId);
-			Log.e("foundparentEntityMultipleAttribute1",parentEntityMultipleAttribute.getName()+"=="+FormScreen.this.parentFormScreenId);
 			if (FormScreen.this.parentEntitySingleAttribute==null){
 				FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.getFormScreenId());
 				if (FormScreen.this.parentEntityMultipleAttribute==null
@@ -713,10 +713,11 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 						List<String> extensionsList = fileDef.getExtensions();
 						
 						if (extensionsList.contains("jpg")||extensionsList.contains("jpeg")){
+							Log.e("fileDef",fileDef.getName()+"=="+this.photoPath);
 							loadedValue = "";
 		    				if (!nodeDef.isMultiple()){
-		        				final PhotoField photoField= new PhotoField(FormScreen.this, nodeDef);
-		        				if (FormScreen.this.currentPictureField!=null){
+		        				final PhotoField photoField= new PhotoField(FormScreen.this, nodeDef);		 
+		        				if (FormScreen.this.currentPictureField!=null && FormScreen.this.currentPictureField.getLabelText().equals(photoField.getLabelText())){
 		    		    			photoField.setValue(0, FormScreen.this.photoPath, FormScreen.this.getFormScreenId(),false);
 		    		    			FormScreen.this.currentPictureField = null;
 		    		    			FormScreen.this.photoPath = null;
@@ -735,7 +736,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		        				FormScreen.this.ll.addView(photoField);
 		    				} else if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
 		        				final PhotoField photoField= new PhotoField(FormScreen.this, nodeDef);
-		        				if (FormScreen.this.currentPictureField!=null){
+		        				if (FormScreen.this.currentPictureField!=null && FormScreen.this.currentPictureField.getLabelText().equals(photoField.getLabelText())){
 		        					photoField.setValue(FormScreen.this.currInstanceNo, FormScreen.this.photoPath, FormScreen.this.parentFormScreenId,false);
 		    		    			FormScreen.this.currentPictureField = null;
 		    		    			FormScreen.this.photoPath = null;
@@ -1924,12 +1925,13 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				} else if (nodeDef instanceof FileAttributeDefinition){
 					FileAttributeDefinition fileDef = (FileAttributeDefinition)nodeDef;
 					List<String> extensionsList = fileDef.getExtensions();
-					
+					Log.e("isJPG","=="+(extensionsList.contains("jpg")||extensionsList.contains("jpeg")));
 					if (extensionsList.contains("jpg")||extensionsList.contains("jpeg")){
 						loadedValue = "";
+						Log.e("currentPhotoPath","=="+this.photoPath);
 	    				if (!nodeDef.isMultiple()){
 	        				final PhotoField photoField= new PhotoField(this, nodeDef);
-	        				if (this.currentPictureField!=null){
+	        				if (FormScreen.this.currentPictureField!=null && FormScreen.this.currentPictureField.getLabelText().equals(photoField.getLabelText())){
 	    		    			photoField.setValue(0, this.photoPath, FormScreen.this.getFormScreenId(),false);
 	    		    			this.currentPictureField = null;
 	    		    			this.photoPath = null;
@@ -1947,7 +1949,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        				this.ll.addView(photoField);
 	    				} else if (this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
 	        				final PhotoField photoField= new PhotoField(this, nodeDef);
-	        				if (this.currentPictureField!=null){
+	        				if (FormScreen.this.currentPictureField!=null && FormScreen.this.currentPictureField.getLabelText().equals(photoField.getLabelText())){
 	        					photoField.setValue(this.currInstanceNo, this.photoPath, this.parentFormScreenId,false);
 	    		    			this.currentPictureField = null;
 	    		    			this.photoPath = null;
@@ -2456,7 +2458,13 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	}
 	
     public void startCamera(PhotoField photoField){
-		Intent cameraIntent = new Intent(this, CameraActivity.class); 
+		Intent cameraIntent = new Intent(this, CameraActivity.class);
+		EntityDefinition rootEntityDef = (EntityDefinition)ApplicationManager.getSurvey().getSchema().getDefinitionById(ApplicationManager.currRootEntityId);
+		Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
+		AttributeDefinition keyAttrDef = rootEntityDef.getKeyAttributeDefinitions().get(0);		
+		Value keyAttributeValue = (Value)rootEntity.getValue(keyAttrDef.getName(),0);
+		cameraIntent.putExtra("plotId", convertValueToString(keyAttributeValue,keyAttrDef));
+		cameraIntent.putExtra("fieldName", photoField.getNodeDefinition().getName());
 		this.startActivityForResult(cameraIntent,getResources().getInteger(R.integer.cameraStarted));
 	}
     
@@ -2472,6 +2480,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 	    if (requestCode==getResources().getInteger(R.integer.cameraStarted)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.photoTaken)){
 	 	    		this.photoPath = data.getStringExtra(getResources().getString(R.string.photoPath));
+	 	    		Log.e("assignedPhotoPath","=="+this.photoPath);
 	 	    	}
 	 	    } else if (requestCode==getResources().getInteger(R.integer.internalGpsStarted)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.internalGpsLocationReceived)){
@@ -2813,4 +2822,111 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		}
     }
     
+	private String convertValueToString(Value value, NodeDefinition nodeDef){
+		String valueToReturn = null;
+		if (value!=null){
+			if (value instanceof TextValue){
+				TextValue textValue = (TextValue)value;
+				valueToReturn = textValue.getValue();
+			} else if (value instanceof NumberValue){
+				NumberValue<?> numberValue = (NumberValue<?>)value;
+				if (numberValue.getValue()==null){
+					valueToReturn = "";
+				} else {
+					if (((NumberAttributeDefinition) nodeDef).isInteger()){
+						valueToReturn = String.valueOf(numberValue.getValue().intValue());	
+					} else {
+						valueToReturn = String.valueOf(numberValue.getValue().doubleValue());
+					}	
+				}				
+			} else if (value instanceof BooleanValue){
+				BooleanValue booleanValue = (BooleanValue)value;
+				if (booleanValue.getValue()!=null)
+					valueToReturn = String.valueOf(booleanValue.getValue());
+			} else if (value instanceof Code){
+				Code codeValue = (Code)value;
+				CodeAttributeDefinition codeDef = (CodeAttributeDefinition)nodeDef;
+				if (codeValue.getCode()!=null && !codeValue.getCode().equals("null") && !codeValue.getCode().equals("")){
+					try{
+						valueToReturn = ApplicationManager.getSurvey().getCodeList(codeDef.getList().getName()).findItem(codeValue.getCode()).getLabel(null);//codeValue.getCode();		
+					} catch (NullPointerException e){
+						valueToReturn = codeValue.getCode();	
+					}
+				}
+			} else if (value instanceof RealRange){
+				RealRange rangeValue = (RealRange)value;
+				valueToReturn = rangeValue.getFrom()+getResources().getString(R.string.rangeSeparator)+rangeValue.getTo();
+			} else if (value instanceof IntegerRange){
+				IntegerRange rangeValue = (IntegerRange)value;
+				valueToReturn = rangeValue.getFrom()+getResources().getString(R.string.rangeSeparator)+rangeValue.getTo();
+			} else if (value instanceof Coordinate){
+				Coordinate coordinateValue = (Coordinate)value;
+				if (coordinateValue.getX()==null && coordinateValue.getY()==null){
+					valueToReturn = "";
+				} else if (coordinateValue.getX()==null) {
+					valueToReturn = getResources().getString(R.string.coordinateSeparator)+coordinateValue.getY();
+				} else if (coordinateValue.getY()==null) {
+					valueToReturn = coordinateValue.getX()+getResources().getString(R.string.coordinateSeparator);
+				} else {
+					valueToReturn = coordinateValue.getX()+getResources().getString(R.string.coordinateSeparator)+coordinateValue.getY();	
+				}
+			} else if (value instanceof Date){
+				Date dateValue = (Date)value;
+				String day = "";
+				String month = "";
+				String year = "";
+				if (dateValue.getDay()!=null)
+					day = dateValue.getDay().toString();
+				if (dateValue.getMonth()!=null)
+					month = dateValue.getMonth().toString();
+				if (dateValue.getYear()!=null)
+					year = dateValue.getYear().toString();
+				valueToReturn = year+getResources().getString(R.string.dateSeparator)+month+getResources().getString(R.string.dateSeparator)+day;
+			} else if (value instanceof Time){
+				Time timeValue = (Time)value;
+				String hour = "";
+				String minute = "";
+				if (timeValue.getHour()!=null){
+					hour = timeValue.getHour().toString();
+					if (timeValue.getHour()<10){
+						hour = "0"+hour;
+					}	
+				}					
+				if (timeValue.getMinute()!=null){
+					minute = timeValue.getMinute().toString();
+					if (timeValue.getMinute()<10){
+						minute = "0"+minute;
+					}
+				}					
+				valueToReturn = hour+getResources().getString(R.string.timeSeparator)+minute;
+			} else if (value instanceof TaxonOccurrence){
+				TaxonOccurrence taxonValue = (TaxonOccurrence)value;
+				String code = "";
+				String sciName = "";
+				String vernName = "";
+				String vernLang = "";
+				String langVariant = "";
+				if (taxonValue.getCode()!=null)
+					code = taxonValue.getCode();
+				if (taxonValue.getScientificName()!=null)
+					sciName = taxonValue.getScientificName();
+				if (taxonValue.getVernacularName()!=null)
+					vernName = taxonValue.getVernacularName();
+				if (taxonValue.getLanguageCode()!=null)
+					vernLang = taxonValue.getLanguageCode();
+				if (taxonValue.getLanguageVariety()!=null)
+					langVariant = taxonValue.getLanguageVariety();
+				valueToReturn = code+getResources().getString(R.string.taxonSeparator)+
+						sciName+getResources().getString(R.string.taxonSeparator)+
+						vernName+getResources().getString(R.string.taxonSeparator)+
+						vernLang+getResources().getString(R.string.taxonSeparator)+
+						langVariant;
+			} else if (value instanceof File){
+				File fileValue = (File)value;
+				if (fileValue.getFilename()!=null)
+					valueToReturn = fileValue.getFilename();
+			}
+		}
+		return valueToReturn;
+	}
 }

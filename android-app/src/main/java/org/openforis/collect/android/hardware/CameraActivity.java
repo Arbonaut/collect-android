@@ -27,13 +27,18 @@ public class CameraActivity extends Activity
 	    super.onCreate(savedInstanceState);
 	    Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
 	    this.photoPath = null;
-	    startCameraActivity();
+	    Intent startingIntent = getIntent();
+	    String keyAttrValue = startingIntent.getStringExtra("plotId");
+	    String fieldName = startingIntent.getStringExtra("fieldName");
+	    startCameraActivity((keyAttrValue==null)?"":keyAttrValue, fieldName);
 	}
 	
-	protected void startCameraActivity()
+	protected void startCameraActivity(String plotId, String fieldName)
 	{
 		Log.i(getResources().getString(R.string.app_name),TAG+":startCameraActivity");
-		this.photoPath = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.application_folder)+System.currentTimeMillis()+".jpg";
+		Log.e("fieldName",fieldName);
+		Log.e("plotID","=="+plotId);
+		this.photoPath = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.photo_folder)+"/"+plotId+"_"+fieldName+"_"+System.currentTimeMillis()+".jpg";
 	    File file = new File(this.photoPath);
 	    Uri outputFileUri = Uri.fromFile(file);
 	    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -45,7 +50,6 @@ public class CameraActivity extends Activity
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		Log.i(getResources().getString(R.string.app_name),TAG+":onActivityResult");
-		Log.e("cameraResultCode",requestCode+"=="+resultCode);
 		switch (resultCode)
 	    {
 	    	case 0:
@@ -56,6 +60,7 @@ public class CameraActivity extends Activity
 	    		break;
 	    }
 	}
+	
 	protected void onPhotoTaken()
 	{
 		Log.i(getResources().getString(R.string.app_name),TAG+":onPhotoTaken");

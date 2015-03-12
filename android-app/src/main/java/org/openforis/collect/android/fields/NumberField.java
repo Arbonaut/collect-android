@@ -188,8 +188,8 @@ public class NumberField extends InputField {
 			validateField(nodeChangeSet);
 
 		} catch (Exception e){
-			Log.e("Number value got exception", "Value is: " + value);
-			e.printStackTrace();
+			//Log.e("Number value got exception", "Value is: " + value);
+			//e.printStackTrace();
 		}		
 	}
 	

@@ -145,6 +145,8 @@ public class ApplicationManager extends BaseActivity {
 				folder.mkdirs();
 				folder = new File(sdcardPath+getResources().getString(R.string.data_folder));
 			    folder.mkdirs();
+				folder = new File(sdcardPath+getResources().getString(R.string.photo_folder));
+			    folder.mkdirs();
 				folder = new File(sdcardPath+getResources().getString(R.string.exported_data_folder));
 			    folder.mkdirs();
 			    folder = new File(sdcardPath+getResources().getString(R.string.imported_data_folder));

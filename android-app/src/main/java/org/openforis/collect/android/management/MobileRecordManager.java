@@ -286,13 +286,13 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 			recordDao.insert(record);
 			id = record.getId();
 			//todo fix: concurrency problem may occur..
-			if ( isLockingEnabled() ) {
+			/*if ( isLockingEnabled() ) {
 				lockManager.lock(id, user, sessionId);
-			}
+			}*/
 		} else {
-			if ( isLockingEnabled() ) {
+			/*if ( isLockingEnabled() ) {
 				lockManager.checkIsLocked(id, user, sessionId);
-			}
+			}*/
 			recordDao.update(record);
 		}
 	}
