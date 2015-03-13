@@ -1,5 +1,6 @@
 package org.openforis.collect.android.management;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.openforis.collect.persistence.CodeListItemDao;
@@ -10,10 +11,17 @@ import org.openforis.idm.metamodel.ExternalCodeListItem;
 import org.openforis.idm.metamodel.PersistedCodeListItem;
 
 public class MobileCodeListManager extends org.openforis.collect.manager.CodeListManager{
-	
-	
+		
 	private DatabaseExternalCodeListProvider provider;
 	private CodeListItemDao codeListItemDao;
+	private HashMap<CodeList,List<PersistedCodeListItem>> loadedCodeLists;
+	
+	public MobileCodeListManager(CodeListItemDao codeListItemDao){
+		super();
+		super.setCodeListItemDao(codeListItemDao);
+		this.setCodeListItemDao(codeListItemDao);
+		this.loadedCodeLists = new HashMap<CodeList,List<PersistedCodeListItem>>();
+	}
 	
 	public CodeListItemDao getCodeListItemDao() {
 		return codeListItemDao;
@@ -29,14 +37,7 @@ public class MobileCodeListManager extends org.openforis.collect.manager.CodeLis
 
 	public void setProvider(DatabaseExternalCodeListProvider provider) {
 		this.provider = provider;
-	}		
-	
-	public MobileCodeListManager(CodeListItemDao codeListItemDao){
-		super();
-		super.setCodeListItemDao(codeListItemDao);
-		this.setCodeListItemDao(codeListItemDao);
-	}
-	
+	}	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -57,12 +58,18 @@ public class MobileCodeListManager extends org.openforis.collect.manager.CodeLis
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends CodeListItem> List<T> loadRootItems(CodeList list) {
-		System.err.println("Load root items from mobile CodeListManager");
+		System.err.println("Load root items from mobile CodeListManager"+list.getName());
 		if ( list.isExternal() ) {
 			return (List<T>) provider.getRootItems(list);
 		} else if ( list.isEmpty() ) {
 			System.err.println("Finish loading root items from mobile CodeListManager from CodeListDao");
-			return (List<T>) codeListItemDao.loadRootItems(list);
+			if (this.loadedCodeLists.containsKey(list)){
+				System.err.println("LIST loaded"+list.getName());
+				return (List<T>)this.loadedCodeLists.get(list);
+			}
+			List<PersistedCodeListItem> loadedCodeListItems = (List<PersistedCodeListItem>) codeListItemDao.loadRootItems(list);
+			this.loadedCodeLists.put(list, loadedCodeListItems);
+			return (List<T>)loadedCodeListItems;
 		} else {
 			System.err.println("Finish loading items from mobile CodeListManager from list.getItems");
 			return list.getItems();

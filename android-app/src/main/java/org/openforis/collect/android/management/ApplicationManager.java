@@ -25,6 +25,7 @@ import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectSurvey;
 import org.openforis.collect.model.User;
+import org.openforis.idm.metamodel.CodeList;
 import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.LanguageSpecificText;
 import org.openforis.idm.metamodel.NodeDefinition;
@@ -185,6 +186,7 @@ public class ApplicationManager extends BaseActivity {
 	            ApplicationManager.points = new ArrayList<Pair<Integer,GeoPoint>>();
 	            ApplicationManager.isGpsOn = false;
 	            showFormsListScreen();
+	            
 			} catch (Exception e) {
 				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
 	    				Environment.getExternalStorageDirectory().toString()
@@ -351,7 +353,8 @@ public class ApplicationManager extends BaseActivity {
 	 	    		} else {
 	 	    			survey = ServiceFactory.getSurveyManager().getById(formId);
 	 	    			showRootEntitiesListScreen();
-	 	    		}	    		
+	 	    		}
+	 	    		codeListsLoadingThread.start();
 	 	    	} else if (resultCode==getResources().getInteger(R.integer.backButtonPressed)){
 	 	    		ApplicationManager.this.finish();
 	 	    	}
@@ -428,6 +431,30 @@ public class ApplicationManager extends BaseActivity {
     				+getResources().getString(R.string.log_file_extension));
 	    }
     }
+    
+	private static Thread codeListsLoadingThread = new Thread() {
+		@Override
+		public void run() {
+			try {
+				super.run();
+				Log.e("ApplicationManager.getSurvey()","=="+(ApplicationManager.getSurvey()==null));
+				//List<CollectSurvey> surveysList = ServiceFactory.surveyManager.getAll();
+				//for (CollectSurvey survey : surveysList){
+					List<CodeList> codeLists = survey.getCodeLists();
+		            Log.e("THREAD","loading=="+codeLists.size());
+		        	for (CodeList codeList : codeLists){
+		        		Log.e("THREAD","loading=="+codeList.getName());
+		        		if (!codeList.isExternal())
+		        			ServiceFactory.getCodeListManager().loadRootItems(codeList);
+		        	}
+				//}	        	            
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+
+			}
+		}
+	};
     
     private class loadingFormDefinition extends AsyncTask<String, Void, String> {
 
@@ -686,6 +713,8 @@ public class ApplicationManager extends BaseActivity {
     	ApplicationManager.isRecordListUpToDate = false;
     	ApplicationManager.dpiScale = getBaseContext().getResources().getDisplayMetrics().density;
     	ApplicationManager.isBackFromTaxonSearch = false;
+    	
+
 	}
 	
 	public static User getLoggedInUser(){
