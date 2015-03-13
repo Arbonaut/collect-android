@@ -22,7 +22,6 @@ import org.openforis.collect.android.misc.ViewBacktrack;
 import org.openforis.collect.android.screens.BaseActivity;
 import org.openforis.collect.android.screens.FormScreen;
 import org.openforis.collect.android.service.ServiceFactory;
-import org.openforis.collect.manager.SurveyManager;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectSurvey;
 import org.openforis.collect.model.User;
@@ -32,11 +31,9 @@ import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.metamodel.NodeLabel.Type;
 import org.openforis.idm.metamodel.Survey;
 import org.openforis.idm.model.Entity;
-import org.openforis.idm.model.Node;
 import org.osmdroid.util.GeoPoint;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -274,7 +271,6 @@ public class ApplicationManager extends BaseActivity {
     				+System.currentTimeMillis()
     				+getResources().getString(R.string.log_file_extension)));
     		thread.start();
-    	//	Log.e(this.TAG+"onCREATE","=="+(System.currentTimeMillis()-startTime)/1000+" s");
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -322,27 +318,14 @@ public class ApplicationManager extends BaseActivity {
 	 	    			ApplicationManager.currentRecord = ServiceFactory.getRecordManager().create(survey, ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(), ApplicationManager.dataManager.getUser(), versionName);
 	 	    			Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 	 					rootEntity.setId(ApplicationManager.currRootEntityId);
-
-						/*ApplicationManager.currentRecord = new CollectRecord(ApplicationManager.survey, versionName);//null;	 	    			
-	 					Entity rootEntity = ApplicationManager.currentRecord.createRootEntity(ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName());
-	 					rootEntity.setId(ApplicationManager.currRootEntityId);*/
-	 	    			Log.e("currentRecord.rootEntity",currentRecord.getRootEntity().getId()+"=="+currentRecord.getRootEntity().getName());
-	 	    			List<Node<? extends NodeDefinition>> list = ApplicationManager.currentRecord.getRootEntity().getChildren();
-	 	    			Log.e("iloscDzieci","=="+list.size());
-		 	   			for (int i=0;i<list.size();i++){
-		 	   				Log.e("root_child"+i,"=="+list.get(i).getName());
-		 	   			}
 	 	    		} else {//record from database
 	 	    			CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
-			        	//DataManager dataManager = new DataManager(collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
-	 	    			//Log.e("selectedRecordId","=="+recordId);
 	 	    			ApplicationManager.dataManager = new DataManager(this,collectSurvey,collectSurvey.getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
 			        	ApplicationManager.currentRecord = dataManager.loadRecord(recordId);
 			        	Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 	    				rootEntity.setId(ApplicationManager.currRootEntityId);
 	 	    		}
 	 	    		showFormRootScreen();
-    	            //DataManager dataManager = new DataManager((CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
     	            ApplicationManager.pd.dismiss();    	            
 	 	    	} else if (resultCode==getResources().getInteger(R.integer.backButtonPressed)){
 	 	    		if (ApplicationManager.getSurvey().getSchema().getRootEntityDefinitions().size()==1){
@@ -454,20 +437,15 @@ public class ApplicationManager extends BaseActivity {
     			try{
     				Log.i(getResources().getString(R.string.app_name),TAG+":loadingForm");
     	        	
-        			long startTimeParsing = System.currentTimeMillis();
-     	           	
-        			//String sdcardPath = Environment.getExternalStorageDirectory().toString();
     	        	String selectedFormDefinitionFile = params[0];//ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
  
     	        	MobileSurveyManager surveyManager = ServiceFactory.getSurveyManager();
     	        	File idmlFile = new File(selectedFormDefinitionFile);
     	        	
-    	        	//ApplicationManager.pd.setMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
     	        	changeMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
 
             		survey = surveyManager.unmarshalSurvey(idmlFile, false, false);
     	        	
-            		//ApplicationManager.pd.setMessage(getResources().getString(R.string.importingSurveyToDatabaseMessage));
             		changeMessage(getResources().getString(R.string.importingSurveyToDatabaseMessage));
             		            		
             		List<LanguageSpecificText> projectNamesList = survey.getProjectNames();
@@ -476,77 +454,18 @@ public class ApplicationManager extends BaseActivity {
             		} else {
             			survey.setName("defaultSurveyName");
             		}
-            		Log.e("surveyNAME","=="+survey.getName());
+
             		CollectSurvey loadedSurvey = surveyManager.get(survey.getName());
             		if (loadedSurvey==null){            			
     					survey = surveyManager.importModel(idmlFile, survey.getName(), false);
-            			//Debug.startMethodTracing("loadingSURVEY");
-            			//surveyManager.importModel(survey);
-            			//ServiceFactory.getCodeListManager().importCodeLists(survey, idmlFile);
-            			//Debug.stopMethodTracing();
             		} else {
             			survey = loadedSurvey;
             		}
-            		/*if (loadedSurvey==null){
-    					//survey = surveyManager.importModel(idmlFile, survey.getName(), false);
-            			//Debug.startMethodTracing("loadingSURVEY");
-            			changeMessage("reading file");
-            			//String marshalledIdmlFromFile = new Scanner( idmlFile, "UTF-8" ).useDelimiter("\\A").next();
-            	        BufferedReader reader = null;
-            	        String marshalledIdmlFromFile = "";
-            	        InputStream input = getAssets().open(sdcardPath + selectedFormDefinitionFile);
-            	        InputStream input = new FileInputStream(sdcardPath + selectedFormDefinitionFile);
-                        int size = input.available();
-                        Log.e("available","=="+size);
-                        byte[] buffer = new byte[size];
-                        input.read(buffer);
-                        input.close();
-             
-                        // byte buffer into a string
-                        marshalledIdmlFromFile = new String(buffer);
-            			changeMessage("importing model");
-            			surveyManager.importModel(survey, idmlFile, ServiceFactory.getDataSource());
-            			changeMessage("inserting code lists");
-            			ServiceFactory.getCodeListManager().importCodeLists(survey, idmlFile);
-            			//Debug.stopMethodTracing();*/
-					
-                	Log.e("parsingTIME","=="+(System.currentTimeMillis()-startTimeParsing));
-    				
     			} catch (Exception e){
     				e.printStackTrace();
     				survey = null;
     				return e.getLocalizedMessage();
     			}
-
-            	/*if (survey!=null){
-            		ApplicationManager.pd.dismiss();
-            		SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
-					String language = ApplicationManager.appPreferences.getString(getResources().getString(R.string.selectedLanguage), getResources().getString(R.string.defaultLanguage));			
-					boolean languageFound = false;
-					List<String> languageList = ApplicationManager.getSurvey().getLanguages();
-					if (ApplicationManager.getSurvey()!=null){	        		        
-			    		for (int i=0;i<languageList.size();i++){
-			    			if (languageList.get(i).equals(language)){
-			    				languageFound = true;
-			    			}
-			    		}
-			        }
-					if (!languageFound){
-						if (languageList.size()>0){
-							language = languageList.get(0);
-						} else {
-							language = "null";
-						}
-					}
-					editor = ApplicationManager.appPreferences.edit();
-					editor.putString(getResources().getString(R.string.selectedLanguage), language);
-					editor.commit();
-					ApplicationManager.selectedLanguage = language;
-            		showRootEntitiesListScreen();		    	            
-            	} else {
-            		ApplicationManager.pd.dismiss();
-            		showFormsListScreen();
-            	}*/
 	            
 			} catch (Exception e) {
 				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
@@ -556,19 +475,19 @@ public class ApplicationManager extends BaseActivity {
 	    				+System.currentTimeMillis()
 	    				+getResources().getString(R.string.log_file_extension));
 			}
-			return "Executed";
+			return "Executed correctly.";
         }      
 
         @Override
         protected void onPostExecute(String result) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationManager.this);
+			/*AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationManager.this);
 			builder.setTitle(getResources().getString(R.string.adding_survey_from_file_failure));
 			builder.setMessage(result);
 			builder.setNegativeButton(getResources().getString(R.string.okay), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					}
 			});
-			builder.show();
+			builder.show();*/
 
 			if (survey!=null){
         		ApplicationManager.pd.dismiss();
@@ -598,17 +517,6 @@ public class ApplicationManager extends BaseActivity {
         	} else {
         		ApplicationManager.pd.dismiss();
         		showFormsListScreen();
-        		/*AlertMessage.createPositiveDialog(ApplicationManager.this, false, getResources().getDrawable(R.drawable.warningsign),
-	 					getResources().getString(R.string.loadFormDefinitionTitle), getResources().getString(R.string.loadFormDefinitionMessage),
-	 					getResources().getString(R.string.okay),
-	 		    		new DialogInterface.OnClickListener() {
-	 						@Override
-	 						public void onClick(DialogInterface dialog, int which) {
-	 							//ApplicationManager.this.finish();
-	 							showFormsListScreen();
-	 						}
-	 					},
-	 					null).show();*/
         	}
         }
 
@@ -633,17 +541,14 @@ public class ApplicationManager extends BaseActivity {
         			String sdcardPath = Environment.getExternalStorageDirectory().toString();
 
     	        	String selectedFormDefinitionFile = ApplicationManager.appPreferences.getString(getResources().getString(R.string.formDefinitionPath), getResources().getString(R.string.defaultFormDefinitionPath));
-    	        	Log.e("loadingForm","=FROM=="+selectedFormDefinitionFile);
     	        	
     	        	MobileSurveyManager surveyManager = ServiceFactory.getSurveyManager();
     	        	File idmlFile = new File(sdcardPath, selectedFormDefinitionFile);
     	        	
-    	        	//ApplicationManager.pd.setMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
     	        	changeMessage(getResources().getString(R.string.unmarshallingSurveyMessage));
 
             		survey = surveyManager.unmarshalSurvey(idmlFile, false, false);
     	        	
-            		//ApplicationManager.pd.setMessage(getResources().getString(R.string.importingSurveyToDatabaseMessage));
             		changeMessage(getResources().getString(R.string.importingSurveyToDatabaseMessage));
             		            		
             		List<LanguageSpecificText> projectNamesList = survey.getProjectNames();
@@ -782,20 +687,6 @@ public class ApplicationManager extends BaseActivity {
     	ApplicationManager.dpiScale = getBaseContext().getResources().getDisplayMetrics().density;
     	ApplicationManager.isBackFromTaxonSearch = false;
 	}
-    
-	/*private boolean userExists(User user){
-		List<User> usersList = ServiceFactory.getUserManager().loadAll();
-		boolean userExists = false;
-		Log.e("iloscUserowWBazie","=="+usersList.size());
-		for (int i=0;i<usersList.size();i++){
-			Log.e("usersList.get(i).equals(user)","=="+usersList.get(i).equals(user));
-			if (usersList.get(i).equals(user)){
-	 			userExists = true;
-	 			break;
-	 		}
-	 	}
-		return userExists;
-	}*/
 	
 	public static User getLoggedInUser(){
 		return ApplicationManager.loggedInUser;
@@ -878,86 +769,6 @@ public class ApplicationManager extends BaseActivity {
 		}
 		return label;
 	}
-	
-/*
-    public static void updateUIElementsWithValidationResults(NodeChangeSet nodeChangeSet){
-    	List<NodeChange<?>> nodeChangesList = nodeChangeSet.getChanges();
-    	Log.e("Size of NodeChangeList","=="+nodeChangesList.size());
-    	for (NodeChange<?> nodeChange : nodeChangesList){
-    		Log.e("Does nodeChange.getNode() Not Null?","=="+(nodeChange.getNode()!=null));
-    		Log.e("Does nodeChange.getNode().getInternalId() Not Null","=="+(nodeChange.getNode().getInternalId()!=null));    		
-    		if (nodeChange.getNode().getInternalId() !=null){
-    			Log.e("Node ID","=="+nodeChange.getNode().getInternalId());
-    			//HERE WE CHECK DOES IT HAVE ANY ERRORS or WARNINGS
-    			if (nodeChange instanceof AttributeChange) {
-    				ValidationResults results = ((AttributeChange)nodeChange).getValidationResults();
-    				Log.e("VALIDATION FOR FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
-    				Log.d("VALIDATION FOR FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString()); 			
-    				//Make background color red or yellow if there is any errors/warnings
-//        			Log.e("ApplicationManager.getUIElement(nodeChange.getNode().getInternalId())!=null","=="+(ApplicationManager.getUIElement(nodeChange.getNode().getId())!=null));
-//        			UIElement uiEl = ApplicationManager.getUIElement(nodeChange.getNode().getInternalId());    				
-    				UIElement uiEl = ApplicationManager.getUIElement(nodeChange.getNode().getDefinition().getId());
-    				String validationMsg = "";
-    				if (uiEl != null){
-        				Log.e("UI element is: ", uiEl.nodeDefinition.getName() + " with ID: " + uiEl.nodeDefinition.getId());
-        				if (results.getErrors().size() > 0){
-        					uiEl.setBackgroundColor(Color.RED);
-        					for (ValidationResult error : results.getErrors()){
-        						validationMsg += ValidationMessageBuilder.createInstance().getValidationMessage((Attribute<?, ?>)nodeChange.getNode(), error) + " : ";
-        					}
-        					Log.d("Validation message is: ", validationMsg);
-        					//Show dialog 
-        					//TODO Make it works for time and date fields
-        					if (uiEl instanceof TimeField || uiEl instanceof DateField){
-        						//
-        					}else{
-//	        					AlertDialog alertDialog = getValidationMessageAlert(uiEl, "Error!", validationMsg);
-        						AlertDialog alertDialog = ((InputField)uiEl).getValidationMessageAlert("Error!", validationMsg);
-	        					alertDialog.show();        						
-        					}
-        				}
-        				else if (results.getWarnings().size() > 0){
-        					uiEl.setBackgroundColor(Color.YELLOW);
-        					for (ValidationResult warning : results.getWarnings()){
-        						validationMsg += ValidationMessageBuilder.createInstance().getValidationMessage((Attribute<?, ?>)nodeChange.getNode(), warning) + " : ";
-        					}
-        					Log.d("Validation message is: ", validationMsg);  
-        					//Show dialog 
-        					//TODO Make it works for time and date fields
-        					if (uiEl instanceof TimeField || uiEl instanceof DateField){
-        						//
-        					}else{
-//	        					AlertDialog alertDialog = getValidationMessageAlert(uiEl, "Warning!", validationMsg);
-        						AlertDialog alertDialog = ((InputField)uiEl).getValidationMessageAlert("Warning!", validationMsg);
-        						alertDialog.show();        						
-        					}        					
-        				}
-        				else
-        					uiEl.setBackgroundColor(Color.TRANSPARENT);
-        			}
-        			else{
-        				Log.e("ERROR when validate!","ApplicationManager cannot find node with id: "+nodeChange.getNode().getInternalId());
-        			} 
-    			}		
-    		}    		
-    	}
-    }
-    
-    */
-	
-//	private static AlertDialog getValidationMessageAlert(UIElement uiEl, String strTitle, String validationMsg){
-//		AlertDialog alertDialog = new AlertDialog.Builder(uiEl.getContext()).create();
-//		alertDialog.setTitle(strTitle);
-//		alertDialog.setMessage(validationMsg);
-//		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-//			public void onClick(DialogInterface dialog, int which) {
-//			 //Finish it here
-////				ApplicationManager.this.finish();
-//			 }
-//		 });
-//		    		
-//		return alertDialog;
-//	}
 
 	public static CodeListItemsStorage getStoredItems(Integer definitionId, Integer selectedPosition){
 		CodeListItemsStorage foundItemsStorage = null;

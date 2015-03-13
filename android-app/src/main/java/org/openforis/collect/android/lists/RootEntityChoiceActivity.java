@@ -53,33 +53,6 @@ public class RootEntityChoiceActivity extends BaseListActivity{
         	
         	this.activityLabel = (TextView)findViewById(R.id.lblList);
         	this.activityLabel.setText(getResources().getString(R.string.rootEntityChoiceListLabel));
-        	
-        	/*ProgressDialog pd = ProgressDialog.show(ClusterChoiceActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loading), true, false);
-            //populating available cluster list
-			JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
-			jdbcDao.getConnection();
-			
-			long startTime = System.currentTimeMillis();
-			recordsList = TabManager.getRecordManager().loadSummaries(TabManager.getSurvey(), "cluster");
-			Log.e("loadingSummaries","=="+(System.currentTimeMillis()-startTime)/1000);
-			clusterList = new String[recordsList.size()];
-			for (int i=0;i<recordsList.size();i++){
-				clusterList[i] = recordsList.get(i).getId()+" "+recordsList.get(i).getCreatedBy().getName()
-						+" "+recordsList.get(i).getCreationDate().toLocaleString();
-			}			
-			JdbcDaoSupport.close();
-			
-            this.adapter = new ArrayAdapter<String>(this, R.layout.localclusterrow, R.id.plotlabel, clusterList);
-    		this.setListAdapter(this.adapter);
-    		this.isFirstClick = false;
-    		this.firstClickPosition = -1;
-    		this.firstClickTime = 0;
-    		pd.dismiss();
-    		if (recordsList.size()==0){
-    			//no data saved in database
-    			setResult(getResources().getInteger(R.integer.clusterChoiceFailed), new Intent());
-    			ClusterChoiceActivity.this.finish();
-    		}*/
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()

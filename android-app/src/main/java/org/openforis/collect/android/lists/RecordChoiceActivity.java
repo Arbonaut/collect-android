@@ -49,8 +49,6 @@ import android.widget.TextView;
 public class RecordChoiceActivity extends BaseListActivity implements OnClickListener/*implements OnItemLongClickListener*/{
 	
 	private static final String TAG = "RecordChoiceActivity";
-
-	//private TextView activityLabel;
 	
 	private List<CollectRecord> recordsList;
 	private ArrayAdapter<String> adapter;
@@ -69,8 +67,6 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
         super.onCreate(savedInstanceState);
         Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //setContentView(R.layout.clusterchoiceactivity);
         try{
         	ApplicationManager.recordSelectionActivity = this;
         } catch (Exception e){
@@ -176,25 +172,15 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
         final int position = (int)adapInfo.id;
         switch (item.getItemId()) {
         case R.id.view:
-        	/*if (this.recordsList.size()==0){
-        		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingNewRecord));
-    			Intent resultHolder = new Intent();
-    			resultHolder.putExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));	
-    			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
-    			RecordChoiceActivity.this.finish();		
-    		} else {*/
-    			//if (position!=recordsList.size()){
-    			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecord));
-				Intent resultHolder = new Intent();
-				if (position<recordsList.size()){
-					resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
-				} else {
-					resultHolder.putExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));	
-				}			
-				setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
-				RecordChoiceActivity.this.finish();	
-    			//}
-    		//}
+			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecord));
+			Intent resultHolder = new Intent();
+			if (position<recordsList.size()){
+				resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
+			} else {
+				resultHolder.putExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));	
+			}			
+			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
+			RecordChoiceActivity.this.finish();	
             return true;
         case R.id.delete:
         	AlertMessage.createPositiveNegativeDialog(RecordChoiceActivity.this, false, getResources().getDrawable(R.drawable.warningsign),
@@ -224,25 +210,15 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 		super.onListItemClick(l, v, position, id);
 		Log.i(getResources().getString(R.string.app_name),TAG+":onListItemClick");
 		ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingSavedRecord));
-		/*if (this.recordsList.size()==0){
-			ApplicationManager.isRecordListUpToDate = false;
-			Intent resultHolder = new Intent();
+		ApplicationManager.isRecordListUpToDate = false;
+		Intent resultHolder = new Intent();
+		if (position<recordsList.size()){
+			resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
+		} else {
 			resultHolder.putExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));	
-			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
-			RecordChoiceActivity.this.finish();					
-		} else {*/
-			//if (position!=recordsList.size()){
-			ApplicationManager.isRecordListUpToDate = false;
-			Intent resultHolder = new Intent();
-			if (position<recordsList.size()){
-				resultHolder.putExtra(getResources().getString(R.string.recordId), this.recordsList.get(position).getId());	
-			} else {
-				resultHolder.putExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));	
-			}			
-			setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
-			RecordChoiceActivity.this.finish();	
-			//}
-		//}		
+		}			
+		setResult(getResources().getInteger(R.integer.clusterChoiceSuccessful),resultHolder);
+		RecordChoiceActivity.this.finish();	
 	}
     
 	@Override
@@ -351,11 +327,6 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 					for (int i=0;i<recordsList.size();i++){
 						CollectRecord record = recordsList.get(i);
 						List<String> keyValues = record.getRootEntityKeyValues();
-						Log.e("keyValuesSIZE","=="+keyValues.size());
-						for (int g=0;g<keyValues.size();g++){
-							//Log.e("attr"+g,"=="+keyAttr.get(g).getName());
-							Log.e("value"+g,"=="+keyValues.get(g));
-						}
 						clusterList[i] = /*record.getId()+"=="+*/(i+1)//+" "+record.getCreatedBy().getName()
 								+"\r\n"+record.getCreationDate();
 						if (record.getModifiedDate()!=null){
@@ -364,29 +335,19 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						CollectRecord currentRecord = null;
 						List<AttributeDefinition> attrDefs = null;
 						if (keyValues.size()>0){
-							Log.e("moreKEYS","=="+keyValues.size());
 							currentRecord = dataManager.loadRecord(record.getId());
 							attrDefs = currentRecord.getRootEntity().getDefinition().getKeyAttributeDefinitions();
-							Log.e("attrDefs.size","=="+attrDefs.size());
 						}
 						for (int j=0;j<keyValues.size();j++){
 							String key = keyValues.get(j);
-							Log.e("value","=="+key);
 							if (key!=null){
 								String label = attrDefs.get(j).getLabel(Type.INSTANCE, ApplicationManager.selectedLanguage);
-								Log.e("label","=="+label);
 								if (label!=null)
 									clusterList[i] += "\r\n"+label+": "+key;
 							}				
 						}
 						
 					}
-					/*if (RecordChoiceActivity.this.recordsList.size()==0){		
-						clusterList[0]=getResources().getString(R.string.addNewRecord)+" "+ApplicationManager.getLabel(RecordChoiceActivity.this.rootEntityDef);;
-					} else {
-						clusterList[recordsList.size()]="";
-						clusterList[recordsList.size()+1]=getResources().getString(R.string.addNewRecord)+" "+ApplicationManager.getLabel(RecordChoiceActivity.this.rootEntityDef);;
-					}*/
 					
 					Message msg = Message.obtain();
 			        msg.what = 1;

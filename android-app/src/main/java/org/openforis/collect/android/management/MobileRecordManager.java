@@ -14,17 +14,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.database.MobileRecordDao;
 import org.openforis.collect.manager.RecordConverter;
-import org.openforis.collect.manager.RecordLockManager;
 import org.openforis.collect.metamodel.ui.UIOptions;
 import org.openforis.collect.metamodel.ui.UIOptions.Layout;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectRecord.Step;
 import org.openforis.collect.model.CollectSurvey;
-import org.openforis.collect.model.RecordLock;
 import org.openforis.collect.model.RecordSummarySortField;
 import org.openforis.collect.model.User;
 import org.openforis.collect.persistence.MissingRecordKeyException;
-import org.openforis.collect.persistence.RecordLockedException;
 import org.openforis.collect.persistence.RecordPersistenceException;
 import org.openforis.idm.metamodel.AttributeDefinition;
 import org.openforis.idm.metamodel.CodeAttributeDefinition;
@@ -43,26 +40,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class MobileRecordManager extends org.openforis.collect.manager.RecordManager {
 	
-	private static final int DEFAULT_LOCK_TIMEOUT_MILLIS = 60000;
+	//private static final int DEFAULT_LOCK_TIMEOUT_MILLIS = 60000;
 	
 	private MobileRecordDao recordDao;
 	private MobileCodeListManager codeListManager;
 	
 	private RecordConverter recordConverter;
-	private long lockTimeoutMillis;
+	//private long lockTimeoutMillis;
 	private boolean lockingEnabled;
-	private RecordLockManager lockManager;
+	//private RecordLockManager lockManager;
 	
 	public MobileRecordManager(boolean lockingEnabled) {
 		super();
 		this.lockingEnabled = lockingEnabled;
-		lockTimeoutMillis = DEFAULT_LOCK_TIMEOUT_MILLIS;
+		//lockTimeoutMillis = DEFAULT_LOCK_TIMEOUT_MILLIS;
 		recordConverter = new RecordConverter();
-		lockManager = new RecordLockManager(lockTimeoutMillis);
+		//lockManager = new RecordLockManager(lockTimeoutMillis);
 	}
 	
 	public CollectRecord load(CollectSurvey survey, int recordId, Step step) {
@@ -70,18 +66,6 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		recordConverter.convertToLatestVersion(record);
 		return record;
 	}
-	
-	/*public MobileRecordManager(boolean lockingEnabled, RecordDao recordDao) {
-		super(lockingEnabled);
-		super.setRecordDao(recordDao);
-		this.setRecordDao(recordDao);
-	}*/
-	
-	/*public RecordManager(RecordDao recordDao){
-		super();
-		super.setRecordDao(recordDao);
-		this.setRecordDao(recordDao);
-	}*/
 	
 	public MobileRecordDao getRecordDao() {
 		return recordDao;
@@ -112,7 +96,6 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 	
 	public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
 			List<RecordSummarySortField> sortFields, String... keyValues) {
-		Log.e("MobileRecordDao","LoadSummaries");
 		List<CollectRecord> result = new ArrayList<CollectRecord>();
 		//preparing data for query
 		Schema schema = survey.getSchema();
@@ -132,11 +115,6 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		if ( step != null ) {
 			query += " AND " + OFC_RECORD.STEP + " = " + step.getStepNumber();
 		}
-		/*Log.e("keyValues!=null","=="+(keyValues!=null));
-		if ( keyValues != null ) {
-			String key = keyValues[1];
-			Log.e("keyValues[1]","=="+keyValues[1]);
-		}*/
 
 		query += " ORDER BY " + OFC_RECORD.ID; 
 		query += " LIMIT " + maxRecords;
@@ -274,8 +252,6 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 	
 	@Transactional
 	public void save(CollectRecord record, String sessionId) throws RecordPersistenceException {
-		User user = record.getModifiedBy();
-		
 		record.updateRootEntityKeyValues();
 		checkAllKeysSpecified(record);
 		
@@ -285,27 +261,20 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		if(id == null) {
 			recordDao.insert(record);
 			id = record.getId();
-			//todo fix: concurrency problem may occur..
-			/*if ( isLockingEnabled() ) {
-				lockManager.lock(id, user, sessionId);
-			}*/
 		} else {
-			/*if ( isLockingEnabled() ) {
-				lockManager.checkIsLocked(id, user, sessionId);
-			}*/
 			recordDao.update(record);
 		}
 	}
 
 	@Transactional
 	public void delete(int recordId) throws RecordPersistenceException {
-		if ( isLockingEnabled() && lockManager.isLocked(recordId) ) {
+		/*if ( isLockingEnabled() && lockManager.isLocked(recordId) ) {
 			RecordLock lock = lockManager.getLock(recordId);
 			User lockUser = lock.getUser();
 			throw new RecordLockedException(lockUser.getName());
-		} else {
+		} else {*/
 			recordDao.delete(recordId);
-		}
+		//}
 	}
 	
 	private void checkAllKeysSpecified(CollectRecord record) throws MissingRecordKeyException {

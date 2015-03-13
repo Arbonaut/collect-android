@@ -27,6 +27,7 @@ public class MobileCodeListItemDao extends org.openforis.collect.persistence.Cod
 		this.queriesList = new ArrayList<Object>();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected List<PersistedCodeListItem> loadChildItems(CodeList codeList, Integer parentItemId, ModelVersion version) {
 		List<PersistedCodeListItem> result = new ArrayList<PersistedCodeListItem>();
@@ -112,12 +113,10 @@ public class MobileCodeListItemDao extends org.openforis.collect.persistence.Cod
 		Survey survey = codeList.getSurvey();
 		item.removeAllLabels();
 		List<String> languages = survey.getLanguages();
-//		Log.e("Mobile DAO", "Set labels. Number of languages is: " + languages.size() + " SurveyId is " + survey.getId());
 		String[] labelColumnNames = {OFC_CODE_LIST.LABEL1.getName(), OFC_CODE_LIST.LABEL2.getName(), OFC_CODE_LIST.LABEL3.getName()};
 		for (int i = 0; i < languages.size(); i++) {
 			String lang = languages.get(i);
 			String label = crs.getString(crs.getColumnIndex(labelColumnNames[i]));
-//			Log.e("Mobile DAO", "Set label: " + label + " for language: " + lang);
 			item.setLabel(lang, label);
 			if(i>=3)
 				break;
@@ -128,40 +127,13 @@ public class MobileCodeListItemDao extends org.openforis.collect.persistence.Cod
 		Survey survey = codeList.getSurvey();
 		item.removeAllDescriptions();
 		List<String> languages = survey.getLanguages();
-//		Log.e("Mobile DAO", "Set description. Number of languages is: " + languages.size() + " SurveyId is " + survey.getId());
 		String[] descrColumnNames = {OFC_CODE_LIST.DESCRIPTION1.getName(), OFC_CODE_LIST.DESCRIPTION2.getName(), OFC_CODE_LIST.DESCRIPTION3.getName()};
 		for (int i = 0; i < languages.size(); i++) {
 			String lang = languages.get(i);
 			String label = crs.getString(crs.getColumnIndex(descrColumnNames[i]));
-//			Log.e("Mobile DAO", "Set description: " + label + " for language: " + lang);
 			item.setDescription(lang, label);
 			if(i>=3)
 				break;
 		}
 	}
-	
-	/*@Override
-	public void insert(List<PersistedCodeListItem> items) {
-		System.err.println("insert from MOBILE DAO2"+items.size());
-		if ( items != null && items.size() > 0 ) {
-			PersistedCodeListItem firstItem = items.get(0);
-			CodeList list = firstItem.getCodeList();
-			JooqFactory jf = getMappingJooqFactory(list);
-			int id = jf.nextId();
-			int maxId = id;
-			Insert<OfcCodeListRecord> query = jf.createInsertStatement();
-			Log.e("query","=="+query.toString());
-			BatchBindStep batch = jf.batch(query);
-			for (PersistedCodeListItem item : items) {
-				if ( item.getSystemId() == null ) {
-					item.setSystemId(id++);
-				}
-				Object[] values = jf.extractValues(item);
-				batch.bind(values);
-				maxId = Math.max(maxId, item.getSystemId());
-			}
-			batch.execute();
-			jf.restartSequence(maxId + 1);
-		}
-	}*/
 }

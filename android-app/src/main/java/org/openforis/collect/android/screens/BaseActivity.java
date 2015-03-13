@@ -72,7 +72,6 @@ public class BaseActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater menuInflater = getMenuInflater();
-        Log.e("onCreateOptionsMenu","menu");
         menuInflater.inflate(R.layout.menu, menu);
         return true;
     }
@@ -357,14 +356,9 @@ public class BaseActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {    	
 	    super.onActivityResult(requestCode, resultCode, data);
 	    try{
-	    	Log.e("onActivityResult","BaseActivity");
-	    	Log.e("requestCode"+requestCode,"resultCode"+resultCode);
-	    	Log.e("P"+getResources().getInteger(R.integer.chooseFormFile),"K"+getResources().getInteger(R.integer.formFileChosen));
 	    	if (requestCode==getResources().getInteger(R.integer.chooseSpeciesListFile)
 	    			&&
 	    		resultCode==getResources().getInteger(R.integer.speciesListFileChosen)){
-				Log.e("choosing species list","=========================");
-				Log.e("CHOSEN FILE","=="+data.getStringExtra(getResources().getString(R.string.speciesListFileName)));
 				String selectedFileName = data.getStringExtra(getResources().getString(R.string.speciesListFileName));
 				if (selectedFileName.endsWith(".csv")){
 					/*DatabaseHelper.copyDataBase(selectedFileName);

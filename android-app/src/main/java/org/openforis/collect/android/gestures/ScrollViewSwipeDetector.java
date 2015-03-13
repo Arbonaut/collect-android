@@ -36,7 +36,6 @@ public class ScrollViewSwipeDetector implements View.OnTouchListener {
  }
 
  public boolean onTouch(View v, MotionEvent event) {
-	 Log.e("onTouch","=======================");
   switch(event.getAction()){
   case MotionEvent.ACTION_DOWN: {
    downX = event.getX();

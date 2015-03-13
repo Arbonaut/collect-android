@@ -36,8 +36,6 @@ public class CameraActivity extends Activity
 	protected void startCameraActivity(String plotId, String fieldName)
 	{
 		Log.i(getResources().getString(R.string.app_name),TAG+":startCameraActivity");
-		Log.e("fieldName",fieldName);
-		Log.e("plotID","=="+plotId);
 		this.photoPath = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.photo_folder)+"/"+plotId+"_"+fieldName+"_"+System.currentTimeMillis()+".jpg";
 	    File file = new File(this.photoPath);
 	    Uri outputFileUri = Uri.fromFile(file);

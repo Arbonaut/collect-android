@@ -11,7 +11,6 @@ import org.openforis.idm.model.Node;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -40,7 +39,6 @@ public class PhotoField extends FileField implements OnClickListener{
 	
 	public void setValue(Integer position, String photoName, String path, boolean isPhotoChanged)
 	{		
-		Log.e("photoName(field)","=="+photoName);
 		if (photoName==null)
 			photoName = "";
 		java.io.File imageFile = new java.io.File(photoName);
@@ -64,10 +62,7 @@ public class PhotoField extends FileField implements OnClickListener{
 
 	@Override
 	public void onClick(View arg0) {
-		if (PhotoField.form.currentPictureField!=null)
-			Log.e("onClick1","=="+PhotoField.form.currentPictureField.getLabelText());
 		PhotoField.form.currentPictureField = this;
-		Log.e("onClick2","=="+PhotoField.form.currentPictureField.getLabelText());
 		PhotoField.form.startCamera(this);
 	}
 }

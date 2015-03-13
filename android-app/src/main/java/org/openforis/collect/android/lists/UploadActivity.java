@@ -92,11 +92,6 @@ public class UploadActivity extends Activity{
     			    	//CheckBox overwrite;
     			    	pd = ProgressDialog.show(UploadActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.uploadingDataToServerMessage));
     			    	for (int i=0;i<adapter.getCount();i++){
-    			    		Log.e("filesToSend", adapter.getCount()+"=="+filesCount);
-    			    		//LinearLayout ll = (LinearLayout)lv.getChildAt(i);
-    			    		//upload = (CheckBox)ll.getChildAt(1);
-    			    		//overwrite = (CheckBox)ll.getChildAt(2);
-    			    		//if (upload.isChecked()){
     			    		if (adapter.checkList.get(i)[0]){
     			    			(new SendData()).execute(adapter.getItem(i).getName(),adapter.checkList.get(i)[1]);
     		    				filesCount++;	
@@ -104,24 +99,7 @@ public class UploadActivity extends Activity{
     			    	}
     			    	if (filesCount==0){
     			    		pd.dismiss();
-    			    	}
-    			    	/*
-    			    	pd = ProgressDialog.show(UploadActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.uploadingDataToServerMessage));
-    			    	
-    		        	SparseBooleanArray checkedItems = lv.getCheckedItemPositions();
-    			    	for (int i=0;i<lv.getChildCount();i++){
-    			    		if (checkedItems.get(i)){
-    			    			try {
-    			    				(new SendData()).execute(lv.getItemAtPosition(i).toString());
-    			    				filesCount++;
-    							} catch (Exception e) {
-    								e.printStackTrace();
-    							}
-    			    		}
-    			    	}
-    			    	if (filesCount==0){
-    			    		pd.dismiss();
-    			    	}*/
+    			    	}    	
     			    }
     		    });
         	} else {        		
@@ -155,36 +133,18 @@ public class UploadActivity extends Activity{
 		try {
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 			changeBackgroundColor(backgroundColor);
-			
-			/*File dataFilesFolder = new File(path);
-			File[] dataFiles = dataFilesFolder.listFiles();
-			int filesNo = dataFiles.length;
-			filesList = new String[filesNo];
-			this.selections = new Boolean[filesNo];
-			for (int i=0;i<filesNo;i++) {
-				File inFile = dataFiles[i];
-		        filesList[i] = inFile.getName();
-		        this.selections[i] = false;
-			}
-			if (filesNo==0){
-				this.activityLabel.setText(getResources().getString(R.string.noDataToUpload)+" "+getResources().getString(R.string.exported_data_folder));
-			}*/
+
 			dataFilesList = new ArrayList<DataFile>();
 			File dataFilesFolder = new File(path);
 			File[] dataFiles = dataFilesFolder.listFiles();
 			int filesNo = dataFiles.length;
 			for (int i=0;i<filesNo;i++) {
-		        //filesList[i] = serverFiles.get(i);
 		        dataFilesList.add(new DataFile(dataFiles[i].getName(),"xml_icon"));
 			}
 			if (filesNo==0){
 				this.activityLabel.setText(getResources().getString(R.string.noDataToUpload));
 			}
-			//int layout = (backgroundColor!=Color.WHITE)?R.layout.selectableitem_white:R.layout.selectableitem_black;
 			int layout = (backgroundColor!=Color.WHITE)?R.layout.upload_list_item_white:R.layout.upload_list_item_black;
-			//this.adapter = new ArrayAdapter<String>(this,layout,filesList);
-			/*this.adapter = new ArrayAdapter<String>(this, layout, R.id.lblFileName, filesList);
-			this.setListAdapter(this.adapter);*/
 			this.adapter = new FileListAdapter(this, layout, dataFilesList, "upload");
 			lv.setAdapter(this.adapter);
 		} catch (Exception e){
@@ -197,12 +157,6 @@ public class UploadActivity extends Activity{
         }
 	
     }
-    
-    /*@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Log.i(getResources().getString(R.string.app_name),TAG+":onListItemClick");
-	}*/
     
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
@@ -225,38 +179,11 @@ public class UploadActivity extends Activity{
 		this.columnLabel.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
     }
     
-    /*public void postData(String sendData) {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(getResources().getString(R.string.serverAddress));
-        
-        try {
-            StringEntity se = new StringEntity(sendData);
-            httppost.setEntity(se);
-            HttpResponse response = httpclient.execute(httppost);
-            Log.e("response","=="+response.getEntity().getContent().toString());
-        } 
-        catch (ClientProtocolException e) 
-        {
-            Log.e("ClientProtocolException","==");     
-            e.printStackTrace();
-        } 
-        catch (IOException e) 
-        {
-            Log.e("IOException","==");
-            e.printStackTrace();
-        }
-    }*/
-    
     private static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line = null;
         while ((line = reader.readLine()) != null) {
-        	/*if (line.contains("<value>")&&line.contains("</value>")){
-        		line = line.substring(line.indexOf("<value>")+7,line.indexOf("</value>"));
-        	} else if (line.contains("<code>")&&line.contains("<code>")){
-        		line = line.substring(line.indexOf("<code>")+6,line.indexOf("</code>"));        		
-        	}*/
         	sb.append(line).append("\n");
         }
         return sb.toString();
@@ -296,7 +223,6 @@ public class UploadActivity extends Activity{
          */
         protected void onPostExecute(Object objResult) {
         	filesCount--;
-        	Log.e("file","SENT");
             if(objResult != null && objResult instanceof String) {
                 String result = (String) objResult;
 

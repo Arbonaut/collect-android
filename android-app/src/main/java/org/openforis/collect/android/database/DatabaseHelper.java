@@ -19,7 +19,6 @@ import liquibase.exception.DatabaseException;
 import liquibase.logging.LogFactory;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
-import org.openforis.collect.android.R;
 import org.openforis.collect.android.config.Configuration;
 import org.openforis.collect.android.database.liquibase.AndroidLiquibaseLogger;
 import org.openforis.collect.android.service.ServiceFactory;
@@ -28,7 +27,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 //import android.util.Log;
-import android.util.Log;
 
 /**
  * 
@@ -185,7 +183,6 @@ public abstract class DatabaseHelper {
 	}
 	
 	public static void importSpeciesFileList(String pathToFileOnSdcard) throws IOException{
-		Log.e("DatabaseHelper","importing species list from file to database"+pathToFileOnSdcard);
 		FileInputStream file = new FileInputStream(pathToFileOnSdcard);
 		 
 		//Construct BufferedReader from InputStreamReader
@@ -193,7 +190,7 @@ public abstract class DatabaseHelper {
 	 
 		String line = null;
 		while ((line = br.readLine()) != null) {
-			String[] speciesData = line.split(DatabaseHelper.contex.getResources().getString(R.string.speciesListSeparator));
+			//String[] speciesData = line.split(DatabaseHelper.contex.getResources().getString(R.string.speciesListSeparator));
 			insertSpeciesToDatabase();
 		}
 	 

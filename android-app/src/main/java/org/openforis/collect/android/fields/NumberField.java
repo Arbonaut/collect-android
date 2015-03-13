@@ -21,7 +21,6 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -55,7 +54,6 @@ public class NumberField extends InputField {
 	    });
 		
 		this.txtBox = new EditText(context);
-		//this.setHint(hintText);
 		this.txtBox.setLayoutParams(new LayoutParams(0,ViewGroup.LayoutParams.WRAP_CONTENT,(float) 2));
 		this.numberNodeDef = (NumberAttributeDefinition)nodeDef;
 		this.type = numberNodeDef.getType().toString();
@@ -69,8 +67,6 @@ public class NumberField extends InputField {
 		    	//Get current settings about software keyboard for text fields
 		    	if(hasFocus){
 			    	if(this.getClass().toString().contains("NumberField")){
-				    	//Map<String, ?> settings = ApplicationManager.appPreferences.getAll();
-				    	//Boolean valueForNum = (Boolean)settings.get(getResources().getString(R.string.showSoftKeyboardOnNumericField));
 				    	boolean valueForNum = false;				   
 				    	if (ApplicationManager.appPreferences!=null){
 				    		valueForNum = ApplicationManager.appPreferences.getBoolean(getResources().getString(R.string.showSoftKeyboardOnNumericField), false);
@@ -87,8 +83,6 @@ public class NumberField extends InputField {
 				    		NumberField.this.txtBox.setInputType(InputType.TYPE_NULL);
 				    	}
 			    	}
-		    	} else{
-		    		//Log.e("FOCUS","LOST NUMBER");
 		    	}
 		    }
 	    });
@@ -120,14 +114,8 @@ public class NumberField extends InputField {
 	}
 	
 	public void validateResult(){
-		Log.e("validate","numberField");
 		String value = NumberField.this.txtBox.getText().toString();
 		if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
-			Log.e("form.getFormScreenId()","=="+form.getFormScreenId());
-			Log.e("NumberField.this.findParentEntity(form.getFormScreenId())==null","=="+(NumberField.this.findParentEntity(form.getFormScreenId())==null));
-			Log.e("findParentEntity(form.getFormScreenId())","=="+NumberField.this.findParentEntity(form.getFormScreenId()).getName());
-			Log.e("nodeDefinition.getName()","=="+NumberField.this.nodeDefinition.getName());
-			Log.e("form.currInstanceNo","=="+form.currInstanceNo);
 			Node<? extends NodeDefinition> node = NumberField.this.findParentEntity(form.getFormScreenId()).get(NumberField.this.nodeDefinition.getName(), form.currInstanceNo);
 			ValidationResults results = ValidationManager.validateField(node);
 			if(results.getErrors().size() > 0 || results.getFailed().size() > 0){
@@ -142,7 +130,6 @@ public class NumberField extends InputField {
 	
 	public void setValue(int position, String value, String path, boolean isTextChanged)
 	{
-		Log.e("setVALUE","=="+value);
 		NodeChangeSet nodeChangeSet = null;
 		try{
 			if (!isTextChanged)
@@ -154,14 +141,8 @@ public class NumberField extends InputField {
 			if (node!=null){
 				if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
 					if (((NumberAttributeDefinition) this.nodeDefinition).isInteger()){
-//						IntegerAttribute intAttr = (IntegerAttribute)node;
-//						intAttr.setValue(new IntegerValue(Integer.valueOf(value), null));
-						//Log.d("Number(int) field with Id: ",node.getDefinition().getId() + " is updating. Node name is: " + node.getName() + " Node ID is: " + node.getInternalId());
 						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((IntegerAttribute)node, new IntegerValue(Integer.valueOf(value), null));					
 					} else {
-//						RealAttribute intAttr = (RealAttribute)node;
-//						intAttr.setValue(new RealValue(Double.valueOf(value), null));
-						//Log.d("Number(real) field with Id: ",node.getDefinition().getId() + " is updating. Node name is: " + node.getName() + " Node ID is: " + node.getInternalId());
 						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealAttribute)node, new RealValue(Double.valueOf(value), null));						
 					}
 				} else if (value.equals("")){
@@ -174,22 +155,16 @@ public class NumberField extends InputField {
 			} else {
 				if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
 					if (((NumberAttributeDefinition) this.nodeDefinition).isInteger()){
-//						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), Integer.valueOf(value), position);	
-						//Log.d("Number(int) field","is adding attribute.");
 						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerValue(Integer.valueOf(value), null), null, null);			
 					} else {
-//						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), Double.valueOf(value), position);
-						//Log.d("Number(real) field","is adding attribute.");
 						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealValue(Double.valueOf(value), null), null, null);
 					}
 				}			
 			}
-//			ApplicationManager.updateUIElementsWithValidationResults(nodeChangeSet);
 			validateField(nodeChangeSet);
 
 		} catch (Exception e){
-			//Log.e("Number value got exception", "Value is: " + value);
-			//e.printStackTrace();
+
 		}		
 	}
 	

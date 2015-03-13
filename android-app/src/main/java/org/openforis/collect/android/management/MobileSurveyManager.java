@@ -41,8 +41,6 @@ import org.openforis.idm.metamodel.Survey;
 import org.openforis.idm.metamodel.xml.IdmlParseException;
 import org.springframework.transaction.annotation.Transactional;
 
-import android.util.Log;
-
 /**
  * @author M. Togna
  * @author S. Ricci
@@ -559,7 +557,6 @@ public class MobileSurveyManager {
 	public void deleteSurvey(Integer id) {
 		CollectSurvey survey = getById(id);
 		if ( survey != null ) {
-			Log.e("recordDao","=="+recordDao.getClass());
 			recordDao.deleteBySurvey(id);
 			speciesManager.deleteTaxonomiesBySurvey(id);
 			samplingDesignManager.deleteBySurvey(id);

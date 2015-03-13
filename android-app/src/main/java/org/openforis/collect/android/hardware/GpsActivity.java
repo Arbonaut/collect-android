@@ -35,8 +35,6 @@ public class GpsActivity extends Activity {
 		setContentView(R.layout.welcomescreen);
 		this.waitingTime = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.gpsTimeout), getResources().getInteger(R.integer.gpsTimeoutInMs));
 		loc = null;
-		//String[] utmLocation = convert(62,29/*loc.getLatitude(),loc.getLongitude()*/); 
-		//Log.e("GPS","UTMn=="+utmLocation[0]+"\r\nUTMe=="+utmLocation[1]+"\r\nzone="+utmLocation[2]);
 		lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		if ( !lm.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
 			buildAlertMessageNoGps();
@@ -54,10 +52,7 @@ public class GpsActivity extends Activity {
 						// Wait for first GPS coords change (do nothing until loc != null)
 					}				
 					if (loc!=null){
-						Intent resultHolder = new Intent();
-						String[] utmLocation = convert(loc.getLatitude(),loc.getLongitude()); 
-						Log.e("GPS","LAT=="+loc.getLatitude()+"\r\nLON=="+loc.getLongitude());
-						Log.e("GPS","UTMn=="+utmLocation[0]+"\r\nUTMe=="+utmLocation[1]+"\r\nzone="+utmLocation[2]);
+						Intent resultHolder = new Intent(); 
 						resultHolder.putExtra(getResources().getString(R.string.latitude), String.valueOf(loc.getLatitude()));
 						resultHolder.putExtra(getResources().getString(R.string.longitude), String.valueOf(loc.getLongitude()));
 						setResult(getResources().getInteger(R.integer.internalGpsLocationReceived),resultHolder);
@@ -153,8 +148,6 @@ public class GpsActivity extends Activity {
 		public void onLocationChanged(Location location) {
 			if (location != null) {
 				loc = location;
-				//Log.e("onLocationChanged "+loc.getLatitude(),"location updates"+loc.getLongitude());
-				
 			}
 		}
 

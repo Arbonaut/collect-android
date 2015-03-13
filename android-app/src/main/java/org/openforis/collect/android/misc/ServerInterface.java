@@ -21,8 +21,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import android.util.Log;
-
 /**
  * 
  * @author K. Waga
@@ -65,50 +63,15 @@ public class ServerInterface {
         	    }
         	    return filesList;        	        	
         }
-        /*private static String executeHttpRequest(String data) {
-        		Log.e("executeHttpRequest","=="+data);
-                String result = "";
-                try {
-                        URL url = new URL(SERVER_URL);
-                        URLConnection connection = url.openConnection();
-  
-                        connection.setDoInput(true);
-                        connection.setDoOutput(true);
-                        connection.setUseCaches(false);
-                        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-                        // Send the POST data
-                        DataOutputStream dataOut = new DataOutputStream(connection.getOutputStream());
-                        dataOut.writeBytes(data);
-                        dataOut.flush();
-                        dataOut.close();
-
-                        // get the response from the server and store it in result
-                        DataInputStream dataIn = new DataInputStream(connection.getInputStream());
-                        String inputLine;
-                        while ((inputLine = dataIn.readLine()) != null) {
-                                result += inputLine;
-                        }
-                        dataIn.close();
-                } catch (IOException e) {
-                        e.printStackTrace();
-                        result = null;
-                }
-
-                return result;
-        }*/
         
         private static String postSyncXML(String url, String xml, String survey_id, String username, boolean overwrite) {
             //String url = "http://ar5.arbonaut.com/webforest/fao-mobile/save-received-data-file";        	
             //String url = "http://ar5.arbonaut.com/demo/fao-mobile/save-received-data-file";
-            HttpClient httpclient = new DefaultHttpClient();  
-            /* String encode_url=URLEncoder.encode(url,"UTF-8");
-         	String decode_url=URLDecoder.decode(encode_url,"UTF-8");*/
+            HttpClient httpclient = new DefaultHttpClient(); 
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("datafile_xml_string",xml));
             ///nameValuePairs.add(new BasicNameValuePair("survey_id","99"));
             nameValuePairs.add(new BasicNameValuePair("survey_id", survey_id));
-            //nameValuePairs.add(new BasicNameValuePair("username","collect"));
             nameValuePairs.add(new BasicNameValuePair("username",username));
             nameValuePairs.add(new BasicNameValuePair("overwrite",String.valueOf(overwrite)));
 
@@ -117,13 +80,11 @@ public class ServerInterface {
                 form = new UrlEncodedFormEntity(nameValuePairs);
                         form.setContentEncoding(HTTP.UTF_8);
                 HttpPost httppost = new HttpPost(url);
-                Log.e("POST","=="+url);
                 httppost.setEntity(form);
 
                 HttpResponse response = (HttpResponse) httpclient .execute(httppost);
                 HttpEntity resEntity = response.getEntity();  
                 String resp = EntityUtils.toString(resEntity);
-                Log.e("POSTresp","=="+resp);
                 return resp;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

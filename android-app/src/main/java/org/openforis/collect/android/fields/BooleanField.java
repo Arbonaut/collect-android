@@ -139,17 +139,10 @@ public class BooleanField extends Field {
 		Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
 		NodeChangeSet nodeChangeSet = null;
 		if (node!=null){
-//			BooleanAttribute boolAtr = (BooleanAttribute)node;
-//			boolAtr.setValue(new BooleanValue(boolValue));
-			//Validate results 
-			//Log.e("Boolean field with Id: ",node.getDefinition().getId() + " is updating. Node name is: " + node.getName() + " Node ID is: " + node.getInternalId());
 			nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((BooleanAttribute)node, new BooleanValue(boolValue));
 		} else {
-//			EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), boolValue, position);	
-			//Log.e("Buulean field","is adding attribute.");
 			nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(this.findParentEntity(path), this.nodeDefinition.getName(), new BooleanValue(boolValue), null, null);
 		}
-		//Validation
 		validateField(nodeChangeSet);
 	}
 	
@@ -173,9 +166,7 @@ public class BooleanField extends Field {
     	for (NodeChange<?> nodeChange : nodeChangesList){
 			//HERE WE CHECK DOES IT HAVE ANY ERRORS or WARNINGS
 			if (nodeChange instanceof AttributeChange) {
-				ValidationResults results = ((AttributeChange)nodeChange).getValidationResults();
-				//Log.e("VALIDATION FOR BOOLEAN FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
-				//Log.d("VALIDATION FOR BOOLEAN FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString()); 			
+				ValidationResults results = ((AttributeChange)nodeChange).getValidationResults(); 			
 				//Make background color red or yellow if there is any errors/warnings 				
 				String validationMsg = "";
 				if (results.getErrors().size() > 0){

@@ -1,6 +1,5 @@
 package org.openforis.collect.android.misc;
 
-import android.util.Log;
 
 public class Pair<L,R> {
 
@@ -10,7 +9,6 @@ public class Pair<L,R> {
 	  public Pair(L left, R right) {
 	    this.left = left;
 	    this.right = right;
-	    Log.e("setLeft","=="+left);
 	  }
 
 	  public L getLeft() { return left; }

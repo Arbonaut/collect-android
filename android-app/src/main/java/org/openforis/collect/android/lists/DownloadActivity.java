@@ -54,11 +54,7 @@ public class DownloadActivity extends Activity{
 	private TextView activityLabel;
 	private TextView columnLabel;
 	
-	//private String[] filesList;
-	
 	private ListView lv;
-	
-	//private String path;
 	
 	private ProgressDialog pd;
 	
@@ -74,7 +70,6 @@ public class DownloadActivity extends Activity{
     TextView cur_val;
     
     private boolean isConnectedToInternet;
-    //String dwnload_file_path = "http://ar5.arbonaut.com/awfdatademo/planned/";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,57 +101,13 @@ public class DownloadActivity extends Activity{
             	btn.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    	//showProgress(dwnload_file_path);
                     	pd = ProgressDialog.show(DownloadActivity.this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.downloadingDataToServerMessage));
-                    	/*for (int i=0;i<dataFilesList.size();i++){
-                    		if (DownloadActivity.this.adapter.checkList.get(i)[0]){
-                    			final int number = i;
-                    					
-                                new Thread(new Runnable() {
-                                    public void run() {
-                                         downloadFile(adapter.getItem(number).getName());
-                                    }
-                                  }).start();
-                                filesCount++;
-                    		}
-                    	}
-                    	if (filesCount==0){
-    			    		pd.dismiss();
-    			    	}*/
                     	
                     	 new Thread(new Runnable() {
                              public void run() {
                                   downloadFiles(dataFilesList);
                              }
                            }).start();
-    			    	/*CheckBox upload;
-    			    	//CheckBox overwrite;
-    			    	for (int i=0;i<adapter.getCount();i++){
-    			    		LinearLayout ll = (LinearLayout)lv.getChildAt(i);
-    			    		Log.e("ll==null",i+"=="+(ll==null));
-    			    		upload = (CheckBox)ll.getChildAt(1);
-    			    		//overwrite = (CheckBox)ll.getChildAt(2);
-    			    		final int number = i;
-    			    		if (upload.isChecked()){
-    			    			showProgress(dwnload_file_path);                             
-                                new Thread(new Runnable() {
-                                    public void run() {
-                                         downloadFile(adapter.getItem(number).toString());
-                                    }
-                                  }).start();
-    			    			//(new SendData()).execute(adapter.getItem(i).toString(),overwrite.isChecked());
-    		    				filesCount++;	
-    			    		}
-    			    	}*/
-    			    	/*if (filesCount==0){
-    			    		dialog.dismiss();
-    			    	}*/
-                        /* showProgress(dwnload_file_path);                             
-                            new Thread(new Runnable() {
-                                public void run() {
-                                     downloadFile(filesList);
-                                }
-                              }).start();*/
                     }
                 });              
         	} else {
@@ -235,37 +186,9 @@ public class DownloadActivity extends Activity{
 		int layout = (backgroundColor!=Color.WHITE)?R.layout.download_list_item_white:R.layout.download_list_item_black;
 		this.adapter = new FileListAdapter(this, layout, dataFilesList, "download");
 		lv.setAdapter(this.adapter);
-		//this.adapter = new ArrayAdapter<String>(this, layout, R.id.lblFileName, filesList);
-		//this.setListAdapter(this.adapter);
 		
 		this.filesCount = 0;
     }
-    
-    /*public List clientServerFileList(){
-    	Log.e("clientServerFileList","===");
-        URL url;
-        List serverDir = null;
-        List serverFiles = null;
-        try {
-            url = new URL("http://ar5.arbonaut.com/webforest/public/test/");           
-            ApacheURLLister lister = new ApacheURLLister();   
-            serverFiles = lister.listFiles(url);
-            serverDir = lister.listAll(url);
-        } 
-        catch (Exception e) {
-            e.printStackTrace();
-            Log.e("ERROR ON GETTING FILE","Error is " +e);
-        }
-        Log.e("serverFilesList","=="+serverFiles);
-        Log.e("serverList","=="+serverDir);
-        return serverDir;
-    } */
-    
-    /*@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Log.i(getResources().getString(R.string.app_name),TAG+":onListItemClick");
-	}*/
     
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
@@ -288,51 +211,6 @@ public class DownloadActivity extends Activity{
 		this.columnLabel.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
     }
     
-    /*public void postData(String sendData) {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(getResources().getString(R.string.serverAddress));
-        
-        try {
-            StringEntity se = new StringEntity(sendData);
-            httppost.setEntity(se);
-            HttpResponse response = httpclient.execute(httppost);
-            Log.e("response","=="+response.getEntity().getContent().toString());
-        } 
-        catch (ClientProtocolException e) 
-        {
-            Log.e("ClientProtocolException","==");     
-            e.printStackTrace();
-        } 
-        catch (IOException e) 
-        {
-            Log.e("IOException","==");
-            e.printStackTrace();
-        }
-    }*/
-    
-    /*private static String convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-        	if (line.contains("<value>")&&line.contains("</value>")){
-        		line = line.substring(line.indexOf("<value>")+7,line.indexOf("</value>"));
-        	} else if (line.contains("<code>")&&line.contains("<code>")){
-        		line = line.substring(line.indexOf("<code>")+6,line.indexOf("</code>"));        		
-        	}
-        	sb.append(line).append("\n");
-        }
-        return sb.toString();
-    }*/
-
-    /*private static String getStringFromFile (String filePath) throws Exception {
-        File fl = new File(filePath);
-        FileInputStream fin = new FileInputStream(fl);
-        String ret = convertStreamToString(fin);
-        fin.close();        
-        return ret;
-    }*/
-    
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager 
               = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -340,67 +218,16 @@ public class DownloadActivity extends Activity{
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     
-    /*private class SendData extends AsyncTask {
-        protected String doInBackground(Object... args) {
-            try {            
-            	String survey_id = ApplicationManager.appPreferences.getString(getResources().getString(R.string.surveyId), "99");
-            	String username = ApplicationManager.appPreferences.getString(getResources().getString(R.string.username), "collect");
-				return ServerInterface.sendDataFiles(ApplicationManager.appPreferences.getString(getResources().getString(R.string.recordsDownloadPath), getResources().getString(R.string.defaultRecordsUploadPath)),DownloadActivity.getStringFromFile(Environment.getExternalStorageDirectory().toString()+String.valueOf(getResources().getString(R.string.exported_data_folder)+"/"+args[0])), survey_id, username,(Boolean)args[1]);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "";
-			}
-        }
-     
-        protected void onPostExecute(Object objResult) {
-        	Log.e("onPostExecute","=="+objResult);
-        	filesCount--;
-
-            if(objResult != null && objResult instanceof String) {
-                String result = (String) objResult;
-
-                String[] responseList;
-     
-                StringTokenizer tk = new StringTokenizer(result, ",");
-     
-                responseList = new String[tk.countTokens()];
-     
-                int i = 0;
-                while(tk.hasMoreTokens()) {
-                    responseList[i++] = tk.nextToken();
-                }
-            }
-            if (filesCount==0){
-            	pd.dismiss();
-    			AlertMessage.createPositiveDialog(DownloadActivity.this, true, null,
-    					getResources().getString(R.string.downloadToDeviceSuccessfulTitle), 
-    					getResources().getString(R.string.downloadToDeviceSuccessfulMessage),
-    						getResources().getString(R.string.okay),
-    			    		new DialogInterface.OnClickListener() {
-    							@Override
-    							public void onClick(DialogInterface dialog, int which) {
-    								
-    							}
-    						},
-    						null).show();
-            }            	
-        }
-     
-    }*/
-    
     void downloadFile(String fileName){
         
         try {
         	String dwnload_file_path = ApplicationManager.appPreferences.getString(getResources().getString(R.string.recordsDownloadPath), getResources().getString(R.string.defaultRecordsDownloadPath));
-        	//Log.e("dwnload_file_path","=="+dwnload_file_path);
             URL url = new URL(dwnload_file_path+fileName);
-            //Log.e("file","=="+dwnload_file_path+fileName);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
  
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(true);
- 
-            //connect
+
             urlConnection.connect();
  
             //set the path where we want to save the file          
@@ -410,63 +237,28 @@ public class DownloadActivity extends Activity{
   
             FileOutputStream fileOutput = new FileOutputStream(file);
  
-            //Stream used for reading the data from the internet
+            //Stream used for reading the data from the Internet
             InputStream inputStream = urlConnection.getInputStream();
  
-            //this is the total size of the file which we are downloading
+            //this is the total size of the file which is being downloaded
             totalSize = urlConnection.getContentLength();
  
-            /*runOnUiThread(new Runnable() {
-                public void run() {
-                    pb.setMax(totalSize);
-                }              
-            });*/
-             
-            //create a buffer...
             byte[] buffer = new byte[1024];
             int bufferLength = 0;
  
             while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
                 fileOutput.write(buffer, 0, bufferLength);
                 downloadedSize += bufferLength;
-                // update the progressbar //
-                /*runOnUiThread(new Runnable() {
-                    public void run() {
-                        pb.setProgress(downloadedSize);
-                        float per = ((float)downloadedSize/totalSize) * 100;
-                        cur_val.setText("Downloaded " + downloadedSize + "KB / " + totalSize + "KB (" + (int)per + "%)" );
-                    }
-                });*/
             }
-            //close the output stream when complete //
             fileOutput.close();
-            /*runOnUiThread(new Runnable() {
-                public void run() {
-                    //dialog.dismiss(); // if you want close it..
-                }
-            });*/
-            //Log.e("file DOWNLOADED","=="+fileName);
+            
             DataManager dataManager = new DataManager(this,(CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
-            //Log.e("fileNAMEtoLoad","=="+fileName);
             fileName = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.imported_data_folder)+"/"+fileName;
-            //Log.e("loadRecordFromXml","STARTS"+fileName);
             dataManager.loadRecordFromXml(fileName);
-            //Log.e("loadRecordFromXml","ENDS"+fileName);
             filesCount--;
             if (filesCount==0){
             	pd.dismiss();
             	DownloadActivity.this.finish();
-    			/*AlertMessage.createPositiveDialog(DownloadActivity.this, true, null,
-    					getResources().getString(R.string.downloadToDeviceSuccessfulTitle), 
-    					getResources().getString(R.string.downloadToDeviceSuccessfulMessage),
-    						getResources().getString(R.string.okay),
-    			    		new DialogInterface.OnClickListener() {
-    							@Override
-    							public void onClick(DialogInterface dialog, int which) {
-    								
-    							}
-    						},
-    						null).show();*/
             }            	
         } catch (MalformedURLException e) {
             showError("Error : MalformedURLException " + e);       
@@ -498,9 +290,6 @@ public class DownloadActivity extends Activity{
     void showError(final String err){
         runOnUiThread(new Runnable() {
             public void run() {
-                //Toast.makeText(DownloadActivity.this, err, Toast.LENGTH_LONG).show();
-            	Log.e("showError","=="+err);
-                //dialog.dismiss();
             	AlertMessage.createPositiveDialog(DownloadActivity.this, true, null,
 						"Error downloading the file(s)", 
 						err,

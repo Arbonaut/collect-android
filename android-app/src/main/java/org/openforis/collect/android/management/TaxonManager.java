@@ -63,9 +63,7 @@ public class TaxonManager {
 		List<TaxonOccurrence> result = new ArrayList<TaxonOccurrence>();
 		Taxonomy taxonomy = taxonomyDao.load(ApplicationManager.getSurvey().getId()/*this.getSurveyId()*/, taxonomyName);
 		if (taxonomy!=null){
-			//List<Taxon> list = taxonDao.findByCode(taxonomy.getId(), searchString, maxResults);
 			List<Taxon> list = ApplicationManager.dataManager.findByCode(taxonomy.getId(), searchString, maxResults);
-			Log.e("findByCode","==");
 			for (Taxon taxon : list) {
 				TaxonOccurrence o = new TaxonOccurrence(taxon.getCode(), taxon.getScientificName());
 				result.add(o);
@@ -80,7 +78,6 @@ public class TaxonManager {
 		
 		Taxonomy taxonomy = taxonomyDao.load(ApplicationManager.getSurvey().getId()/*this.getSurveyId()*/, taxonomyName);	
 		if (taxonomy!=null){
-			//List<Taxon> list = taxonDao.findByScientificName(taxonomy.getId(), searchString, maxResults);
 			List<Taxon> list = ApplicationManager.dataManager.findByScientificName(taxonomy.getId(), searchString, maxResults);
 			for (Taxon taxon : list) {
 				TaxonOccurrence o = new TaxonOccurrence(taxon.getCode(), taxon.getScientificName());

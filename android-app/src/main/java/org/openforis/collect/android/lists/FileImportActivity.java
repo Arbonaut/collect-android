@@ -123,12 +123,9 @@ public class FileImportActivity extends Activity{
 		
 		dataFilesList = new ArrayList<DataFile>();
 		File dataFilesFolder = new File(path);
-		//Log.e("dataFilesFolder","=="+path);
 		File[] dataFiles = dataFilesFolder.listFiles();
 		int filesNo = dataFiles.length;
-		//Log.e("numberOFFiles","=="+filesNo);
 		for (int i=0;i<filesNo;i++) {
-	        //filesList[i] = serverFiles.get(i);
 	        dataFilesList.add(new DataFile(dataFiles[i].getName(),"xml_icon"));
 		}
 		if (filesNo==0){
@@ -165,23 +162,11 @@ public class FileImportActivity extends Activity{
         
         try {        	
             DataManager dataManager = new DataManager(this,(CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
-            Log.e("fileNAMEtoLoad","=="+fileName);
             fileName = Environment.getExternalStorageDirectory().toString()+getResources().getString(R.string.exported_data_folder)+"/"+fileName;
             dataManager.loadRecordFromXml(fileName);
             filesCount--;
             if (filesCount==0){
             	pd.dismiss();
-    			/*AlertMessage.createPositiveDialog(FileImportActivity.this, true, null,
-    					getResources().getString(R.string.downloadToDeviceSuccessfulTitle), 
-    					getResources().getString(R.string.downloadToDeviceSuccessfulMessage),
-    						getResources().getString(R.string.okay),
-    			    		new DialogInterface.OnClickListener() {
-    							@Override
-    							public void onClick(DialogInterface dialog, int which) {
-    								
-    							}
-    						},
-    						null).show();*/
             }            	
         } catch (Exception e) {
             e.printStackTrace();

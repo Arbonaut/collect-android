@@ -356,14 +356,9 @@ public class BaseListActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {    	
 	    super.onActivityResult(requestCode, resultCode, data);
 	    try{
-	    	Log.e("onActivityResult","BaseListActivity");
-	    	Log.e("requestCode"+requestCode,"resultCode"+resultCode);
-	    	Log.e(""+getResources().getInteger(R.integer.chooseFormFile),""+getResources().getInteger(R.integer.formFileChosen));
 	    	if (requestCode==getResources().getInteger(R.integer.chooseDatabaseFile)
 	    			&&
 	    		resultCode==getResources().getInteger(R.integer.databaseFileChosen)){
-				Log.e("choosing database","=========================");
-				Log.e("CHOSEN FILE","=="+data.getStringExtra(getResources().getString(R.string.databaseFileName)));
 				String selectedFileName = data.getStringExtra(getResources().getString(R.string.databaseFileName));
 				if (selectedFileName.endsWith(".db")){
 					DatabaseHelper.copyDataBase(selectedFileName);

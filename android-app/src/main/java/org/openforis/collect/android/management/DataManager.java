@@ -35,14 +35,12 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class DataManager {
 
 	private CollectSurvey survey;
 	private String rootEntity;
 	private User user;
-	//private Context context;
 	
 	private DataMarshaller dataMarshaller;
 	private DataUnmarshaller dataUnmarshaller;
@@ -51,7 +49,6 @@ public class DataManager {
 		this.survey = survey;
 		this.rootEntity = rootEntity;
 		this.user = loggedInUser;
-		//this.context = ctx;
 		
 		this.dataMarshaller = new DataMarshaller();
 		HashMap<String,User> users = new HashMap<String, User>();
@@ -197,8 +194,6 @@ public class DataManager {
 	public void deleteForm(int position){
 		try {
 			List<CollectSurvey> formsList = ServiceFactory.getSurveyManager().getAll();
-			Log.e("ServiceFactory.getSurveyManager()==null","=="+(ServiceFactory.getSurveyManager()==null));
-			Log.e("formID","=="+formsList.get(position).getId());
 			ApplicationManager.setSurvey(formsList.get(position));
 			ServiceFactory.getSurveyManager().deleteSurvey(formsList.get(position).getId());
 			//List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
@@ -211,8 +206,6 @@ public class DataManager {
 	}
 	
 	public List<CollectRecord> loadSummaries(){
-		Log.e("loading","SUMMARIES");
-		long startTime = System.currentTimeMillis();
 		//JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
 		//jdbcDao.getConnection();
 		//android.os.Debug.startMethodTracing("slad");
@@ -221,15 +214,12 @@ public class DataManager {
 		//MobileRecordManager recordManager = (MobileRecordManager) ServiceFactory.getRecordManager();
 		List<CollectRecord> recordsList = ServiceFactory.getRecordManager().getRecordDao().loadSummaries(survey, rootEntity);
 		//android.os.Debug.stopMethodTracing();
-		System.err.println("LOADING SUMMARIES");
-		Log.e("loadSummaries","=="+((System.currentTimeMillis()-startTime)));
 		//JdbcDaoSupport.close();
 		ApplicationManager.isRecordListUpToDate = true;
 		return recordsList;
 	}
 	
 	public CollectRecord loadRecord(int recordId){
-		long startTime = System.currentTimeMillis();
 		CollectRecord loadedRecord = null;
 		try {
 //			JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
@@ -239,10 +229,7 @@ public class DataManager {
 			DatabaseHelper.closeConnection();
 		} catch (NullPointerException e){
 			e.printStackTrace();
-		} /*catch (RecordPersistenceException e) {
-			e.printStackTrace();
-		}*/
-		Log.e("record"+recordId,"LOADED IN "+(System.currentTimeMillis()-startTime)+"ms");
+		}
 		return loadedRecord;
 	}
 	
@@ -447,8 +434,7 @@ public class DataManager {
 	private void assignShapesToRecord(int recordId){
 		int pointsNo = ApplicationManager.points.size();
 		int linesNo = ApplicationManager.lineEnds.size();
-		int plotsNo = ApplicationManager.plots.size();		
-		Log.e("recordId to be set","=="+recordId);
+		int plotsNo = ApplicationManager.plots.size();	
 		if ((pointsNo+linesNo+plotsNo)>0){
 			for (int i=0;i<pointsNo;i++){
 				if ((ApplicationManager.points.get(i).getLeft()==null)){					

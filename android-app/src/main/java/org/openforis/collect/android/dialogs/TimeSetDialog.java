@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -73,9 +72,7 @@ public class TimeSetDialog extends FragmentActivity {
 
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 		    //Set time to the clicked TimeField
-			Log.e("onTimeSet",hourOfDay+":"+minute);
 			String strTime = pad(hourOfDay) + ":" + pad(minute);
-			Log.e("onTimeSet","=="+strTime);
 			activity_edittext.setValue(0, strTime, this.pathToParentScreen, false);
 		    finish();
 		}

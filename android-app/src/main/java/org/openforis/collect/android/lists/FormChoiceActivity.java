@@ -278,7 +278,6 @@ public class FormChoiceActivity extends BaseListActivity {
         AdapterContextMenuInfo adapInfo = (AdapterContextMenuInfo) item
                 .getMenuInfo();
         final int position = (int)adapInfo.id;
-        Log.e("selectedPosition","=="+position);
         switch (item.getItemId()) {
         case R.id.view:
         	if (this.surveysList.size()==0){
@@ -354,12 +353,9 @@ public class FormChoiceActivity extends BaseListActivity {
 		  new Thread(new Runnable() {
 			    public void run() {
 			    	List<CollectSurvey> formsList = ServiceFactory.getSurveyManager().getAll();
-					Log.e("1ServiceFactory.getSurveyManager()==null","=="+(ServiceFactory.getSurveyManager()==null));
-					Log.e("1formID","=="+formsList.get(position).getId());
 					ApplicationManager.setSurvey(formsList.get(position));
 			    	DataManager dataManager = new DataManager(FormChoiceActivity.this,(CollectSurvey)ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinitions().get(0).getName(),ApplicationManager.getLoggedInUser());
-					dataManager.deleteForm(position);
-					//ApplicationManager.recordsList.remove(position);					
+					dataManager.deleteForm(position);				
 					Message msg = Message.obtain();
 			        msg.what = 1;
 					handler.sendMessage(msg);

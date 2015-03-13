@@ -82,34 +82,6 @@ public class DateField extends InputField {
 		    }
 	    });
 	}
-/*
-	private void validateResult(Node<? extends NodeDefinition> node){
-		ValidationResults results = ValidationManager.validateField(node);
-		if(results.getErrors().size() > 0 || results.getFailed().size() > 0){
-			DateField.this.txtBox.setBackgroundColor(Color.RED);
-		}else if (results.getWarnings().size() > 0){
-			DateField.this.txtBox.setBackgroundColor(Color.YELLOW);
-		}else{
-			DateField.this.txtBox.setBackgroundColor(Color.TRANSPARENT);
-		}
-//		Log.i("DateField info", "Start to validate DateField's value");		    		
-////		Log.i("VALIDATION FOR DATE FIELD", "Record of attribute is: " + attribute.getRecord());
-//		//Validate value into field and change color if it's not valid
-//		Validator validator = new Validator();
-//		ValidationResults results = validator.validate(attribute); 
-//		if(results.getErrors().size() > 0 || results.getFailed().size() > 0){
-//			DateField.this.txtBox.setBackgroundColor(Color.RED);
-//		}else if (results.getWarnings().size() > 0){
-//			DateField.this.txtBox.setBackgroundColor(Color.YELLOW);
-//		}else{
-//			DateField.this.txtBox.setBackgroundColor(Color.TRANSPARENT);
-//		}
-//		Log.e("VALIDATION FOR DATE FIELD", "Errors: " + results.getErrors().size() + " : " + results.getErrors().toString());
-//		Log.d("VALIDATION FOR DATE FIELD", "Warnings: "  + results.getWarnings().size() + " : " + results.getWarnings().toString());
-//		Log.e("VALIDATION FOR DATE FIELD", "Fails: "  + results.getFailed().size() + " : " +  results.getFailed().toString());	    		
-
-	}
-	*/
 	
 	private void showDatePickerDialog(int id) {
 		Intent datePickerIntent = new Intent(DateField.this.getContext(), DateSetDialog.class);
@@ -160,16 +132,11 @@ public class DateField extends InputField {
 		NodeChangeSet nodeChangeSet = null;
 		Entity parentEntity = this.findParentEntity(path);
 		if (node!=null){
-//			DateAttribute dateAtr = (DateAttribute)node;
-			//Log.e("Date field with Id: ",node.getDefinition().getId() + " is updating. Node name is: " + node.getName() + " Node ID is: " + node.getInternalId());
 			if (month.equals("") && day.equals("") && year.equals("")){
-//				dateAtr.setValue(new Date(null,null,null));
 				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(null,null,null));
-			} else if (month.equals("") && day.equals("")){
-//				dateAtr.setValue(new Date(Integer.valueOf(year),null,null));	
+			} else if (month.equals("") && day.equals("")){	
 				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),null,null));
-			} else if (month.equals("") && year.equals("")){
-//				dateAtr.setValue(new Date(null,null,Integer.valueOf(day)));	
+			} else if (month.equals("") && year.equals("")){	
 				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(null,null,Integer.valueOf(day)));
 			} else if (day.equals("") && year.equals("")){
 //				dateAtr.setValue(new Date(null,Integer.valueOf(month),null));
@@ -187,9 +154,7 @@ public class DateField extends InputField {
 //				dateAtr.setValue(new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)));
 				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)));
 			}
-			//this.validateResult(node);
 		} else {
-			//Log.e("Date field","is adding attribute.");
 			if (month.equals("") && day.equals("") && year.equals("")){
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(null,null,null), position);
 				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,null,null), null, null);
@@ -216,14 +181,8 @@ public class DateField extends InputField {
 				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)), null, null);
 			}	
 		}
-//		ApplicationManager.updateUIElementsWithValidationResults(nodeChangeSet);
 		validateField(nodeChangeSet);
 	}
-	
-	/*@Override
-	public void afterTextChanged(Editable s) {
-		this.setValue(0, s.toString(), DateField.this.form.getFormScreenId(),true);
-	}*/
 	
 	public static String formatDate(Date dateValue){
     	String formattedDateValue = "";

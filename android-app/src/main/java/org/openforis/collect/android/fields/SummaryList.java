@@ -27,7 +27,6 @@ import org.openforis.idm.model.Value;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -67,35 +66,10 @@ public class SummaryList extends UIElement {
 		
 		this.entityDefinition = entityDef;
 		this.plotNo = -1;
-		//Log.e("entityDef",this.entityDefinition.getName()+"=="+this.instanceNo);
-		
-		//adding the entity and its nodes if do not exist yet
-		/*for (int i=0;i<entityDef.getChildDefinitions().size();i++){
-			try{
-				Entity parentEntity1 = ApplicationManager.currentRecord.getRootEntity();
-				String screenPath = this.context.getFormScreenId();
-				String[] entityPath = screenPath.split(getResources().getString(R.string.valuesSeparator2));
-				int pathLength = entityPath.length;
-				for (int m=2;m<pathLength;m++){
-					String[] instancePath = entityPath[m].split(getResources().getString(R.string.valuesSeparator1));
-					int id = Integer.valueOf(instancePath[0]);
-					int instanceNo = Integer.valueOf(instancePath[1]);
-					parentEntity1 = (Entity) parentEntity1.get(ApplicationManager.getSurvey().getSchema().getDefinitionById(id).getName(), instanceNo);
-					parentEntity1.setId(id);
-				}
-				parentEntity1 = (Entity)parentEntity1.get(entityDef.getName(), entityInstanceNo);			
-			} catch (Exception e){
-			
-			}
-		}*/
 		
 		ArrayList<List<String>> keysList = new ArrayList<List<String>>();
-		//ArrayList<List<String>> detailsList = new ArrayList<List<String>>();
-		
-
 		
 		Entity parentEntity = this.findParentEntity(this.context.getFormScreenId()).getParent();		
-		//Log.e("parentEntity","=="+parentEntity.getName());
 		Entity currentEntity = null;
 		if (parentEntity.getName().equals(ApplicationManager.currentRecord.getRootEntity().getName())
 				&&
@@ -107,15 +81,11 @@ public class SummaryList extends UIElement {
 		}
 		
 		boolean isAtLeastOneKeyValue = false;
-		//Log.e("currentEntity","=="+currentEntity.getName());
-		//if (this.context.getFormScreenId()!=null){			
-			//fetching keys and their values
 		List<AttributeDefinition> keyAttrDefsList = entityDef.getKeyAttributeDefinitions();
 		for (AttributeDefinition attrDef : keyAttrDefsList){
 			List<String> key = new ArrayList<String>();
 			Value attrValue = null;			
 			attrValue = (Value)currentEntity.getValue(attrDef.getName(),0);
-			//key.add(attrDef.getName());
 			String label = ApplicationManager.getLabel(attrDef);
 			key.add(label);
 			String stringValue = convertValueToString(attrValue, (NodeDefinition)attrDef);
@@ -124,7 +94,6 @@ public class SummaryList extends UIElement {
 				isAtLeastOneKeyValue = true;
 			}
 			keysList.add(key);
-			Log.e("value","=="+stringValue);
 			if (stringValue!=null)
 				this.plotNo = Integer.valueOf(stringValue);
 			else 
@@ -149,8 +118,6 @@ public class SummaryList extends UIElement {
 					keysLine += (entityInstanceNo+1);
 			}
 			
-			Log.e("keysLine0",threshold+"=="+keysLine);
-			
 			if (keysLine.length()>threshold){
 				keysLine = keysLine.substring(0,threshold-3)+"...";
 			}
@@ -168,36 +135,9 @@ public class SummaryList extends UIElement {
 				detail.add(nodeDef.getName());
 				String stringValue = convertValueToString(attrValue, nodeDef);
 				if (stringValue!=null)
-					detail.add(stringValue);				
-				//detailsList.add(detail);
+					detail.add(stringValue);
 			}
-			
-			/*String detailsLine = "";
-			for (List<String> detail : detailsList){
-				if (detail.size()==1){
-					detailsLine += detail.get(0) + getResources().getString(R.string.valuesSeparator1);
-				} else {
-					if (detail.get(1).equals("entitydefinitionnode")){
-						detailsLine += "["+detail.get(0)+"]" + getResources().getString(R.string.valuesSeparator1);
-					} else {
-						detailsLine += detail.get(0) + getResources().getString(R.string.valuesEqualsTo) + detail.get(1) + getResources().getString(R.string.valuesSeparator1);	
-					}						
-				}
-				
-				if (detailsLine.length()>threshold){
-					break;
-				}
-			}
-			if (detailsLine.length()>threshold){
-				String visibleDetails = detailsLine.substring(0,threshold-3);
-				if (visibleDetails.substring(visibleDetails.length()-1, visibleDetails.length()).equals(getResources().getString(R.string.valuesSeparator1))){
-					visibleDetails = visibleDetails.substring(0,visibleDetails.length()-1);
-				}
-				detailsLine = visibleDetails;
-				detailsLine += getResources().getString(R.string.valuesNotVisibleSign);
-			} else {
-				detailsLine = detailsLine.substring(0,detailsLine.length()-1);
-			}*/
+		
 			
 			TextView titleView = new TextView(context);
 			if (this.entityDefinition.isMultiple())
@@ -207,56 +147,6 @@ public class SummaryList extends UIElement {
 				titleView.setText(this.label.getText()+" "+keysLine);
 			titleView.setOnClickListener(this.context);
 			this.tableLayout.addView(titleView);
-			
-			/*TextView tv = new TextView(context);
-			tv.setText(keysLine/*+"\r\n"+detailsLine*///);
-			/*tv.setId(entityInstanceNo);
-			tv.setOnClickListener(listener);
-			final Entity entityToRemove = currentEntity;
-			final Entity parent = parentEntity;*/
-			/*tv.setOnLongClickListener(new OnLongClickListener() {
-		        @Override
-		        public boolean onLongClick(View v) {		        
-		        	AlertMessage.createPositiveNegativeDialog(SummaryList.this.context, false, getResources().getDrawable(R.drawable.warningsign),
-		 					getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
-		 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
-		 		    		new DialogInterface.OnClickListener() {
-		 						@Override
-		 						public void onClick(DialogInterface dialog, int which) {
-		 							//Log.i("SummaryList", "Yes-button has been pressed from " + entityToRemove.getName());
-		 							Log.e("entityToRemove",SummaryList.this.instanceNo+"=="+entityToRemove.getName());
-		 							ServiceFactory.getRecordManager().deleteNode(entityToRemove);
-		 							
-		 							//ApplicationManager.isToBeScrolled = true;
-		 							ViewBacktrack viewBacktrack = null;
-		 							if (SummaryList.this.form!=null){
-		 								viewBacktrack = new ViewBacktrack(SummaryList.this,SummaryList.this.form.getFormScreenId());	
-		 							} else {
-		 								//Log.e("SummaryList.currentInstance",SummaryList.this.entityInstances.getFormScreenId(SummaryList.this.currentInstanceNo)+"=="+SummaryList.this.currentInstanceNo);
-		 								viewBacktrack = new ViewBacktrack(SummaryList.this,SummaryList.this.entityInstances.getFormScreenId());
-		 							}		 							
-		 							ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);
-		 							Toast.makeText(SummaryList.this.context, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
-		 							((EntityInstancesScreen)SummaryList.this.context).onResume();
-		 						}
-		 					},
-		 		    		new DialogInterface.OnClickListener() {
-		 						@Override
-		 						public void onClick(DialogInterface dialog, int which) {
-		 							//Log.i("SummaryList", "No-button has been pressed from " + entityToRemove.getName());
-		 							//Log.i("SummaryList", "No-button has been pressed. Parent entity is:  " + parent.getName());
-		 						}
-		 					},
-		 					null).show();
-		            return true;
-		        }
-		    });*/
-			//tv.setOnClickListener(this.context);
-
-			/*TableRow tr = new TableRow(context);
-			tr.addView(tv);
-			this.tableLayout.addView(tr);*/
-		//}
 		
 		this.container.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		this.container.addView(this.tableLayout);
@@ -287,6 +177,7 @@ public class SummaryList extends UIElement {
 		this.entityDefinition = entityDef;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private String convertValueToString(Value value, NodeDefinition nodeDef){
 		String valueToReturn = null;
 		if (value!=null){

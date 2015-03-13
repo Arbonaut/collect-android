@@ -72,10 +72,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -167,7 +165,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 						/*||
 					FormScreen.this.parentEntitySingleAttribute.equals(FormScreen.this.parentEntityMultipleAttribute)*/){
 					FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity2(FormScreen.this.parentFormScreenId);
-					Log.e("foundparentEntityMultipleAttribute2",parentEntityMultipleAttribute.getName()+"=="+FormScreen.this.parentFormScreenId);
 				}
 			}
 			String loadedValue = "";
@@ -309,8 +306,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        				ApplicationManager.putUIElement(codeField.getId(), codeField);
 	        				FormScreen.this.ll.addView(codeField);
 	    				} else if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
-	    					Log.e("nodeDEF",FormScreen.this.currInstanceNo+"=="+nodeDef.getName());
-	    					Log.e("parentEntityMultipleAttribute","="+FormScreen.this.parentEntityMultipleAttribute.getName());
 	    					Node<?> foundNode = FormScreen.this.parentEntityMultipleAttribute.get(nodeDef.getName(), FormScreen.this.currInstanceNo);
 	    					if (foundNode!=null){
 		    					Code codeValue = (Code)FormScreen.this.parentEntityMultipleAttribute.getValue(nodeDef.getName(), FormScreen.this.currInstanceNo);
@@ -713,7 +708,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 						List<String> extensionsList = fileDef.getExtensions();
 						
 						if (extensionsList.contains("jpg")||extensionsList.contains("jpeg")){
-							Log.e("fileDef",fileDef.getName()+"=="+this.photoPath);
 							loadedValue = "";
 		    				if (!nodeDef.isMultiple()){
 		        				final PhotoField photoField= new PhotoField(FormScreen.this, nodeDef);		 
@@ -886,12 +880,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());		 								
 	 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
 	 								if ((tempNode==null)&&(FormScreen.this.currInstanceNo==0))
-	 									Log.e("FormScreen","0ADDING ENTITY");
-	 									Entity newlyAddedEntity = EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());
-	 									Log.e("newlyAddedEntity",newlyAddedEntity.getChildren().size()+"=="+newlyAddedEntity.getName());
-	 									for (int g=0;g<newlyAddedEntity.getChildren().size();g++){
-	 										Log.e("newlyAddedEntity"+newlyAddedEntity.getName(),"=="+newlyAddedEntity.getChildren().get(g).getName());
-	 									}
+	 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());
 	 							}
  								refreshEntityScreen(2);
  								Toast.makeText(FormScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
@@ -930,7 +919,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			}
 			
 		} else  if (arg0 instanceof EntityLink){
-			Log.e("clickedOn","EntityLink");
 			ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
 			this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)arg0,-1));	
 		}
@@ -939,16 +927,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	private Intent prepareIntentForEntityInstancesList(EntityLink entityLink, int plotId){
 		Intent intent = new Intent(this,EntityInstancesScreen.class);
 		EntityDefinition entityDef = entityLink.getEntityDefinition();
-		Log.e("prepareForEntityInstances","=="+entityDef.getName());
-		/*if (!entityDef.isMultiple()){
-			if (entityDef.getChildDefinitions().size()==1){
-				if (entityDef.getChildDefinitions().get(0) instanceof EntityDefinition){
-					EntityDefinition innerEntityDef = (EntityDefinition)entityDef.getChildDefinitions().get(0);
-					Log.e("ENTITY",entityDef.getName()+"NESTED IN ENTITY"+innerEntityDef.getName());
-					entityDef = innerEntityDef;
-				}
-			}
-		}*/
 		if (!this.breadcrumb.equals("")){
 			String title = "";
 			String entityTitle = "";
@@ -1206,7 +1184,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
         	if (tablica[i]!=null){
         		String piece1 = tablica[i];
             	String firstNumber1 = tablica[i].split(",")[0];
-            	//Log.e("piece1",firstNumber1+"=="+piece1);
             	for (int j=i+1;j<tablica.length;j++){
             		if (tablica[j]!=null){
             			String piece2 = tablica[j];
@@ -1284,7 +1261,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				return;
 			}
 		} else if (actionCode==1) {//scroll right to next (or new) entity
-			//Log.e("SCROLLING","RIGHT");
 			NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+0, -1));
 			if (!nodeDef.isMultiple()){
 				Node<?> foundNode = this.parentEntitySingleAttribute.getParent().get(this.parentEntitySingleAttribute.getName(), this.currInstanceNo+1);
@@ -1449,28 +1425,13 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		//refreshing values of fields in the entity 
 		Entity parentEntity = this.findParentEntity(this.getFormScreenId());	
 		if (parentEntity==null){
-			Log.e("FormScreen","ADDING ENTITY");
-		} else {
-			Log.e("FormScreen","NOT ADDING ENTITY");
-		}
-		if (parentEntity==null){
 			String path = this.getFormScreenId().substring(0,this.getFormScreenId().lastIndexOf(getResources().getString(R.string.valuesSeparator2)));
 			parentEntity = this.findParentEntity(path);
 			try{
-				Log.e("FormScreen","4ADDING ENTITY"+this.idmlId);
-				Entity newlyAddedEntity = EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
-				Log.e("newlyAddedEntity",newlyAddedEntity.getChildren().size()+"=="+newlyAddedEntity.getName());
-				for (int g=0;g<newlyAddedEntity.getChildren().size();g++){
-					Log.e("newlyAddedEntity"+newlyAddedEntity.getName(),"=="+newlyAddedEntity.getChildren().get(g).getName());
-				}
+				EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
 			} catch (IllegalArgumentException e){
 				parentEntity = parentEntity.getParent();
-				Log.e("FormScreen","5ADDING ENTITY"+this.idmlId);
-				Entity newlyAddedEntity = EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
-				Log.e("newlyAddedEntity",newlyAddedEntity.getChildren().size()+"=="+newlyAddedEntity.getName());
-				for (int g=0;g<newlyAddedEntity.getChildren().size();g++){
-					Log.e("newlyAddedEntity"+newlyAddedEntity.getName(),"=="+newlyAddedEntity.getChildren().get(g).getName());
-				}
+				EntityBuilder.addEntity(parentEntity, ApplicationManager.getSurvey().getSchema().getDefinitionById(this.idmlId).getName());
 			}
 			parentEntity = this.findParentEntity(this.getFormScreenId());
 		}
@@ -1925,10 +1886,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				} else if (nodeDef instanceof FileAttributeDefinition){
 					FileAttributeDefinition fileDef = (FileAttributeDefinition)nodeDef;
 					List<String> extensionsList = fileDef.getExtensions();
-					Log.e("isJPG","=="+(extensionsList.contains("jpg")||extensionsList.contains("jpeg")));
 					if (extensionsList.contains("jpg")||extensionsList.contains("jpeg")){
 						loadedValue = "";
-						Log.e("currentPhotoPath","=="+this.photoPath);
 	    				if (!nodeDef.isMultiple()){
 	        				final PhotoField photoField= new PhotoField(this, nodeDef);
 	        				if (FormScreen.this.currentPictureField!=null && FormScreen.this.currentPictureField.getLabelText().equals(photoField.getLabelText())){
@@ -2480,7 +2439,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 	    if (requestCode==getResources().getInteger(R.integer.cameraStarted)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.photoTaken)){
 	 	    		this.photoPath = data.getStringExtra(getResources().getString(R.string.photoPath));
-	 	    		Log.e("assignedPhotoPath","=="+this.photoPath);
 	 	    	}
 	 	    } else if (requestCode==getResources().getInteger(R.integer.internalGpsStarted)){
 	 	    	if (resultCode==getResources().getInteger(R.integer.internalGpsLocationReceived)){
@@ -2822,6 +2780,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		}
     }
     
+    @SuppressWarnings("deprecation")
 	private String convertValueToString(Value value, NodeDefinition nodeDef){
 		String valueToReturn = null;
 		if (value!=null){

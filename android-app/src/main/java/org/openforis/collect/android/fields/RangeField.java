@@ -262,10 +262,8 @@ public class RangeField extends InputField {
 					}	
 				}
 			}
-//			ApplicationManager.updateUIElementsWithValidationResults(nodeChangeSet);
 			validateField(nodeChangeSet);
 		}catch (Exception e){
-			//Log.e("RangeField", "ERROR when try to set value" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
