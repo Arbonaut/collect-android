@@ -64,7 +64,6 @@ public class MobileCodeListManager extends org.openforis.collect.manager.CodeLis
 		} else if ( list.isEmpty() ) {
 			System.err.println("Finish loading root items from mobile CodeListManager from CodeListDao");
 			if (this.loadedCodeLists.containsKey(list)){
-				System.err.println("LIST loaded"+list.getName());
 				return (List<T>)this.loadedCodeLists.get(list);
 			}
 			List<PersistedCodeListItem> loadedCodeListItems = (List<PersistedCodeListItem>) codeListItemDao.loadRootItems(list);

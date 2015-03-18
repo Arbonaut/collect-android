@@ -35,6 +35,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class DataManager {
 
@@ -212,7 +213,9 @@ public class DataManager {
 		//List<CollectRecord> recordsList = this.loadSummaries(survey, rootEntity, (Step) null, 0, Integer.MAX_VALUE, (List<RecordSummarySortField>) null, (String[]) null);
 		//List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
 		//MobileRecordManager recordManager = (MobileRecordManager) ServiceFactory.getRecordManager();
+		long startTime = System.currentTimeMillis();
 		List<CollectRecord> recordsList = ServiceFactory.getRecordManager().getRecordDao().loadSummaries(survey, rootEntity);
+		Log.e("loadingSummaries","totalTime=="+(System.currentTimeMillis()-startTime));
 		//android.os.Debug.stopMethodTracing();
 		//JdbcDaoSupport.close();
 		ApplicationManager.isRecordListUpToDate = true;
@@ -220,16 +223,15 @@ public class DataManager {
 	}
 	
 	public CollectRecord loadRecord(int recordId){
+		long startTime = System.currentTimeMillis();
 		CollectRecord loadedRecord = null;
 		try {
-//			JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
-//			jdbcDao.getConnection();
 			loadedRecord = ServiceFactory.getRecordManager().load(survey, recordId, Step.ENTRY);
-//			JdbcDaoSupport.close();
 			DatabaseHelper.closeConnection();
 		} catch (NullPointerException e){
 			e.printStackTrace();
 		}
+		Log.e("loadRecord","totalTime=="+(System.currentTimeMillis()-startTime));
 		return loadedRecord;
 	}
 	

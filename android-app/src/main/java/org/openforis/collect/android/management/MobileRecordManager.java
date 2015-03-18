@@ -1,17 +1,9 @@
 package org.openforis.collect.android.management;
 
-import static org.openforis.collect.persistence.jooq.Tables.OFC_RECORD;
-import static org.openforis.collect.persistence.jooq.tables.OfcUser.OFC_USER;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
-import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.database.MobileRecordDao;
 import org.openforis.collect.manager.RecordConverter;
 import org.openforis.collect.metamodel.ui.UIOptions;
@@ -19,7 +11,6 @@ import org.openforis.collect.metamodel.ui.UIOptions.Layout;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectRecord.Step;
 import org.openforis.collect.model.CollectSurvey;
-import org.openforis.collect.model.RecordSummarySortField;
 import org.openforis.collect.model.User;
 import org.openforis.collect.persistence.MissingRecordKeyException;
 import org.openforis.collect.persistence.RecordPersistenceException;
@@ -30,16 +21,12 @@ import org.openforis.idm.metamodel.CodeListItem;
 import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.ModelVersion;
 import org.openforis.idm.metamodel.NodeDefinition;
-import org.openforis.idm.metamodel.Schema;
 import org.openforis.idm.model.Code;
 import org.openforis.idm.model.CodeAttribute;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.Node;
 import org.openforis.idm.model.Record;
 import org.springframework.transaction.annotation.Transactional;
-
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 public class MobileRecordManager extends org.openforis.collect.manager.RecordManager {
 	
@@ -83,78 +70,7 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		this.codeListManager = codeListManager;
 	}
 	
-	@Override
-	@Transactional
-	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity) {
-		return this.loadSummaries(survey, rootEntity, (String[]) null);
-	}
 	
-	@Transactional
-	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity, String... keys) {
-		return recordDao.loadSummaries(survey, rootEntity, keys);
-	}
-	
-	public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
-			List<RecordSummarySortField> sortFields, String... keyValues) {
-		List<CollectRecord> result = new ArrayList<CollectRecord>();
-		//preparing data for query
-		Schema schema = survey.getSchema();
-		EntityDefinition rootEntityDefn = schema.getRootEntityDefinition(rootEntity);
-		Integer rootEntityDefnId = rootEntityDefn.getId();
-		
-		String query = "SELECT " + 
-				OFC_RECORD.DATE_CREATED + "," + OFC_RECORD.CREATED_BY_ID + "," + OFC_RECORD.DATE_MODIFIED + "," + OFC_RECORD.ERRORS + "," + OFC_RECORD.ID + "," + 
-			     OFC_RECORD.MISSING + "," + OFC_RECORD.MODEL_VERSION + "," + OFC_RECORD.MODIFIED_BY_ID + "," + 
-			     OFC_RECORD.ROOT_ENTITY_DEFINITION_ID + "," + OFC_RECORD.SKIPPED + "," + OFC_RECORD.STATE + "," + OFC_RECORD.STEP + "," + OFC_RECORD.SURVEY_ID + "," + 
-			     OFC_RECORD.WARNINGS + "," + OFC_RECORD.KEY1 + "," + OFC_RECORD.KEY2 + "," + OFC_RECORD.KEY3 + "," + 
-			     OFC_RECORD.COUNT1 + "," + OFC_RECORD.COUNT2 + "," + OFC_RECORD.COUNT3 + "," + OFC_RECORD.COUNT4 + "," + OFC_RECORD.COUNT5
-			     + " FROM " + OFC_RECORD
-			     + " WHERE " + OFC_RECORD.SURVEY_ID + " = " + survey.getId()
-			     + " AND " + OFC_RECORD.ROOT_ENTITY_DEFINITION_ID + " = " + rootEntityDefnId;
-		
-		if ( step != null ) {
-			query += " AND " + OFC_RECORD.STEP + " = " + step.getStepNumber();
-		}
-
-		query += " ORDER BY " + OFC_RECORD.ID; 
-		query += " LIMIT " + maxRecords;
-		
-		//executing query
-		SQLiteDatabase db = DatabaseHelper.getDb();
-		Cursor cursor = db.rawQuery(query, null);
-		
-		//preparing result
-		while (cursor.moveToNext()) {
-			CollectRecord collectRecord = new CollectRecord(survey, survey.getVersion(cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()))).getName());
-			
-			query = "SELECT " + OFC_USER.USERNAME + " FROM " + OFC_USER
-					+ " WHERE " + OFC_USER.ID + " = " + cursor.getColumnIndex(OFC_RECORD.CREATED_BY_ID.getName());
-
-			Cursor userCursor = db.rawQuery(query, null);
-			if (userCursor.moveToFirst()){
-				User user = new User();
-	        	user.setName(userCursor.getString(0));
-	        	collectRecord.setCreatedBy(user);	
-			}
-			try {
-				Date creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_CREATED.getName())));
-				collectRecord.setCreationDate(creationDate);
-				Date modificationDate = null;
-				if (cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName()))!=null){
-					modificationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName())));
-				}
-				collectRecord.setModifiedDate(modificationDate);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}			
-			collectRecord.setId(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ID.getName())));
-
-			result.add(collectRecord);
-		}	
-		cursor.close();
-		db.close();
-		return result;
-	}	
 	
 	protected void addEmptyEnumeratedEntities(Entity parentEntity, EntityDefinition enumerableEntityDefn) {
 		Record record = parentEntity.getRecord();
