@@ -35,7 +35,7 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 	private MobileRecordDao recordDao;
 	private MobileCodeListManager codeListManager;
 	
-	private RecordConverter recordConverter;
+	//private RecordConverter recordConverter;
 	//private long lockTimeoutMillis;
 	private boolean lockingEnabled;
 	//private RecordLockManager lockManager;
@@ -44,13 +44,13 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		super();
 		this.lockingEnabled = lockingEnabled;
 		//lockTimeoutMillis = DEFAULT_LOCK_TIMEOUT_MILLIS;
-		recordConverter = new RecordConverter();
+		//recordConverter = new RecordConverter();
 		//lockManager = new RecordLockManager(lockTimeoutMillis);
 	}
 	
 	public CollectRecord load(CollectSurvey survey, int recordId, Step step) {
 		CollectRecord record = recordDao.load(survey, recordId, step.getStepNumber());
-		recordConverter.convertToLatestVersion(record);
+		//recordConverter.convertToLatestVersion(record);
 		return record;
 	}
 	

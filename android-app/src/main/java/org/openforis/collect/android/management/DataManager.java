@@ -225,9 +225,10 @@ public class DataManager {
 	public CollectRecord loadRecord(int recordId){
 		long startTime = System.currentTimeMillis();
 		CollectRecord loadedRecord = null;
-		try {
+		try {			
 			loadedRecord = ServiceFactory.getRecordManager().load(survey, recordId, Step.ENTRY);
 			DatabaseHelper.closeConnection();
+			Log.e("loadRecord1","totalTime=="+(System.currentTimeMillis()-startTime));
 		} catch (NullPointerException e){
 			e.printStackTrace();
 		}

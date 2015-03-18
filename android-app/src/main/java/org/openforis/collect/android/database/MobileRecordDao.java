@@ -14,7 +14,6 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Field;
 import org.jooq.Record;
-import org.jooq.Result;
 import org.jooq.SelectQuery;
 import org.jooq.TableField;
 import org.openforis.collect.model.CollectRecord;
@@ -23,8 +22,11 @@ import org.openforis.collect.model.CollectRecord.Step;
 import org.openforis.collect.model.CollectSurvey;
 import org.openforis.collect.model.RecordSummarySortField;
 import org.openforis.collect.model.User;
+import org.openforis.collect.persistence.DataInconsistencyException;
 import org.openforis.idm.metamodel.EntityDefinition;
+import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.metamodel.Schema;
+import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.ModelSerializer;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +64,7 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 	
 	@Transactional
 	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity, String... keys) {	
-		return loadSummariesLocal2(survey, rootEntity, (Step) null, 0, Integer.MAX_VALUE, (List<RecordSummarySortField>) null, keys);
+		return loadSummariesLocal(survey, rootEntity, (Step) null, 0, Integer.MAX_VALUE, (List<RecordSummarySortField>) null, keys);
 	}
 	
 	/*public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
@@ -136,8 +138,18 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 		}		
 	}
 	
+	private JooqFactory getMappingJooqFactory(CollectSurvey survey, int step) {
+		try {
+			return new JooqFactory(getConnection(), survey, step);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	@Transactional
-	public List<CollectRecord> loadSummariesLocal2(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
+	public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
 			List<RecordSummarySortField> sortFields, String... keyValues) {
 		long startTime = System.currentTimeMillis();
 		
@@ -197,72 +209,76 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 		//preparing result
 		while (cursor.moveToNext()) {
 			CollectRecord collectRecord = new CollectRecord(survey, (cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()))==null)?null:survey.getVersion(cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()))).getName());
-			
-			collectRecord.setId(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ID.getName())));
-			Date creationDate = null;
-			Date modificationDate = null;
-			try {
-				creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_CREATED.getName())));
-				collectRecord.setCreationDate(creationDate);
-				if (cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName()))!=null){
-					modificationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName())));
-				}
-				collectRecord.setModifiedDate(modificationDate);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				if (creationDate==null){
-					collectRecord.setCreationDate(null);
-				} 
-				if (modificationDate==null){
-					collectRecord.setModifiedDate(null);
-				}
-			}
-			
-			Integer createdById = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.CREATED_BY_ID.getName()));
-			if(createdById != null){
-				User user = loadUser(createdById);
-				collectRecord.setCreatedBy(user);
-			}
-			Integer modifiedById = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.MODIFIED_BY_ID.getName()));
-			if(modifiedById != null){
-				User user = loadUser(modifiedById);
-				collectRecord.setModifiedBy(user);
-			}
-			
-			collectRecord.setWarnings(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.WARNINGS.getName())));
-			collectRecord.setErrors(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ERRORS.getName())));
-			collectRecord.setSkipped(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.SKIPPED.getName())));
-			collectRecord.setMissing(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.MISSING.getName())));
-			
-			Integer loadedStep = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.STEP.getName()));
-			if (loadedStep != null) {
-				collectRecord.setStep(Step.valueOf(loadedStep));
-			}
-			String state = cursor.getString(cursor.getColumnIndex(OFC_RECORD.STATE.getName()));
-			if (state != null) {
-				collectRecord.setState(State.fromCode(state));
-			}
-			
-			List<Integer> counts = new ArrayList<Integer>(COUNT_FIELDS.length);
-			for (TableField tableField : COUNT_FIELDS) {
-				counts.add(cursor.getInt(cursor.getColumnIndex(tableField.getName())));
-			}
-			collectRecord.setEntityCounts(counts);
-			// create list of keys
-			List<String> keys = new ArrayList<String>(KEY_FIELDS.length);
-			for (TableField tableField : KEY_FIELDS) {
-				keys.add(cursor.getString(cursor.getColumnIndex(tableField.getName())));
-				Log.e("key5","=="+tableField.getName());
-				Log.e("key6","=="+cursor.getString(cursor.getColumnIndex(tableField.getName())));
-			}			
-			collectRecord.setRootEntityKeyValues(keys);
-			
+			fromCursor(cursor, collectRecord);		
 			result.add(collectRecord);
 		}
 		cursor.close();
 		db.close();
 		Log.e("fetchingResults","totalTime=="+(System.currentTimeMillis()-startTime));
 		return result;
+	}
+	
+	private void fromCursor(Cursor cursor, CollectRecord collectRecord){
+		collectRecord.setId(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ID.getName())));
+		Date creationDate = null;
+		Date modificationDate = null;
+		try {
+			creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_CREATED.getName())));
+			collectRecord.setCreationDate(creationDate);
+			if (cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName()))!=null){
+				modificationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName())));
+			}
+			collectRecord.setModifiedDate(modificationDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			if (creationDate==null){
+				collectRecord.setCreationDate(null);
+			} 
+			if (modificationDate==null){
+				collectRecord.setModifiedDate(null);
+			}
+		}
+		
+		Integer createdById = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.CREATED_BY_ID.getName()));
+		if(createdById != null){
+			User user = loadUser(createdById);
+			collectRecord.setCreatedBy(user);
+		}
+		Integer modifiedById = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.MODIFIED_BY_ID.getName()));
+		if(modifiedById != null){
+			User user = loadUser(modifiedById);
+			collectRecord.setModifiedBy(user);
+		}
+		
+		collectRecord.setWarnings(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.WARNINGS.getName())));
+		collectRecord.setErrors(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ERRORS.getName())));
+		collectRecord.setSkipped(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.SKIPPED.getName())));
+		collectRecord.setMissing(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.MISSING.getName())));
+		
+		Integer loadedStep = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.STEP.getName()));
+		if (loadedStep != null) {
+			collectRecord.setStep(Step.valueOf(loadedStep));
+		}
+		String state = cursor.getString(cursor.getColumnIndex(OFC_RECORD.STATE.getName()));
+		if (state != null) {
+			collectRecord.setState(State.fromCode(state));
+		}
+		
+		List<Integer> counts = new ArrayList<Integer>(COUNT_FIELDS.length);
+		for (TableField tableField : COUNT_FIELDS) {
+			counts.add(cursor.getInt(cursor.getColumnIndex(tableField.getName())));
+		}
+		collectRecord.setEntityCounts(counts);
+		// create list of keys
+		List<String> keys = new ArrayList<String>(KEY_FIELDS.length);
+		for (TableField tableField : KEY_FIELDS) {
+			keys.add(cursor.getString(cursor.getColumnIndex(tableField.getName())));
+		}			
+		collectRecord.setRootEntityKeyValues(keys);
+		
+		int rootEntityId = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ROOT_ENTITY_DEFINITION_ID.getName()));
+		Entity rootEntity = collectRecord.createRootEntity(rootEntityId);
+		collectRecord.setRootEntity(rootEntity);
 	}
 	
 	protected void fromRecord(Record r, CollectRecord c) {
@@ -426,4 +442,40 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 			}
 		}
 	}
+	
+	public CollectRecord load(CollectSurvey survey, int id, int step) {
+		JooqFactory jf = getMappingJooqFactory(survey, step);
+		SelectQuery query = jf.selectRecordQuery(id);
+		query.addLimit(1);
+		//Record r = query.fetchOne();
+		SQLiteDatabase db = DatabaseHelper.getDb();
+		Cursor cursor = db.rawQuery(query.toString(), null);
+		
+		if (cursor.getCount()==0){
+			return null;
+		}
+		cursor.moveToNext();
+		CollectRecord collectRecord;		
+		//preparing result
+		collectRecord = new CollectRecord(survey, (cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()))==null)?null:survey.getVersion(cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()))).getName());
+		fromCursor(cursor, collectRecord);		
+		
+		cursor.close();
+		db.close();
+		return collectRecord;		
+	}
+	
+	/*@Override
+	public CollectRecord fromRecord(Record r) {
+		int rootEntityId = r.getValueAsInteger(OFC_RECORD.ROOT_ENTITY_DEFINITION_ID);
+		String version = r.getValueAsString(OFC_RECORD.MODEL_VERSION);
+		Schema schema = survey.getSchema();
+		NodeDefinition rootEntityDefn = schema.getDefinitionById(rootEntityId);
+		if (rootEntityDefn == null) {
+			throw new DataInconsistencyException("Unknown root entity id " + rootEntityId);
+		}
+		CollectRecord record = new CollectRecord(survey, version);
+		fromRecord(r, record);
+		return record;
+	}*/
 }

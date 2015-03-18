@@ -348,6 +348,8 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						Log.e("keyValues","totalTime=="+keyValues.size());
 						if (keyValues.size()>0){
 							currentRecord = dataManager.loadRecord(record.getId());
+							Log.e("currentRecord==null","=="+(currentRecord==null));
+							Log.e("currentRecord.getRootEntity()","=="+(currentRecord.getRootEntity()==null));
 							attrDefs = currentRecord.getRootEntity().getDefinition().getKeyAttributeDefinitions();
 							//Log.e("attrDefs","=="+attrDefs.size());
 						}
