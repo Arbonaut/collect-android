@@ -1,5 +1,7 @@
 package org.openforis.collect.android.lists;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.openforis.collect.android.R;
@@ -291,7 +293,6 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 		 final Handler handler = new Handler(){
 			    @Override
 			    public void handleMessage(Message msg) {
-			    	Long startTime = System.currentTimeMillis();
 			    	int layout = (backgroundColor!=Color.WHITE)?R.layout.localclusterrow_white:R.layout.localclusterrow_black;
 					RecordChoiceActivity.this.adapter = new ArrayAdapter<String>(RecordChoiceActivity.this, layout, R.id.plotlabel, clusterList);
 				    RecordChoiceActivity.this.lv.setAdapter(RecordChoiceActivity.this.adapter);
@@ -302,20 +303,15 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 				    	RecordChoiceActivity.this.lv.setVisibility(View.VISIBLE);
 				    }
 				    RecordChoiceActivity.pd.dismiss();
-				    Log.e("handlingOVER","totalTime=="+(System.currentTimeMillis()-startTime));
 			    }};
 		  new Thread(new Runnable() {
-			    public void run() {	  
-			    	Long startTime = System.currentTimeMillis();
+			    public void run() {
 			    	RecordChoiceActivity.this.rootEntityDef = ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(getIntent().getIntExtra(getResources().getString(R.string.rootEntityId),1));					
 					CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			    	DataManager dataManager = new DataManager(RecordChoiceActivity.this,collectSurvey,RecordChoiceActivity.this.rootEntityDef.getName(),ApplicationManager.getLoggedInUser());
-			    	Log.e("isRecordListUpToDate","totalTime=="+(ApplicationManager.isRecordListUpToDate));
 			    	if (!ApplicationManager.isRecordListUpToDate){
 			    		ApplicationManager.recordsList = dataManager.loadSummaries();
 			    	}
-			    	Log.e("laodingSUMMARIESagain","totalTime=="+(System.currentTimeMillis()-startTime));
-					startTime = System.currentTimeMillis();
 			    	RecordChoiceActivity.this.recordsList = ApplicationManager.recordsList;
 			    	/*if (RecordChoiceActivity.this.recordsList.size()==0){
 			    		Intent resultHolder = new Intent();
@@ -329,32 +325,22 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						clusterList[0]="";
 					} else {
 						clusterList = new String[recordsList.size()/*+2*/];
-					}			
-					Log.e("beforeFOR","totalTime=="+(System.currentTimeMillis()-startTime));
+					}
 					for (int i=0;i<recordsList.size();i++){
-						startTime = System.currentTimeMillis();
 						CollectRecord record = recordsList.get(i);
 						List<String> keyValues = record.getRootEntityKeyValues();
 						
 						clusterList[i] = /*record.getId()+"=="+*/(i+1)//+" "+record.getCreatedBy().getName()
-								+"\r\n"+record.getCreationDate();
+								+"\r\n"+formatDate(record.getCreationDate());
 						if (record.getModifiedDate()!=null){
-							clusterList[i] += "\r\n"+record.getModifiedDate();
+							clusterList[i] += "\r\n"+formatDate(record.getModifiedDate());
 						}
-						Log.e("firstpartofloop","totalTime=="+(System.currentTimeMillis()-startTime));
-						startTime = System.currentTimeMillis();
 						CollectRecord currentRecord = null;
 						List<AttributeDefinition> attrDefs = null;
-						Log.e("keyValues","totalTime=="+keyValues.size());
 						if (keyValues.size()>0){
 							currentRecord = dataManager.loadRecord(record.getId());
-							Log.e("currentRecord==null","=="+(currentRecord==null));
-							Log.e("currentRecord.getRootEntity()","=="+(currentRecord.getRootEntity()==null));
 							attrDefs = currentRecord.getRootEntity().getDefinition().getKeyAttributeDefinitions();
-							//Log.e("attrDefs","=="+attrDefs.size());
 						}
-						Log.e("2ndpartoftheloop","totalTime=="+(System.currentTimeMillis()-startTime));
-						startTime = System.currentTimeMillis();
 						for (int j=0;j<keyValues.size();j++){
 							String key = keyValues.get(j);
 							if (key!=null){
@@ -362,15 +348,12 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 								if (label!=null)
 									clusterList[i] += "\r\n"+label+": "+key;
 							}				
-						}
-						Log.e("keysPrepared","totalTime=="+(System.currentTimeMillis()-startTime));
-						
+						}						
 					}
 					
 					Message msg = Message.obtain();
 			        msg.what = 1;
 					handler.sendMessage(msg);
-					Log.e("threadOver","totalTime=="+(System.currentTimeMillis()-startTime));
 			    }
 			  }).start();
 	}
@@ -391,4 +374,23 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 			    }
 			  }).start();
 	}
+	
+	public String formatDate(Date dateToFormat){
+		int minutes = dateToFormat.getMinutes();
+		String minutesStr = (minutes<10)?"0"+String.valueOf(minutes):String.valueOf(minutes);
+		int hours = dateToFormat.getHours();
+		Calendar cal = this.dateToCalendar(dateToFormat);
+		
+		String hoursStr = (hours<10)?"0"+String.valueOf(hours):String.valueOf(hours);
+		return cal.get(Calendar.DAY_OF_MONTH)+getResources().getString(R.string.dateSeparator)
+				+(dateToFormat.getMonth()+1)+getResources().getString(R.string.dateSeparator)
+				+(1900+dateToFormat.getYear())+getResources().getString(R.string.whiteSpaceSeparator)
+				+hoursStr+getResources().getString(R.string.timeSeparator)+minutesStr;
+	}
+	
+	private Calendar dateToCalendar(Date date){ 
+		  Calendar cal = Calendar.getInstance();
+		  cal.setTime(date);
+		  return cal;
+		}
 }

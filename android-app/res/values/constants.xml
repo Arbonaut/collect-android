@@ -162,6 +162,7 @@
     <string name="rangeSeparator">-</string>
     <string name="coordinateSeparator">,</string>
     <string name="taxonSeparator">,</string>
+    <string name="whiteSpaceSeparator">&#160;</string>
     
     <!-- ADDITIONAL TEXT MARKERS -->
     <string name="requiredFieldMarker">*</string>

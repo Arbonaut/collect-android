@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openforis.collect.android.database.MobileRecordDao;
-import org.openforis.collect.manager.RecordConverter;
 import org.openforis.collect.metamodel.ui.UIOptions;
 import org.openforis.collect.metamodel.ui.UIOptions.Layout;
 import org.openforis.collect.model.CollectRecord;
