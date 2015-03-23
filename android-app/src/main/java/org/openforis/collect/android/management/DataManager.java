@@ -206,26 +206,15 @@ public class DataManager {
 	}
 	
 	public List<CollectRecord> loadSummaries(){
-		//JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
-		//jdbcDao.getConnection();
-		//android.os.Debug.startMethodTracing("slad");
-		//List<CollectRecord> recordsList = this.loadSummaries(survey, rootEntity, (Step) null, 0, Integer.MAX_VALUE, (List<RecordSummarySortField>) null, (String[]) null);
-		//List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
-		//MobileRecordManager recordManager = (MobileRecordManager) ServiceFactory.getRecordManager();
 		List<CollectRecord> recordsList = ServiceFactory.getRecordManager().getRecordDao().loadSummaries(survey, rootEntity);
-		//android.os.Debug.stopMethodTracing();
-		//JdbcDaoSupport.close();
 		ApplicationManager.isRecordListUpToDate = true;
 		return recordsList;
 	}
 	
 	public CollectRecord loadRecord(int recordId){
 		CollectRecord loadedRecord = null;
-		try {
-//			JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
-//			jdbcDao.getConnection();
+		try {			
 			loadedRecord = ServiceFactory.getRecordManager().load(survey, recordId, Step.ENTRY);
-//			JdbcDaoSupport.close();
 			DatabaseHelper.closeConnection();
 		} catch (NullPointerException e){
 			e.printStackTrace();

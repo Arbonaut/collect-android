@@ -1,19 +1,10 @@
 package org.openforis.collect.android.management;
 
-import static org.openforis.collect.persistence.jooq.Tables.OFC_RECORD;
-import static org.openforis.collect.persistence.jooq.tables.OfcUser.OFC_USER;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
-import org.openforis.collect.android.database.DatabaseHelper;
 import org.openforis.collect.android.database.MobileRecordDao;
-import org.openforis.collect.manager.RecordConverter;
 import org.openforis.collect.metamodel.ui.UIOptions;
 import org.openforis.collect.metamodel.ui.UIOptions.Layout;
 import org.openforis.collect.model.CollectRecord;
@@ -30,16 +21,12 @@ import org.openforis.idm.metamodel.CodeListItem;
 import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.ModelVersion;
 import org.openforis.idm.metamodel.NodeDefinition;
-import org.openforis.idm.metamodel.Schema;
 import org.openforis.idm.model.Code;
 import org.openforis.idm.model.CodeAttribute;
 import org.openforis.idm.model.Entity;
 import org.openforis.idm.model.Node;
 import org.openforis.idm.model.Record;
 import org.springframework.transaction.annotation.Transactional;
-
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 public class MobileRecordManager extends org.openforis.collect.manager.RecordManager {
 	
@@ -48,7 +35,7 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 	private MobileRecordDao recordDao;
 	private MobileCodeListManager codeListManager;
 	
-	private RecordConverter recordConverter;
+	//private RecordConverter recordConverter;
 	//private long lockTimeoutMillis;
 	private boolean lockingEnabled;
 	//private RecordLockManager lockManager;
@@ -57,13 +44,13 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		super();
 		this.lockingEnabled = lockingEnabled;
 		//lockTimeoutMillis = DEFAULT_LOCK_TIMEOUT_MILLIS;
-		recordConverter = new RecordConverter();
+		//recordConverter = new RecordConverter();
 		//lockManager = new RecordLockManager(lockTimeoutMillis);
 	}
 	
 	public CollectRecord load(CollectSurvey survey, int recordId, Step step) {
 		CollectRecord record = recordDao.load(survey, recordId, step.getStepNumber());
-		recordConverter.convertToLatestVersion(record);
+		//recordConverter.convertToLatestVersion(record);
 		return record;
 	}
 	
@@ -83,11 +70,6 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		this.codeListManager = codeListManager;
 	}
 	
-	@Override
-	@Transactional
-	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity) {
-		return this.loadSummaries(survey, rootEntity, (String[]) null);
-	}
 	
 	@Transactional
 	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity, String... keys) {
@@ -100,7 +82,7 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		return recordsSummary;
 	}
 	
-	public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
+	/*public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
 			List<RecordSummarySortField> sortFields, String... keyValues) {
 		List<CollectRecord> result = new ArrayList<CollectRecord>();
 		//preparing data for query
@@ -160,7 +142,7 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		cursor.close();
 		db.close();
 		return result;
-	}	
+	}*/
 	
 	protected void addEmptyEnumeratedEntities(Entity parentEntity, EntityDefinition enumerableEntityDefn) {
 		Record record = parentEntity.getRecord();

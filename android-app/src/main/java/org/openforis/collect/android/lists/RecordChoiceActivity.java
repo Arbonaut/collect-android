@@ -1,5 +1,7 @@
 package org.openforis.collect.android.lists;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.openforis.collect.android.R;
@@ -303,7 +305,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 				    RecordChoiceActivity.pd.dismiss();
 			    }};
 		  new Thread(new Runnable() {
-			    public void run() {	    	
+			    public void run() {
 			    	RecordChoiceActivity.this.rootEntityDef = ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(getIntent().getIntExtra(getResources().getString(R.string.rootEntityId),1));					
 					CollectSurvey collectSurvey = (CollectSurvey)ApplicationManager.getSurvey();	        	
 			    	DataManager dataManager = new DataManager(RecordChoiceActivity.this,collectSurvey,RecordChoiceActivity.this.rootEntityDef.getName(),ApplicationManager.getLoggedInUser());
@@ -323,14 +325,15 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 						clusterList[0]="";
 					} else {
 						clusterList = new String[recordsList.size()/*+2*/];
-					}									
+					}
 					for (int i=0;i<recordsList.size();i++){
 						CollectRecord record = recordsList.get(i);
 						List<String> keyValues = record.getRootEntityKeyValues();
+						
 						clusterList[i] = /*record.getId()+"=="+*/(i+1)//+" "+record.getCreatedBy().getName()
-								+"\r\n"+record.getCreationDate();
+								+"\r\n"+formatDate(record.getCreationDate());
 						if (record.getModifiedDate()!=null){
-							clusterList[i] += "\r\n"+record.getModifiedDate();
+							clusterList[i] += "\r\n"+formatDate(record.getModifiedDate());
 						}
 						CollectRecord currentRecord = null;
 						List<AttributeDefinition> attrDefs = null;
@@ -345,8 +348,7 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 								if (label!=null)
 									clusterList[i] += "\r\n"+label+": "+key;
 							}				
-						}
-						
+						}						
 					}
 					
 					Message msg = Message.obtain();
@@ -372,4 +374,23 @@ public class RecordChoiceActivity extends BaseListActivity implements OnClickLis
 			    }
 			  }).start();
 	}
+	
+	public String formatDate(Date dateToFormat){
+		int minutes = dateToFormat.getMinutes();
+		String minutesStr = (minutes<10)?"0"+String.valueOf(minutes):String.valueOf(minutes);
+		int hours = dateToFormat.getHours();
+		Calendar cal = this.dateToCalendar(dateToFormat);
+		
+		String hoursStr = (hours<10)?"0"+String.valueOf(hours):String.valueOf(hours);
+		return cal.get(Calendar.DAY_OF_MONTH)+getResources().getString(R.string.dateSeparator)
+				+(dateToFormat.getMonth()+1)+getResources().getString(R.string.dateSeparator)
+				+(1900+dateToFormat.getYear())+getResources().getString(R.string.whiteSpaceSeparator)
+				+hoursStr+getResources().getString(R.string.timeSeparator)+minutesStr;
+	}
+	
+	private Calendar dateToCalendar(Date date){ 
+		  Calendar cal = Calendar.getInstance();
+		  cal.setTime(date);
+		  return cal;
+		}
 }

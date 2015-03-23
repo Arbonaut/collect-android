@@ -128,10 +128,6 @@ public class ServiceFactory {
 		return recordManager;
 	}
 	
-	/*public static RecordFileManager getRecordFileManager() {
-		return recordFileManager;
-	}*/
-	
 	public static MobileCodeListManager getCodeListManager() {
 		return codeListManager;
 	}

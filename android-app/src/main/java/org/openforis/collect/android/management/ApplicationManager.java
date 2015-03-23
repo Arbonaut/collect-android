@@ -354,6 +354,10 @@ public class ApplicationManager extends BaseActivity {
 	 	    			survey = ServiceFactory.getSurveyManager().getById(formId);
 	 	    			showRootEntitiesListScreen();
 	 	    		}
+	 	    		if (codeListsLoadingThread.isAlive()){
+	 	    			codeListsLoadingThread.interrupt();
+	 	    		}
+	 	    		codeListsLoadingThread.setPriority(Thread.MIN_PRIORITY);
 	 	    		codeListsLoadingThread.start();
 	 	    	} else if (resultCode==getResources().getInteger(R.integer.backButtonPressed)){
 	 	    		ApplicationManager.this.finish();
@@ -437,17 +441,11 @@ public class ApplicationManager extends BaseActivity {
 		public void run() {
 			try {
 				super.run();
-				Log.e("ApplicationManager.getSurvey()","=="+(ApplicationManager.getSurvey()==null));
-				//List<CollectSurvey> surveysList = ServiceFactory.surveyManager.getAll();
-				//for (CollectSurvey survey : surveysList){
-					List<CodeList> codeLists = survey.getCodeLists();
-		            Log.e("THREAD","loading=="+codeLists.size());
-		        	for (CodeList codeList : codeLists){
-		        		Log.e("THREAD","loading=="+codeList.getName());
-		        		if (!codeList.isExternal())
-		        			ServiceFactory.getCodeListManager().loadRootItems(codeList);
-		        	}
-				//}	        	            
+				List<CodeList> codeLists = survey.getCodeLists();
+	        	for (CodeList codeList : codeLists){
+	        		if (!codeList.isExternal())
+	        			ServiceFactory.getCodeListManager().loadRootItems(codeList);
+	        	}	        	            
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
