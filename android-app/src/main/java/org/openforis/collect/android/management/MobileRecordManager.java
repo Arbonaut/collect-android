@@ -94,6 +94,12 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		return recordDao.loadSummaries(survey, rootEntity, keys);
 	}
 	
+	@Transactional
+	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity, int offset, int maxNumberOfRecords, List<RecordSummarySortField> sortFields, String... keyValues) {
+		List<CollectRecord> recordsSummary = recordDao.loadSummaries(survey, rootEntity, offset, maxNumberOfRecords, sortFields, keyValues);
+		return recordsSummary;
+	}
+	
 	public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
 			List<RecordSummarySortField> sortFields, String... keyValues) {
 		List<CollectRecord> result = new ArrayList<CollectRecord>();
