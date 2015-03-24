@@ -22,7 +22,6 @@ import org.openforis.collect.model.CollectSurvey;
 import org.openforis.collect.model.RecordSummarySortField;
 import org.openforis.collect.model.User;
 import org.openforis.collect.persistence.DataInconsistencyException;
-import org.openforis.collect.persistence.RecordDao.JooqFactory;
 import org.openforis.idm.metamodel.EntityDefinition;
 import org.openforis.idm.metamodel.NodeDefinition;
 import org.openforis.idm.metamodel.Schema;
@@ -198,65 +197,6 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 		collectRecord.setRootEntity(rootEntity);
 	}
 	
-	protected void fromRecord(Record r, CollectRecord c) {
-		long startTime = System.currentTimeMillis();
-		c.setId(r.getValue(OFC_RECORD.ID));
-		c.setCreationDate(r.getValue(OFC_RECORD.DATE_CREATED));
-		c.setModifiedDate(r.getValue(OFC_RECORD.DATE_MODIFIED));
-		Log.e("setModifiedDate","totalTime=="+(System.currentTimeMillis()-startTime));
-		startTime = System.currentTimeMillis();
-		Integer createdById = r.getValue(OFC_RECORD.CREATED_BY_ID);
-		if(createdById !=null){
-			User user = loadUser(createdById);
-			c.setCreatedBy(user);
-		}
-		Integer modifiedById = r.getValue(OFC_RECORD.MODIFIED_BY_ID);
-		if(modifiedById !=null){
-			User user = loadUser(modifiedById);
-			c.setModifiedBy(user);
-		}
-		Log.e("setModifiedBy","totalTime=="+(System.currentTimeMillis()-startTime));
-		startTime = System.currentTimeMillis();
-		c.setWarnings(r.getValue(OFC_RECORD.WARNINGS));
-		c.setErrors(r.getValue(OFC_RECORD.ERRORS));
-		c.setSkipped(r.getValue(OFC_RECORD.SKIPPED));
-		c.setMissing(r.getValue(OFC_RECORD.MISSING));
-		Log.e("setMissing","totalTime=="+(System.currentTimeMillis()-startTime));
-		startTime = System.currentTimeMillis();
-		Integer step = r.getValue(OFC_RECORD.STEP);
-		if (step != null) {
-			c.setStep(Step.valueOf(step));
-		}
-		Log.e("setStep","totalTime=="+(System.currentTimeMillis()-startTime));
-		startTime = System.currentTimeMillis();
-		String state = r.getValue(OFC_RECORD.STATE);
-		if (state != null) {
-			c.setState(State.fromCode(state));
-		}
-		Log.e("setState","totalTime=="+(System.currentTimeMillis()-startTime));
-		startTime = System.currentTimeMillis();
-		// create list of entity counts
-		List<Integer> counts = new ArrayList<Integer>(COUNT_FIELDS.length);
-		for (TableField tableField : COUNT_FIELDS) {
-			counts.add(r.getValueAsInteger(tableField));
-		}
-		c.setEntityCounts(counts);
-		Log.e("entityCounts","totalTime=="+(System.currentTimeMillis()-startTime));
-		startTime = System.currentTimeMillis();
-		// create list of keys
-		List<String> keys = new ArrayList<String>(KEY_FIELDS.length);
-		for (TableField tableField : KEY_FIELDS) {
-			keys.add(r.getValueAsString(tableField));
-			Log.e("key1","=="+tableField.getName());
-			Log.e("key2","=="+r.getValueAsString(tableField));
-		}
-		
-		c.setRootEntityKeyValues(keys);
-		//List<String> keyValues = c.getRootEntityKeyValues();
-		//Entity rootEntity = c.createRootEntity(rootEntityId);
-		Log.e("keys","totalTime=="+(System.currentTimeMillis()-startTime));
-	}
-	
 	private ModelSerializer getSerializer() {
 		return new ModelSerializer(SERIALIZATION_BUFFER_SIZE);
 	}
@@ -377,7 +317,7 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 		}
 	}
 	
-	@Override
+	/*@Override
 	public CollectRecord fromRecord(Record r) {
 		int rootEntityId = r.getValueAsInteger(OFC_RECORD.ROOT_ENTITY_DEFINITION_ID);
 		String version = r.getValueAsString(OFC_RECORD.MODEL_VERSION);
@@ -444,5 +384,5 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 			ModelSerializer modelSerializer = getSerializer();
 			modelSerializer.mergeFrom(data, rootEntity);
 		}
-	}
+	}*/
 }
