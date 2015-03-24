@@ -15,6 +15,7 @@ import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.SelectQuery;
 import org.jooq.TableField;
+import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.model.CollectRecord;
 import org.openforis.collect.model.CollectRecord.State;
 import org.openforis.collect.model.CollectRecord.Step;
@@ -31,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 
 public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao {
@@ -215,6 +215,8 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
         	user.setName(userCursor.getString(0));
     		user.setPassword(userCursor.getString(1));
 		}
+		userCursor.close();
+		db.close();
 		return user;
 	}
 	
@@ -285,7 +287,7 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 		}
 	}
 	
-	/*public CollectRecord load(CollectSurvey survey, int id, int step) {
+	public CollectRecord load(CollectSurvey survey, int id, int step) {
 		JooqFactory jf = getMappingJooqFactory(survey, step);
 		SelectQuery query = jf.selectRecordQuery(id);
 		query.addLimit(1);
@@ -296,17 +298,17 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 			return null;
 		}
 		cursor.moveToNext();
-		CollectRecord collectRecord;		
+		CollectRecord collectRecord;
 		//preparing result
 		collectRecord = new CollectRecord(survey, (cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()))==null)?null:survey.getVersion(cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()))).getName());
-		fromCursor(cursor, collectRecord);		
+		fromCursor2(cursor, query.fetchOne(), collectRecord);		
 		
 		cursor.close();
 		db.close();
 		return collectRecord;		
-	}*/
+	}
 	
-	public CollectRecord load(CollectSurvey survey, int id, int step) {
+	/*public CollectRecord load(CollectSurvey survey, int id, int step) {
 		JooqFactory jf = getMappingJooqFactory(survey, step);
 		SelectQuery query = jf.selectRecordQuery(id);
 		Record r = query.fetchOne();
@@ -315,7 +317,7 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 		} else {
 			return jf.fromRecord(r);
 		}
-	}
+	}*/
 	
 	/*@Override
 	public CollectRecord fromRecord(Record r) {
@@ -327,7 +329,57 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 			throw new DataInconsistencyException("Unknown root entity id " + rootEntityId);
 		}
 		CollectRecord record = new CollectRecord(survey, version);
-		fromRecord(r, record);
+		c.setId(r.getValue(OFC_RECORD.ID));
+		c.setCreationDate(r.getValue(OFC_RECORD.DATE_CREATED));
+		c.setModifiedDate(r.getValue(OFC_RECORD.DATE_MODIFIED));
+		
+		Integer createdById = r.getValue(OFC_RECORD.CREATED_BY_ID);
+		if(createdById !=null){
+			User user = loadUser(createdById);
+			c.setCreatedBy(user);
+		}
+		Integer modifiedById = r.getValue(OFC_RECORD.MODIFIED_BY_ID);
+		if(modifiedById !=null){
+			User user = loadUser(modifiedById);
+			c.setModifiedBy(user);
+		}
+		c.setWarnings(r.getValue(OFC_RECORD.WARNINGS));
+		c.setErrors(r.getValue(OFC_RECORD.ERRORS));
+		c.setSkipped(r.getValue(OFC_RECORD.SKIPPED));
+		c.setMissing(r.getValue(OFC_RECORD.MISSING));
+
+		Integer step = r.getValue(OFC_RECORD.STEP);
+		if (step != null) {
+			c.setStep(Step.valueOf(step));
+		}
+		String state = r.getValue(OFC_RECORD.STATE);
+		if (state != null) {
+			c.setState(State.fromCode(state));
+		}
+		
+		// create list of entity counts
+		List<Integer> counts = new ArrayList<Integer>(COUNT_FIELDS.length);
+		for (TableField tableField : COUNT_FIELDS) {
+			counts.add(r.getValueAsInteger(tableField));
+		}
+		c.setEntityCounts(counts);
+
+		// create list of keys
+		List<String> keys = new ArrayList<String>(KEY_FIELDS.length);
+		for (TableField tableField : KEY_FIELDS) {
+			keys.add(r.getValueAsString(tableField));
+		}
+		c.setRootEntityKeyValues(keys);
+
+		int rootEntityId = r.getValue(OFC_RECORD.ROOT_ENTITY_DEFINITION_ID);
+
+		if ( dataAlias != null ) {
+			byte[] data = r.getValue(dataAlias);
+			//System.out.println("r.getValue(dataAlias) = " + r.getValue(dataAlias));
+			Entity rootEntity = c.createRootEntity(rootEntityId);
+			ModelSerializer modelSerializer = getSerializer();
+			modelSerializer.mergeFrom(data, rootEntity);
+		}
 		return record;
 	}
 	
@@ -385,4 +437,91 @@ public class MobileRecordDao extends org.openforis.collect.persistence.RecordDao
 			modelSerializer.mergeFrom(data, rootEntity);
 		}
 	}*/
+	public CollectRecord fromCursor2(Cursor cursor, Record r, CollectRecord collectRecord) {
+		int rootEntityId = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ROOT_ENTITY_DEFINITION_ID.getName()));
+		
+		String version = cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()));		
+		Schema schema = ApplicationManager.getSurvey().getSchema();
+		NodeDefinition rootEntityDefn = schema.getDefinitionById(rootEntityId);
+		if (rootEntityDefn == null) {
+			throw new DataInconsistencyException("Unknown root entity id " + rootEntityId);
+		}
+		//CollectRecord record = new CollectRecord((CollectSurvey)ApplicationManager.getSurvey(), version);
+		
+		collectRecord.setId(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ID.getName())));
+		Date creationDate = null;
+		Date modificationDate = null;
+		try {
+			creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_CREATED.getName())));
+			collectRecord.setCreationDate(creationDate);
+			if (cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName()))!=null){
+				modificationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName())));
+			}
+			collectRecord.setModifiedDate(modificationDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			if (creationDate==null){
+				collectRecord.setCreationDate(null);
+			} 
+			if (modificationDate==null){
+				collectRecord.setModifiedDate(null);
+			}
+		}
+		
+		Integer createdById = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.CREATED_BY_ID.getName()));
+		if(createdById != null){
+			User user = loadUser(createdById);
+			collectRecord.setCreatedBy(user);
+		}
+		Integer modifiedById = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.MODIFIED_BY_ID.getName()));
+		if(modifiedById != null){
+			User user = loadUser(modifiedById);
+			collectRecord.setModifiedBy(user);
+		}
+		
+		collectRecord.setWarnings(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.WARNINGS.getName())));
+		collectRecord.setErrors(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ERRORS.getName())));
+		collectRecord.setSkipped(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.SKIPPED.getName())));
+		collectRecord.setMissing(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.MISSING.getName())));
+		
+		Integer loadedStep = cursor.getInt(cursor.getColumnIndex(OFC_RECORD.STEP.getName()));
+		if (loadedStep != null) {
+			collectRecord.setStep(Step.valueOf(loadedStep));
+		}
+		String state = cursor.getString(cursor.getColumnIndex(OFC_RECORD.STATE.getName()));
+		if (state != null) {
+			collectRecord.setState(State.fromCode(state));
+		}
+		
+		List<Integer> counts = new ArrayList<Integer>(COUNT_FIELDS.length);
+		for (TableField tableField : COUNT_FIELDS) {
+			counts.add(cursor.getInt(cursor.getColumnIndex(tableField.getName())));
+		}
+		collectRecord.setEntityCounts(counts);
+		// create list of keys
+		List<String> keys = new ArrayList<String>(KEY_FIELDS.length);
+		for (TableField tableField : KEY_FIELDS) {
+			keys.add(cursor.getString(cursor.getColumnIndex(tableField.getName())));
+		}			
+		collectRecord.setRootEntityKeyValues(keys);
+		
+		Entity rootEntity = collectRecord.createRootEntity(rootEntityId);
+		collectRecord.setRootEntity(rootEntity);
+
+		if ( dataAlias != null ) {
+			byte[] data = r.getValue(dataAlias);
+			//System.out.println("r.getValue(dataAlias) = " + r.getValue(dataAlias));
+			//Entity rootEntity = c.createRootEntity(rootEntityId);
+			ModelSerializer modelSerializer = getSerializer();
+			modelSerializer.mergeFrom(data, rootEntity);
+		}
+		/*if ( dataAlias != null ) {
+			byte[] data = r.getValue(dataAlias);
+			//System.out.println("r.getValue(dataAlias) = " + r.getValue(dataAlias));
+			//Entity rootEntity = c.createRootEntity(rootEntityId);
+			ModelSerializer modelSerializer = getSerializer();
+			modelSerializer.mergeFrom(data, rootEntity);
+		}*/
+		return collectRecord;
+	}
 }
