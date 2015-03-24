@@ -139,9 +139,9 @@ public class BooleanField extends Field {
 		Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
 		NodeChangeSet nodeChangeSet = null;
 		if (node!=null){
-			nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((BooleanAttribute)node, new BooleanValue(boolValue));
+			nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((BooleanAttribute)node, new BooleanValue(boolValue));
 		} else {
-			nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(this.findParentEntity(path), this.nodeDefinition.getName(), new BooleanValue(boolValue), null, null);
+			nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(this.findParentEntity(path), this.nodeDefinition.getName(), new BooleanValue(boolValue), null, null);
 		}
 		validateField(nodeChangeSet);
 	}

@@ -109,7 +109,7 @@ public class NumberField extends InputField {
 						NumberField.this.txtBox.setSelection(start);
 					}
 				}
-			}	
+			}
 		});
 	}
 	
@@ -141,23 +141,23 @@ public class NumberField extends InputField {
 			if (node!=null){
 				if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
 					if (((NumberAttributeDefinition) this.nodeDefinition).isInteger()){
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((IntegerAttribute)node, new IntegerValue(Integer.valueOf(value), null));					
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((IntegerAttribute)node, new IntegerValue(Integer.valueOf(value), null));					
 					} else {
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealAttribute)node, new RealValue(Double.valueOf(value), null));						
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((RealAttribute)node, new RealValue(Double.valueOf(value), null));						
 					}
 				} else if (value.equals("")){
 					if (((NumberAttributeDefinition) this.nodeDefinition).isInteger()){
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((IntegerAttribute)node, new IntegerValue(null, null));					
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((IntegerAttribute)node, new IntegerValue(null, null));					
 					} else {
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealAttribute)node, new RealValue(null, null));						
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((RealAttribute)node, new RealValue(null, null));						
 					}
 				}
 			} else {
 				if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
 					if (((NumberAttributeDefinition) this.nodeDefinition).isInteger()){
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerValue(Integer.valueOf(value), null), null, null);			
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerValue(Integer.valueOf(value), null), null, null);			
 					} else {
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealValue(Double.valueOf(value), null), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealValue(Double.valueOf(value), null), null, null);
 					}
 				}			
 			}
@@ -193,7 +193,7 @@ public class NumberField extends InputField {
 		}
 		else {
 			result = false;
-		}	
+		}
 		return result;
 	} 
 }

@@ -83,9 +83,9 @@ public class TextField extends InputField {
 		Node<? extends NodeDefinition> node = this.findParentEntity(path).get(this.nodeDefinition.getName(), position);
 		NodeChangeSet nodeChangeSet = null;
 		if (node!=null){
-			nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((TextAttribute)node, new TextValue(value));
+			nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((TextAttribute)node, new TextValue(value));
 		} else {
-			nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new TextValue(value), null, null);
+			nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new TextValue(value), null, null);
 		}
 		validateField(nodeChangeSet);
 	}

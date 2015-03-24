@@ -748,7 +748,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 		 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
 		 							Node<?> foundNode = EntityInstancesScreen.this.parentEntitySingleAttribute/*.getParent()*/.get(parentNodeDefinition.getName(), position);		 							
 		 							if (foundNode!=null){
-		 								ServiceFactory.getRecordManager().deleteNode(foundNode);
+		 								ServiceFactory.getMobileRecordManager().deleteNode(foundNode);
 		 								Node<?> tempNode = EntityInstancesScreen.this.parentEntitySingleAttribute.get(parentNodeDefinition.getName(), position);
 		 								if ((tempNode==null) && (position==0)){
 		 									//EntityBuilder.addEntity(EntityInstancesScreen.this.parentEntitySingleAttribute/*tempEntity*/, parentNodeDefinition.getName());

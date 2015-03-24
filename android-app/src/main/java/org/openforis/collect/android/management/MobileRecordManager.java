@@ -78,8 +78,7 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 	
 	@Transactional
 	public List<CollectRecord> loadSummaries(CollectSurvey survey, String rootEntity, int offset, int maxNumberOfRecords, List<RecordSummarySortField> sortFields, String... keyValues) {
-		List<CollectRecord> recordsSummary = recordDao.loadSummaries(survey, rootEntity, offset, maxNumberOfRecords, sortFields, keyValues);
-		return recordsSummary;
+		return recordDao.loadSummaries(survey, rootEntity, offset, maxNumberOfRecords, sortFields, keyValues);
 	}
 	
 	/*public List<CollectRecord> loadSummariesLocal(CollectSurvey survey, String rootEntity, Step step, int offset, int maxRecords, 
@@ -91,20 +90,20 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		Integer rootEntityDefnId = rootEntityDefn.getId();
 		
 		String query = "SELECT " + 
-				OFC_RECORD.DATE_CREATED + "," + OFC_RECORD.CREATED_BY_ID + "," + OFC_RECORD.DATE_MODIFIED + "," + OFC_RECORD.ERRORS + "," + OFC_RECORD.ID + "," + 
-			     OFC_RECORD.MISSING + "," + OFC_RECORD.MODEL_VERSION + "," + OFC_RECORD.MODIFIED_BY_ID + "," + 
-			     OFC_RECORD.ROOT_ENTITY_DEFINITION_ID + "," + OFC_RECORD.SKIPPED + "," + OFC_RECORD.STATE + "," + OFC_RECORD.STEP + "," + OFC_RECORD.SURVEY_ID + "," + 
-			     OFC_RECORD.WARNINGS + "," + OFC_RECORD.KEY1 + "," + OFC_RECORD.KEY2 + "," + OFC_RECORD.KEY3 + "," + 
-			     OFC_RECORD.COUNT1 + "," + OFC_RECORD.COUNT2 + "," + OFC_RECORD.COUNT3 + "," + OFC_RECORD.COUNT4 + "," + OFC_RECORD.COUNT5
-			     + " FROM " + OFC_RECORD
-			     + " WHERE " + OFC_RECORD.SURVEY_ID + " = " + survey.getId()
-			     + " AND " + OFC_RECORD.ROOT_ENTITY_DEFINITION_ID + " = " + rootEntityDefnId;
+				org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.DATE_CREATED + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.CREATED_BY_ID + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.DATE_MODIFIED + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.ERRORS + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.ID + "," + 
+			     org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.MISSING + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.MODEL_VERSION + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.MODIFIED_BY_ID + "," + 
+			     org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.ROOT_ENTITY_DEFINITION_ID + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.SKIPPED + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.STATE + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.STEP + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.SURVEY_ID + "," + 
+			     org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.WARNINGS + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.KEY1 + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.KEY2 + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.KEY3 + "," + 
+			     org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.COUNT1 + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.COUNT2 + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.COUNT3 + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.COUNT4 + "," + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.COUNT5
+			     + " FROM " + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD
+			     + " WHERE " + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.SURVEY_ID + " = " + survey.getId()
+			     + " AND " + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.ROOT_ENTITY_DEFINITION_ID + " = " + rootEntityDefnId;
 		
 		if ( step != null ) {
-			query += " AND " + OFC_RECORD.STEP + " = " + step.getStepNumber();
+			query += " AND " + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.STEP + " = " + step.getStepNumber();
 		}
 
-		query += " ORDER BY " + OFC_RECORD.ID; 
+		query += " ORDER BY " + org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.ID; 
 		query += " LIMIT " + maxRecords;
 		
 		//executing query
@@ -113,10 +112,10 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 		
 		//preparing result
 		while (cursor.moveToNext()) {
-			CollectRecord collectRecord = new CollectRecord(survey, survey.getVersion(cursor.getString(cursor.getColumnIndex(OFC_RECORD.MODEL_VERSION.getName()))).getName());
+			CollectRecord collectRecord = new CollectRecord(survey, survey.getVersion(cursor.getString(cursor.getColumnIndex(org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.MODEL_VERSION.getName()))).getName());
 			
-			query = "SELECT " + OFC_USER.USERNAME + " FROM " + OFC_USER
-					+ " WHERE " + OFC_USER.ID + " = " + cursor.getColumnIndex(OFC_RECORD.CREATED_BY_ID.getName());
+			query = "SELECT " + org.openforis.collect.persistence.jooq.tables.OfcUser.OFC_USER.USERNAME + " FROM " + org.openforis.collect.persistence.jooq.tables.OfcUser.OFC_USER
+					+ " WHERE " + org.openforis.collect.persistence.jooq.tables.OfcUser.OFC_USER.ID + " = " + cursor.getColumnIndex(org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.CREATED_BY_ID.getName());
 
 			Cursor userCursor = db.rawQuery(query, null);
 			if (userCursor.moveToFirst()){
@@ -125,17 +124,17 @@ public class MobileRecordManager extends org.openforis.collect.manager.RecordMan
 	        	collectRecord.setCreatedBy(user);	
 			}
 			try {
-				Date creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_CREATED.getName())));
+				Date creationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.DATE_CREATED.getName())));
 				collectRecord.setCreationDate(creationDate);
 				Date modificationDate = null;
-				if (cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName()))!=null){
-					modificationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(OFC_RECORD.DATE_MODIFIED.getName())));
+				if (cursor.getString(cursor.getColumnIndex(org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.DATE_MODIFIED.getName()))!=null){
+					modificationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(cursor.getString(cursor.getColumnIndex(org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.DATE_MODIFIED.getName())));
 				}
 				collectRecord.setModifiedDate(modificationDate);
-			} catch (ParseException e) {
+			} catch (java.text.ParseException e) {
 				e.printStackTrace();
 			}			
-			collectRecord.setId(cursor.getInt(cursor.getColumnIndex(OFC_RECORD.ID.getName())));
+			collectRecord.setId(cursor.getInt(cursor.getColumnIndex(org.openforis.collect.persistence.jooq.tables.OfcRecord.OFC_RECORD.ID.getName())));
 
 			result.add(collectRecord);
 		}	

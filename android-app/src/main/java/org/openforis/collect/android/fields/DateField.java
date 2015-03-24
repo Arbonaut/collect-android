@@ -133,52 +133,52 @@ public class DateField extends InputField {
 		Entity parentEntity = this.findParentEntity(path);
 		if (node!=null){
 			if (month.equals("") && day.equals("") && year.equals("")){
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(null,null,null));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((DateAttribute)node, new Date(null,null,null));
 			} else if (month.equals("") && day.equals("")){	
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),null,null));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),null,null));
 			} else if (month.equals("") && year.equals("")){	
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(null,null,Integer.valueOf(day)));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((DateAttribute)node, new Date(null,null,Integer.valueOf(day)));
 			} else if (day.equals("") && year.equals("")){
 //				dateAtr.setValue(new Date(null,Integer.valueOf(month),null));
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(null,Integer.valueOf(month),null));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((DateAttribute)node, new Date(null,Integer.valueOf(month),null));
 			} else if (month.equals("")){
 //				dateAtr.setValue(new Date(Integer.valueOf(year),null,Integer.valueOf(day)));
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),null,Integer.valueOf(day)));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),null,Integer.valueOf(day)));
 			} else if (day.equals("")){
 //				dateAtr.setValue(new Date(Integer.valueOf(year),Integer.valueOf(month),null));	
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),Integer.valueOf(month),null));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),Integer.valueOf(month),null));
 			} else if (year.equals("")){
 //				dateAtr.setValue(new Date(null,Integer.valueOf(month),Integer.valueOf(day)));	
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(null,Integer.valueOf(month),Integer.valueOf(day)));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((DateAttribute)node, new Date(null,Integer.valueOf(month),Integer.valueOf(day)));
 			} else {
 //				dateAtr.setValue(new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)));
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((DateAttribute)node, new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)));
 			}
 		} else {
 			if (month.equals("") && day.equals("") && year.equals("")){
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(null,null,null), position);
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,null,null), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,null,null), null, null);
 			} else if (month.equals("") && day.equals("")){
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(Integer.valueOf(year),null,null), position);
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),null,null), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),null,null), null, null);
 			} else if (month.equals("") && year.equals("")){
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(null,null,Integer.valueOf(day)), position);	
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,null,Integer.valueOf(day)), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,null,Integer.valueOf(day)), null, null);
 			} else if (day.equals("") && year.equals("")){
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(null,Integer.valueOf(month),null), position);	
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,Integer.valueOf(month),null), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,Integer.valueOf(month),null), null, null);
 			} else if (month.equals("")){
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(Integer.valueOf(year),null,Integer.valueOf(day)), position);	
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),null,Integer.valueOf(day)), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),null,Integer.valueOf(day)), null, null);
 			} else if (day.equals("")){
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(Integer.valueOf(year),Integer.valueOf(month),null), position);	
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),Integer.valueOf(month),null), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),Integer.valueOf(month),null), null, null);
 			} else if (year.equals("")){
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(null,Integer.valueOf(month),Integer.valueOf(day)), position);
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,Integer.valueOf(month),Integer.valueOf(day)), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(null,Integer.valueOf(month),Integer.valueOf(day)), null, null);
 			} else {
 //				EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)), position);
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Date(Integer.valueOf(year),Integer.valueOf(month),Integer.valueOf(day)), null, null);
 			}	
 		}
 		validateField(nodeChangeSet);

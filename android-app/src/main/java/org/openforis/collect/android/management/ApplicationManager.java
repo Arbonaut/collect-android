@@ -317,7 +317,7 @@ public class ApplicationManager extends BaseActivity {
 	 	    		int recordId = data.getIntExtra(getResources().getString(R.string.recordId), getResources().getInteger(R.integer.unsavedRecordId));
 	 	    		if (recordId==getResources().getInteger(R.integer.unsavedRecordId)){//new record
 	 	    			String versionName = survey.getVersions().isEmpty() ? null: survey.getVersions().get(survey.getVersions().size()-1).getName();
-	 	    			ApplicationManager.currentRecord = ServiceFactory.getRecordManager().create(survey, ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(), ApplicationManager.dataManager.getUser(), versionName);
+	 	    			ApplicationManager.currentRecord = ServiceFactory.getMobileRecordManager().create(survey, ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(), ApplicationManager.dataManager.getUser(), versionName);
 	 	    			Entity rootEntity = ApplicationManager.currentRecord.getRootEntity();
 	 					rootEntity.setId(ApplicationManager.currRootEntityId);
 	 	    		} else {//record from database

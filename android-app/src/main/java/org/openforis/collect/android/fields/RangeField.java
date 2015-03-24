@@ -203,62 +203,62 @@ public class RangeField extends InputField {
 //					RealRangeAttribute rangeAtr = (RealRangeAttribute)node;
 					if (valueFrom.equals("") && valueTo.equals("")){
 //						rangeAtr.setValue(new RealRange(null,null,null));
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealRangeAttribute)node, new RealRange(null,null,this.unit));
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((RealRangeAttribute)node, new RealRange(null,null,this.unit));
 					} else if (valueFrom.equals("")){
 //						rangeAtr.setValue(new RealRange(null,Double.valueOf(valueTo),null));
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealRangeAttribute)node, new RealRange(null,Double.valueOf(valueTo),this.unit));
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((RealRangeAttribute)node, new RealRange(null,Double.valueOf(valueTo),this.unit));
 					} else if (valueTo.equals("")){
 //						rangeAtr.setValue(new RealRange(Double.valueOf(valueFrom),null,null));
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealRangeAttribute)node, new RealRange(Double.valueOf(valueFrom),null,this.unit));
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((RealRangeAttribute)node, new RealRange(Double.valueOf(valueFrom),null,this.unit));
 					} else {
 //						rangeAtr.setValue(new RealRange(Double.valueOf(valueFrom),Double.valueOf(valueTo),null));
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((RealRangeAttribute)node, new RealRange(Double.valueOf(valueFrom),Double.valueOf(valueTo),this.unit));
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((RealRangeAttribute)node, new RealRange(Double.valueOf(valueFrom),Double.valueOf(valueTo),this.unit));
 					}			
 				} else {
 //					IntegerRangeAttribute rangeAtr = (IntegerRangeAttribute)node;
 					if (valueFrom.equals("") && valueTo.equals("")){
 //						rangeAtr.setValue(new IntegerRange(null,null,null));
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((IntegerRangeAttribute)node, new IntegerRange(null,null,null));
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((IntegerRangeAttribute)node, new IntegerRange(null,null,null));
 					} else if (valueFrom.equals("")){
 //						rangeAtr.setValue(new IntegerRange(null,Integer.valueOf(valueTo),null));
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((IntegerRangeAttribute)node, new IntegerRange(null,Integer.valueOf(valueTo),this.unit));
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((IntegerRangeAttribute)node, new IntegerRange(null,Integer.valueOf(valueTo),this.unit));
 						
 					} else if (valueTo.equals("")){
 //						rangeAtr.setValue(new IntegerRange(Integer.valueOf(valueFrom),null,null));
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((IntegerRangeAttribute)node, new IntegerRange(Integer.valueOf(valueFrom),null,this.unit));
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((IntegerRangeAttribute)node, new IntegerRange(Integer.valueOf(valueFrom),null,this.unit));
 					} else {
 //						rangeAtr.setValue(new IntegerRange(Integer.valueOf(valueFrom),Integer.valueOf(valueTo),null));
-						nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((IntegerRangeAttribute)node, new IntegerRange(Integer.valueOf(valueFrom),Integer.valueOf(valueTo),this.unit));
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((IntegerRangeAttribute)node, new IntegerRange(Integer.valueOf(valueFrom),Integer.valueOf(valueTo),this.unit));
 					}	
 				}			
 			} else {
 				if (((RangeAttributeDefinition) this.nodeDefinition).isReal()){
 					if (valueFrom.equals("") && valueTo.equals("")){
 //						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new RealRange(null,null,null), position);
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealRange(null,null,this.unit), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealRange(null,null,this.unit), null, null);
 					} else if (valueFrom.equals("")){
 //						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new RealRange(null,Double.valueOf(valueTo),null), position);
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealRange(null,Double.valueOf(valueTo),this.unit), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealRange(null,Double.valueOf(valueTo),this.unit), null, null);
 					} else if (valueTo.equals("")){
 //						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new RealRange(Double.valueOf(valueFrom),null,null), position);
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealRange(Double.valueOf(valueFrom),null,this.unit), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealRange(Double.valueOf(valueFrom),null,this.unit), null, null);
 					} else {
 //						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new RealRange(Double.valueOf(valueFrom),Double.valueOf(valueTo),null), position);
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealRange(Double.valueOf(valueFrom),Double.valueOf(valueTo),this.unit), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new RealRange(Double.valueOf(valueFrom),Double.valueOf(valueTo),this.unit), null, null);
 					}		
 				} else {
 					if (valueFrom.equals("") && valueTo.equals("")){
 //						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new IntegerRange(null,null,null), position);
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerRange(null,null,this.unit), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerRange(null,null,this.unit), null, null);
 					} else if (valueFrom.equals("")){
 //						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new IntegerRange(null,Integer.valueOf(valueTo),null), position);
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerRange(null,Integer.valueOf(valueTo),this.unit), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerRange(null,Integer.valueOf(valueTo),this.unit), null, null);
 					} else if (valueTo.equals("")){
 //						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new IntegerRange(Integer.valueOf(valueFrom),null,null), position);
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerRange(Integer.valueOf(valueFrom),null,this.unit), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerRange(Integer.valueOf(valueFrom),null,this.unit), null, null);
 					} else {
 //						EntityBuilder.addValue(this.findParentEntity(path), this.nodeDefinition.getName(), new IntegerRange(Integer.valueOf(valueFrom),Integer.valueOf(valueTo),null), position);
-						nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerRange(Integer.valueOf(valueFrom),Integer.valueOf(valueTo),this.unit), null, null);
+						nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new IntegerRange(Integer.valueOf(valueFrom),Integer.valueOf(valueTo),this.unit), null, null);
 					}	
 				}
 			}

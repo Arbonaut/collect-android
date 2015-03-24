@@ -253,7 +253,7 @@ public class SummaryTable extends UIElement {
 			 		    		new DialogInterface.OnClickListener() {
 			 						@Override
 			 						public void onClick(DialogInterface dialog, int which) {
-			 							ServiceFactory.getRecordManager().deleteNode(nodeToDelete);
+			 							ServiceFactory.getMobileRecordManager().deleteNode(nodeToDelete);
 			 							//ApplicationManager.isToBeScrolled = true;
 			 							ViewBacktrack viewBacktrack = new ViewBacktrack(SummaryTable.this,SummaryTable.this.form.getFormScreenId());
 			 							ApplicationManager.selectedViewsBacktrackList.add(viewBacktrack);

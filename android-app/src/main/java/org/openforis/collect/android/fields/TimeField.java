@@ -121,23 +121,23 @@ public class TimeField extends InputField implements TextWatcher {
 		Entity parentEntity = this.findParentEntity(path);		
 		if (node!=null){
 			if (hour.equals("") && minute.equals("")){
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((TimeAttribute)node, new Time(null,null));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((TimeAttribute)node, new Time(null,null));
 			} else if (hour.equals("")){
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((TimeAttribute)node, new Time(null,Integer.valueOf(minute)));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((TimeAttribute)node, new Time(null,Integer.valueOf(minute)));
 			} else if (minute.equals("")){
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((TimeAttribute)node, new Time(Integer.valueOf(hour),null));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((TimeAttribute)node, new Time(Integer.valueOf(hour),null));
 			} else {
-				nodeChangeSet = ServiceFactory.getRecordManager().updateAttribute((TimeAttribute)node, new Time(Integer.valueOf(hour),Integer.valueOf(minute)));
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().updateAttribute((TimeAttribute)node, new Time(Integer.valueOf(hour),Integer.valueOf(minute)));
 			}
 		} else {
 			if (hour.equals("") && minute.equals("")){
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Time(null,null), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Time(null,null), null, null);
 			} else if (hour.equals("")){
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Time(null,Integer.valueOf(minute)), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Time(null,Integer.valueOf(minute)), null, null);
 			} else if (minute.equals("")){
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Time(Integer.valueOf(hour),null), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Time(Integer.valueOf(hour),null), null, null);
 			} else {
-				nodeChangeSet = ServiceFactory.getRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Time(Integer.valueOf(hour),Integer.valueOf(minute)), null, null);
+				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Time(Integer.valueOf(hour),Integer.valueOf(minute)), null, null);
 			}			
 		}
 		validateField(nodeChangeSet);

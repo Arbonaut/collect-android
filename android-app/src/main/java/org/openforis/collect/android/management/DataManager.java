@@ -73,7 +73,7 @@ public class DataManager {
 			} else {
 				recordToSave.setModifiedDate(new Date());
 			}
-			ServiceFactory.getRecordManager().save(recordToSave, ApplicationManager.getSessionId());
+			ServiceFactory.getMobileRecordManager().save(recordToSave, ApplicationManager.getSessionId());
 			this.assignShapesToRecord(recordToSave.getId());
 			ApplicationManager.isRecordListUpToDate = false;
 		} catch (RecordUnlockedException e) {
@@ -107,7 +107,7 @@ public class DataManager {
 			} else {
 				recordToSave.setModifiedDate(new Date());
 			}
-			ServiceFactory.getRecordManager().save(recordToSave, ApplicationManager.getSessionId());
+			ServiceFactory.getMobileRecordManager().save(recordToSave, ApplicationManager.getSessionId());
 		} catch (RecordUnlockedException e) {
 			e.printStackTrace();
 		} catch (RecordPersistenceException e) {
@@ -120,7 +120,7 @@ public class DataManager {
 	
 	public void saveAllRecordsToFile(String folderToSave){
 		try{
-			MobileBackupProcess backup = new MobileBackupProcess(ServiceFactory.getSurveyManager(), ServiceFactory.getRecordManager(), 
+			MobileBackupProcess backup = new MobileBackupProcess(ServiceFactory.getSurveyManager(), ServiceFactory.getMobileRecordManager(), 
 					this.dataMarshaller, new File(folderToSave),
 					this.survey, this.survey.getSchema().getDefinitionById(ApplicationManager.currRootEntityId).getName(), new int[]{1,2,3});
 			/*BackupProcess backup = new BackupProcess(ServiceFactory.getSurveyManager(),
@@ -182,8 +182,8 @@ public class DataManager {
 		try {
 //			JdbcDaoSupport jdbcDao = new JdbcDaoSupport();
 //			jdbcDao.getConnection();
-			List<CollectRecord> recordsList = ServiceFactory.getRecordManager().loadSummaries(survey, rootEntity);
-			ServiceFactory.getRecordManager().delete(recordsList.get(position).getId());			
+			List<CollectRecord> recordsList = ServiceFactory.getMobileRecordManager().loadSummaries(survey, rootEntity);
+			ServiceFactory.getMobileRecordManager().delete(recordsList.get(position).getId());			
 		} catch (RecordPersistenceException e) {
 			e.printStackTrace();
 		} finally {
@@ -206,7 +206,7 @@ public class DataManager {
 	}
 	
 	public List<CollectRecord> loadSummaries(){
-		List<CollectRecord> recordsList = ServiceFactory.getRecordManager().getRecordDao().loadSummaries(survey, rootEntity);
+		List<CollectRecord> recordsList = ServiceFactory.getMobileRecordManager().getRecordDao().loadSummaries(survey, rootEntity);
 		ApplicationManager.isRecordListUpToDate = true;
 		return recordsList;
 	}
@@ -214,7 +214,7 @@ public class DataManager {
 	public CollectRecord loadRecord(int recordId){
 		CollectRecord loadedRecord = null;
 		try {			
-			loadedRecord = ServiceFactory.getRecordManager().load(survey, recordId, Step.ENTRY);
+			loadedRecord = ServiceFactory.getMobileRecordManager().load(survey, recordId, Step.ENTRY);
 			DatabaseHelper.closeConnection();
 		} catch (NullPointerException e){
 			e.printStackTrace();

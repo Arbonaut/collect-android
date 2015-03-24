@@ -850,7 +850,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 							NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
 	 							Node<?> foundNode = FormScreen.this.parentEntityMultipleAttribute.get(nodeDef.getName(), FormScreen.this.currInstanceNo);
 	 							if (foundNode!=null){
-	 								ServiceFactory.getRecordManager().deleteNode(foundNode);
+	 								ServiceFactory.getMobileRecordManager().deleteNode(foundNode);
 	 								refreshMultipleAttributeScreen(2);
 	 								Toast.makeText(FormScreen.this, getResources().getString(R.string.attributeDeletedToast), Toast.LENGTH_SHORT).show();
 	 								FormScreen.this.onResume();
@@ -876,7 +876,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 							Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(parentNodeDefinition.getName(), FormScreen.this.currInstanceNo);
 	 							
 	 							if (foundNode!=null){
-	 								ServiceFactory.getRecordManager().deleteNode(foundNode);	 	
+	 								ServiceFactory.getMobileRecordManager().deleteNode(foundNode);	 	
 	 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());		 								
 	 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
 	 								if ((tempNode==null)&&(FormScreen.this.currInstanceNo==0))
