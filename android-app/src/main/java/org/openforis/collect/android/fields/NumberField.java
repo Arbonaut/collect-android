@@ -98,15 +98,17 @@ public class NumberField extends InputField {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if (s.length() > 0){
 					if(!isNumeric(s.toString())){
-						String strReplace = "";
-						if (before==0){//inputting characters
-							strReplace = s.toString().substring(0, start+count-1);
-							strReplace += s.toString().substring(start+count);
-						} else {//deleting characters
-							//do nothing - number with deleted digit is still a number
-						}
-						NumberField.this.txtBox.setText(strReplace);
-						NumberField.this.txtBox.setSelection(start);
+						if (!((s.toString().equals("-"))||(s.toString().equals("+")))){
+							String strReplace = "";
+							if (before==0){//inputting characters
+								strReplace = s.toString().substring(0, start+count-1);
+								strReplace += s.toString().substring(start+count);
+							} else {//deleting characters
+								//do nothing - number with deleted digit is still a number
+							}
+							NumberField.this.txtBox.setText(strReplace);
+							NumberField.this.txtBox.setSelection(strReplace.length()/*start*/);	
+						}					
 					}
 				}
 			}
