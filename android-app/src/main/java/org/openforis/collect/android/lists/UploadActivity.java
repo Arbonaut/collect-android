@@ -133,7 +133,7 @@ public class UploadActivity extends Activity{
 		try {
 			int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 			changeBackgroundColor(backgroundColor);
-
+			UploadActivity.this.lv.setCacheColorHint(0);
 			dataFilesList = new ArrayList<DataFile>();
 			File dataFilesFolder = new File(path);
 			File[] dataFiles = dataFilesFolder.listFiles();

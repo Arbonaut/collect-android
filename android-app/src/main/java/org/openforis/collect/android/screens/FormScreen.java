@@ -676,7 +676,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        				final TaxonField taxonField= new TaxonField(FormScreen.this, nodeDef, codes, options, vernLang);
 	        				taxonField.setOnClickListener(FormScreen.this);
 	        				taxonField.setId(nodeDef.getId());
-	        				taxonField.setValue(0, code, sciName, vernName, vernLang, langVariant, FormScreen.this.getFormScreenId(),false);
+	        				//Log.e("FromScreen1","setValue");
+	        				//taxonField.setValue(0, code, sciName, vernName, vernLang, langVariant, FormScreen.this.getFormScreenId(),false);
 	        				ApplicationManager.putUIElement(taxonField.getId(), taxonField);
 	        				FormScreen.this.ll.addView(taxonField);
 	    				} else if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
@@ -694,7 +695,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		    				final TaxonField taxonField= new TaxonField(FormScreen.this, nodeDef, codes, options, vernLang);
 		    				taxonField.setOnClickListener(FormScreen.this);
 		    				taxonField.setId(nodeDef.getId());
-		    				taxonField.setValue(FormScreen.this.currInstanceNo, code, sciName, vernName, vernLang, langVariant, FormScreen.this.parentFormScreenId,false);
+		    				Log.e("FromScreen2","setValue");
+		    				//taxonField.setValue(FormScreen.this.currInstanceNo, code, sciName, vernName, vernLang, langVariant, FormScreen.this.parentFormScreenId,false);
 	        				ApplicationManager.putUIElement(taxonField.getId(), taxonField);
 	        				FormScreen.this.ll.addView(taxonField);
 	    				} else {//multiple attribute summary    			    		
@@ -1856,6 +1858,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
     					Node<?> foundNode = this.parentEntitySingleAttribute.get(nodeDef.getName(), 0);
 	    				if (foundNode!=null){
 	    					TaxonOccurrence taxonValue = (TaxonOccurrence)this.parentEntitySingleAttribute.getValue(nodeDef.getName(), 0);
+	    					Log.e("taxonValue==null","=="+(taxonValue==null));
 	    					if (taxonValue!=null){
 	    	    				vernLang = taxonValue.getLanguageCode();
 	    					}	    				
@@ -2083,6 +2086,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					}
 					TaxonField taxonField = (TaxonField) ApplicationManager.getUIElement(nodeDef.getId());
 					if (taxonField!=null){
+						Log.e("FromScreen3","setValue");
 						taxonField.setValue(0, code, sciName, vernName, vernLang, langVariant, this.getFormScreenId(), false);
 					}						
 				} else if (nodeDef instanceof FileAttributeDefinition){
@@ -2408,6 +2412,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					}
 					TaxonField taxonField = (TaxonField) ApplicationManager.getUIElement(nodeDef.getId());
 					if (taxonField!=null){
+						Log.e("FromScreen4","setValue");
 						taxonField.setValue(this.currInstanceNo, code, sciName, vernName, vernLang, langVariant, this.getFormScreenId(), false);	
 					}						
 				} else if (nodeDef instanceof FileAttributeDefinition){

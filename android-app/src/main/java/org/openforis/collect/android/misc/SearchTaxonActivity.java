@@ -25,6 +25,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.QwertyKeyListener;
 import android.text.method.TextKeyListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -239,6 +240,9 @@ public class SearchTaxonActivity extends Activity {
         };
         
         private void populateResultList(List<TaxonOccurrence> lstTaxonOccurence, final int parentTaxonFieldId){
+
+        	Log.e("parentTaxonFieldId","=="+parentTaxonFieldId);
+        	Log.e("lstTaxonOccurence","=="+lstTaxonOccurence.size());
         	String[] arrResults = new String[lstTaxonOccurence.size()];
         	int idx = 0;
     		for (TaxonOccurrence taxonOcc : lstTaxonOccurence) {
@@ -271,6 +275,7 @@ public class SearchTaxonActivity extends Activity {
     				TaxonField parentTaxonField = (TaxonField)ApplicationManager.getUIElement(parentTaxonFieldId);
     				try{
     					if(parentTaxonField != null){
+    						Log.e("SearchTaxon","setValue");
         					parentTaxonField.setValue(/*SearchTaxonActivity.this.currentInstanceNo*/0, arrItemValues[0].trim(), arrItemValues[1].trim(), arrItemValues[2].trim(), arrItemValues[3].trim(), arrItemValues[4].trim(), SearchTaxonActivity.this.path,false);
         				}
     				} catch (LanguageCodeNotSupportedException e){

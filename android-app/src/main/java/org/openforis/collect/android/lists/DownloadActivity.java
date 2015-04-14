@@ -141,7 +141,7 @@ public class DownloadActivity extends Activity{
 		
 		int backgroundColor = ApplicationManager.appPreferences.getInt(getResources().getString(R.string.backgroundColor), Color.WHITE);	
 		changeBackgroundColor(backgroundColor);
-	
+		DownloadActivity.this.lv.setCacheColorHint(0);
 		/*File dataFilesFolder = new File(path);
 		File[] dataFiles = dataFilesFolder.listFiles();
 		int filesNo = dataFiles.length;

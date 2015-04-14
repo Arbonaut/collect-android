@@ -10,6 +10,8 @@ import org.openforis.idm.metamodel.CodeListItem;
 import org.openforis.idm.metamodel.ExternalCodeListItem;
 import org.openforis.idm.metamodel.PersistedCodeListItem;
 
+import android.util.Log;
+
 public class MobileCodeListManager extends org.openforis.collect.manager.CodeListManager{
 		
 	private DatabaseExternalCodeListProvider provider;
@@ -58,19 +60,16 @@ public class MobileCodeListManager extends org.openforis.collect.manager.CodeLis
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends CodeListItem> List<T> loadRootItems(CodeList list) {
-		System.err.println("Load root items from mobile CodeListManager"+list.getName());
 		if ( list.isExternal() ) {
 			return (List<T>) provider.getRootItems(list);
 		} else if ( list.isEmpty() ) {
-			System.err.println("Finish loading root items from mobile CodeListManager from CodeListDao");
-			if (this.loadedCodeLists.containsKey(list)){
+			if (this.loadedCodeLists.containsKey(list)){				
 				return (List<T>)this.loadedCodeLists.get(list);
 			}
 			List<PersistedCodeListItem> loadedCodeListItems = (List<PersistedCodeListItem>) codeListItemDao.loadRootItems(list);
-			this.loadedCodeLists.put(list, loadedCodeListItems);
+			this.loadedCodeLists.put(list, loadedCodeListItems);			
 			return (List<T>)loadedCodeListItems;
 		} else {
-			System.err.println("Finish loading items from mobile CodeListManager from list.getItems");
 			return list.getItems();
 		}
 	}

@@ -67,7 +67,7 @@
     <string name="uploadToServerSuccessfulTitle">Upload completed</string>
     <string name="uploadToServerSuccessfulMessage">Uploading data to server successfully finished.</string>
     <string name="downloadToDeviceSuccessfulTitle">Download completed</string>
-    <string name="downloadToDeviceSuccessfulMessage">Downloading data the device successfully finished.</string>
+    <string name="downloadToDeviceSuccessfulMessage">Downloading data to the device successfully finished.</string>
     <string name="copyingDatabaseTitle">Copying database&#8230;</string>
     <string name="importingSpeciesListTitle">Importing species&#8230;</string>
     <string name="copyingDatabaseWrongFileExtensionMessage">Selected file does not seem to be database file (its extension is not .db)</string>

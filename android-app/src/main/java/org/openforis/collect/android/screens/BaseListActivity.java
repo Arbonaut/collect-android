@@ -88,6 +88,7 @@ public class BaseListActivity extends ListActivity {
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
     	menu.findItem(R.id.menu_add_survey).setVisible(ApplicationManager.getSurvey()==null);
+    	menu.findItem(R.id.menu_download).setVisible(ApplicationManager.getSurvey()!=null);
     	menu.findItem(R.id.menu_export_all).setVisible(ApplicationManager.getSurvey()!=null);
         return true;
     }

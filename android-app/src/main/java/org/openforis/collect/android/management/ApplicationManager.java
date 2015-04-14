@@ -443,8 +443,10 @@ public class ApplicationManager extends BaseActivity {
 				super.run();
 				List<CodeList> codeLists = survey.getCodeLists();
 	        	for (CodeList codeList : codeLists){
+	        		
 	        		if (!codeList.isExternal())
 	        			ServiceFactory.getCodeListManager().loadRootItems(codeList);
+	        		
 	        	}	        	            
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -722,6 +724,7 @@ public class ApplicationManager extends BaseActivity {
 	private void showFormRootScreen(){	
 		//List<EntityDefinition> rootEntitiesDefsList = schema.getRootEntityDefinitions();		
 		Intent intent = new Intent(this,FormScreen.class);
+		
 		EntityDefinition rootEntityDef = (EntityDefinition)ApplicationManager.getSurvey().getSchema().getDefinitionById(ApplicationManager.currRootEntityId);
 		intent.putExtra(getResources().getString(R.string.breadcrumb), ApplicationManager.getLabel(rootEntityDef));
 		intent.putExtra(getResources().getString(R.string.screenTitle), ApplicationManager.getLabel(rootEntityDef));

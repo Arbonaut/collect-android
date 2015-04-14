@@ -58,7 +58,8 @@ public class ServiceFactory {
 	    	
 	    	CodeListItemDao codeListItemDao = new CodeListItemDao();
 			codeListItemDao.setDataSource(dataSource);
-	    	codeListManager = new org.openforis.collect.android.management.MobileCodeListManager(codeListItemDao);	    	
+	    	codeListManager = new org.openforis.collect.android.management.MobileCodeListManager(codeListItemDao);
+	    	
 			
 			
 			CollectCodeListService codeListService = new CollectCodeListService();

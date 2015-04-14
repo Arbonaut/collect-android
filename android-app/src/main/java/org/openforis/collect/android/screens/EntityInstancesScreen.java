@@ -36,7 +36,6 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -63,9 +62,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	private String breadcrumb;
 	private String screenTitle;
 	private int intentType;
-	//private int fieldsNo;
 	private int idmlId;
-	//public int currInstanceNo;
 	public int plotId;
 	
 	public Entity parentEntity;
@@ -85,8 +82,6 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		this.screenTitle = this.startingIntent.getStringExtra(getResources().getString(R.string.screenTitle));
     		this.intentType = this.startingIntent.getIntExtra(getResources().getString(R.string.intentType),-1);
     		this.idmlId = this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId),-1);
-    		//this.currInstanceNo = this.startingIntent.getIntExtra(getResources().getString(R.string.instanceNo),-1);
-    		//this.numberOfInstances = this.startingIntent.getIntExtra(getResources().getString(R.string.numberOfInstances),-1);
     		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;
     		this.plotId = this.startingIntent.getIntExtra(getResources().getString(R.string.plotId),-1);
     		this.setScreenOrientation();
@@ -130,26 +125,20 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	    		breadcrumb.setSingleLine();
 	    		HorizontalScrollView scroller = new HorizontalScrollView(EntityInstancesScreen.this);
 	    		scroller.addView(breadcrumb);
-	    		//EntityInstancesScreen.this.ll.addView(scroller);
 	    		EntityInstancesScreen.this.mainLayout.addView(scroller);
-	    		//EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
 	    		EntityInstancesScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 	    		
 	    		TextView screenTitle = new TextView(EntityInstancesScreen.this);
 	    		screenTitle.setText(EntityInstancesScreen.this.screenTitle);
 	    		pixels = (int) (getResources().getInteger(R.integer.screenTitleFontSize) * ApplicationManager.dpiScale + 0.5f);
 	    		screenTitle.setTextSize(pixels/*getResources().getInteger(R.integer.screenTitleFontSize)*/);
-	    		//EntityInstancesScreen.this.ll.addView(screenTitle);
 	    		EntityInstancesScreen.this.mainLayout.addView(screenTitle);
-	    		//EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(this));
 	    		EntityInstancesScreen.this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 			}
 			
 			NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1));
 			if (nodeDef.isMultiple()){
-				//this.ll.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this, true));
 				this.mainLayout.addView(arrangeButtonsInLine(new Button(this), getResources().getString(R.string.addInstanceButton), this, true));
-				//this.ll.addView(ApplicationManager.getDividerLine(this));
 				this.mainLayout.addView(ApplicationManager.getDividerLine(this));
 			}
 			

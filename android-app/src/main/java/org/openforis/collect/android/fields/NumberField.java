@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -35,7 +36,6 @@ public class NumberField extends InputField {
 	
 	private NumberAttributeDefinition numberNodeDef;
 	private String type;
-	//private Entity parentEntity;
 	
 	public NumberField(Context context, NodeDefinition nodeDef) {
 		super(context, nodeDef);
@@ -96,7 +96,7 @@ public class NumberField extends InputField {
 			}
 			public void beforeTextChanged(CharSequence s, int start,  int count, int after) {}				 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (s.length() > 0){
+				if (s.length() > 0){					
 					if(!isNumeric(s.toString())){
 						if (!((s.toString().equals("-"))||(s.toString().equals("+")))){
 							String strReplace = "";
