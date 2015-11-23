@@ -120,6 +120,7 @@ public class NumberField extends InputField {
 		if ((value!=null) && (!value.equals("")) && (!value.equals("null"))){
 			Node<? extends NodeDefinition> node = NumberField.this.findParentEntity(form.getFormScreenId()).get(NumberField.this.nodeDefinition.getName(), form.currInstanceNo);
 			ValidationResults results = ValidationManager.validateField(node);
+			
 			if(results.getErrors().size() > 0 || results.getFailed().size() > 0){
 				NumberField.this.txtBox.setBackgroundColor(Color.RED);
 			}else if (results.getWarnings().size() > 0){

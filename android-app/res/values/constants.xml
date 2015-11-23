@@ -129,6 +129,9 @@
     <string name="photoPath">photoPath</string>
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
+    <string name="accuracy">accuracy</string>
+    <string name="bearing">bearing</string>
+    <string name="altitude">altitude</string>
     <string name="databaseFileName">databaseFileName</string>
     <string name="speciesListFileName">speciesListFileName</string>
     <string name="databaseFileNameRequest">databaseFileNameRequest</string>
@@ -175,6 +178,9 @@
     <color name="greenStart">#00ff00</color>
     <color name="greenMid">#00ff00</color>
     <color name="greenEnd">#00ff00</color>
+    <color name="aluminium_end">#8f8f8f</color>
+    <color name="aluminium_start">#919191</color>
+    
     
     <!-- COLLECT constants -->
     <string name="shortTextField">SHORT</string>

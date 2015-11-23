@@ -41,6 +41,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -191,6 +192,7 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				EntityInstancesScreen.this.ll.addView(ApplicationManager.getDividerLine(EntityInstancesScreen.this));
 				registerForContextMenu(summaryListView);
 				TextView titleView = (TextView)summaryListView.tableLayout.getChildAt(0);
+				//TableRow titleView = (TableRow)summaryListView.tableLayout.getChildAt(0);
 				registerForContextMenu(titleView);
 			}
 			

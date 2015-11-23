@@ -1,45 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<RelativeLayout android:id="@+id/welcomeLayout"
-android:layout_width="fill_parent" 
-android:layout_height="fill_parent"
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:background="#000000">
-
-     	
- 	 	<ImageView 
-   		android:id="@+id/companylogo2"
-   		android:layout_width="fill_parent"
-   		android:layout_height="wrap_content"
-   		android:layout_alignParentTop="true"   		
-   		android:contentDescription="@string/faologo"
-   		android:src="@drawable/faologo"
-   		 />
- 	 	
- 	<ImageView 
-   		android:id="@+id/companylogo1"
-   		android:layout_width="fill_parent"
-   		android:layout_height="wrap_content"
-   		android:contentDescription="@string/arbonautlogo"
-   		android:src="@drawable/arbonaut_logo_big"
-   		android:layout_below="@id/companylogo2"
-   		 />
- 	
- 	<ImageView 
-   		android:id="@+id/productlogo"
-   		android:layout_width="fill_parent"
-   		android:layout_height="wrap_content"
-   		android:layout_below="@id/companylogo1"
-   		android:layout_alignParentBottom="true"
-   		android:contentDescription="@string/ofclogo"
-   		android:src="@drawable/ofclogo"
-   		 />
-</RelativeLayout>-->
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <RelativeLayout
+    <!---<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.7"
@@ -51,7 +15,7 @@ android:background="#000000">
             android:src="@drawable/faologo"
             android:adjustViewBounds="true"
             />
-    </RelativeLayout>
+    </RelativeLayout>-->
      <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

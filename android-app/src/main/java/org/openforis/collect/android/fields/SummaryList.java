@@ -27,6 +27,7 @@ import org.openforis.idm.model.Value;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Html;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -54,7 +55,6 @@ public class SummaryList extends UIElement {
 			OnClickListener listener, int entityInstanceNo) {
 		super(context, entityDef);
 		
-		//this.context = (FormScreen)context;
 		this.context = (EntityInstancesScreen)context;
 		
 		this.instanceNo = entityInstanceNo;
@@ -62,7 +62,7 @@ public class SummaryList extends UIElement {
 		this.tableLayout  = new TableLayout(context);  
 		this.tableLayout.setStretchAllColumns(true); 
 	    this.tableLayout.setShrinkAllColumns(true);
-		this.tableLayout.setPadding(5, 10, 5, 10);
+		this.tableLayout.setPadding(10, 5, 10, 5);
 		
 		this.entityDefinition = entityDef;
 		this.plotNo = -1;
@@ -73,7 +73,7 @@ public class SummaryList extends UIElement {
 		Entity currentEntity = null;
 		if (parentEntity.getName().equals(ApplicationManager.currentRecord.getRootEntity().getName())
 				&&
-				entityDef.getName().equals(ApplicationManager.currentRecord.getRootEntity().getName())){
+			entityDef.getName().equals(ApplicationManager.currentRecord.getRootEntity().getName())){
 			currentEntity = parentEntity;
 			parentEntity = null;
 		} else {
@@ -100,53 +100,67 @@ public class SummaryList extends UIElement {
 				this.plotNo = -1;
 		}
 			
-			String keysLine = "";
-			if (isAtLeastOneKeyValue){
-				for (List<String> key : keysList){
-					if (key.size()==1){
-						keysLine += key.get(0) + getResources().getString(R.string.valuesSeparator1);
-					} else {
-						keysLine += key.get(0) + getResources().getString(R.string.valuesEqualsTo) + key.get(1) + getResources().getString(R.string.valuesSeparator1);	
-					}
-					if (keysLine.length()>threshold){
-						break;
-					}
-					isAtLeastOneKeyValue = false;
-				}
-			} else {
-				if (entityDef.isMultiple())
-					keysLine += (entityInstanceNo+1);
-			}
-			
-			if (keysLine.length()>threshold){
-				keysLine = keysLine.substring(0,threshold-3)+"...";
-			}
-			
-			//fetching details and their values
-			List<NodeDefinition> detailNodeDefsList = entityDef.getChildDefinitions();
-			for (NodeDefinition nodeDef : detailNodeDefsList){
-				List<String> detail = new ArrayList<String>();
-				Value attrValue = null;
-				if (nodeDef instanceof EntityDefinition){
-					attrValue = new TextValue("entitydefinitionnode");
+		String keysLine = "";
+		if (isAtLeastOneKeyValue){
+			for (List<String> key : keysList){
+				TableRow tr = new TableRow(this.context);
+			    tr.setLayoutParams(new TableRow.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			    tr.setBackgroundDrawable(getResources().getDrawable(R.drawable.row_background));
+			    TextView keyLabel = new TextView(this.context);
+			    TextView keyValue = new TextView(this.context);
+				if (key.size()==1){
+					keysLine += key.get(0) + getResources().getString(R.string.valuesSeparator1);					
+					keyLabel.setText(Html.fromHtml("<b>"+key.get(0)+"</b>"));					
+					keyValue.setText("");
 				} else {
-					attrValue = (Value)currentEntity.getValue(nodeDef.getName(),0);	
+					keysLine += key.get(0) + getResources().getString(R.string.valuesEqualsTo) + key.get(1) + getResources().getString(R.string.valuesSeparator1);					
+					keyLabel.setText(Html.fromHtml("<b>"+key.get(0)+"</b>"));
+					keyValue.setText(key.get(1));
+					
 				}
-				detail.add(nodeDef.getName());
-				String stringValue = convertValueToString(attrValue, nodeDef);
-				if (stringValue!=null)
-					detail.add(stringValue);
+				tr.addView(keyLabel);
+				tr.addView(keyValue);
+				this.tableLayout.addView(tr);
+				if (keysLine.length()>threshold){
+					break;
+				}
+				isAtLeastOneKeyValue = false;
 			}
+		} else {
+			if (entityDef.isMultiple())
+				keysLine += (entityInstanceNo+1);
+		}
 		
-			
-			TextView titleView = new TextView(context);
-			if (this.entityDefinition.isMultiple())
-				//titleView.setText(this.label.getText()+" "+(this.instanceNo+1));
-				titleView.setText(this.label.getText()+" "+keysLine);
-			else
-				titleView.setText(this.label.getText()+" "+keysLine);
-			titleView.setOnClickListener(this.context);
-			this.tableLayout.addView(titleView);
+		if (keysLine.length()>threshold){
+			keysLine = keysLine.substring(0,threshold-3)+"...";
+		}
+		
+		//fetching details and their values
+		List<NodeDefinition> detailNodeDefsList = entityDef.getChildDefinitions();
+		for (NodeDefinition nodeDef : detailNodeDefsList){
+			List<String> detail = new ArrayList<String>();
+			Value attrValue = null;
+			if (nodeDef instanceof EntityDefinition){
+				attrValue = new TextValue("entitydefinitionnode");
+			} else {
+				attrValue = (Value)currentEntity.getValue(nodeDef.getName(),0);	
+			}
+			detail.add(nodeDef.getName());
+			String stringValue = convertValueToString(attrValue, nodeDef);
+			if (stringValue!=null)
+				detail.add(stringValue);
+		}
+	
+		
+		TextView titleView = new TextView(context);
+		if (this.entityDefinition.isMultiple())
+			//titleView.setText(this.label.getText()+" "+(this.instanceNo+1));
+			titleView.setText(Html.fromHtml("<b><u>"+this.label.getText()+" "+(this.instanceNo/*currentInstanceNo*/+1)+"</u></b>")/*+"\r\n"+keysLine*/);
+		else
+			titleView.setText(Html.fromHtml("<b><u>"+this.label.getText()+"</u></b>")/*+" "+keysLine*/);
+		titleView.setOnClickListener(this.context);
+		
+		this.tableLayout.addView(titleView, 0);
 		
 		this.container.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		this.container.addView(this.tableLayout);
@@ -156,12 +170,19 @@ public class SummaryList extends UIElement {
 	public void changeBackgroundColor(int backgroundColor){
 		TextView titleView = (TextView)this.tableLayout.getChildAt(0);
 		titleView.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-		int childrenNo = this.tableLayout.getChildCount();
-		for (int i=1;i<childrenNo;i++){		
+		
+		int rowNo = this.tableLayout.getChildCount();
+		for (int i=1;i<rowNo;i++){		
 			TableRow tableRowView = (TableRow)this.tableLayout.getChildAt(i);
-			TextView rowView = (TextView) tableRowView.getChildAt(0);
-			rowView.setBackgroundDrawable((backgroundColor!=Color.WHITE)?getResources().getDrawable(R.drawable.cellshape_white):getResources().getDrawable(R.drawable.cellshape_black));
-			rowView.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+			tableRowView.setBackgroundDrawable((backgroundColor!=Color.WHITE)?getResources().getDrawable(R.drawable.cellshape_white):getResources().getDrawable(R.drawable.cellshape_black));
+			int colNo = tableRowView.getChildCount();
+			for (int j=0; j<colNo; j++) {
+				TextView cellView = (TextView) tableRowView.getChildAt(j);
+				cellView.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+			}
+			//TextView rowView = (TextView) tableRowView.getChildAt(0);
+			//rowView.setBackgroundDrawable((backgroundColor!=Color.WHITE)?getResources().getDrawable(R.drawable.cellshape_white):getResources().getDrawable(R.drawable.cellshape_black));
+			//rowView.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
 		}
 	}
 	

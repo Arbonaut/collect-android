@@ -6,8 +6,12 @@ import org.openforis.idm.metamodel.EntityDefinition;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,8 +43,8 @@ public class EntityLink extends UIElement {
 		
 		TextView titleView = new TextView(context);
 		titleView.setText(this.label.getText());
-		RelativeLayout.LayoutParams titleParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-		titleParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		RelativeLayout.LayoutParams titleParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+		titleParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		titleParams.addRule(RelativeLayout.CENTER_VERTICAL);
 		titleView.setLayoutParams(titleParams);
 		
@@ -50,9 +54,33 @@ public class EntityLink extends UIElement {
 		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		linkView.setLayoutParams(params);
 		
-		this.relativeLayout.addView(titleView);
-		this.relativeLayout.addView(linkView);
-		this.relativeLayout.addView(ApplicationManager.getDividerLine(context));
+		//this.relativeLayout.addView(titleView);
+		//this.relativeLayout.addView(linkView);
+    	Drawable drawable = getResources().getDrawable(R.drawable.expand_entity_black);
+    	drawable.setBounds(0, 0, (int)(drawable.getIntrinsicWidth()*0.25), 
+    	                         (int)(drawable.getIntrinsicHeight()*0.25));
+    	ScaleDrawable sd = new ScaleDrawable(drawable, Gravity.CENTER, 1F, 1F);
+    	
+    	Button b = new Button(context);
+		b.setBackgroundResource(R.drawable.aluminium_button);
+		//b.setShadowLayer(8,  3, 2, Color.RED);
+		b.setText(this.label.getText());
+		RelativeLayout.LayoutParams btnLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		btnLayoutParams.setMargins(5, 5, 5, 5);
+		b.setLayoutParams(btnLayoutParams);
+		b.setOnClickListener(listener);
+		b.setCompoundDrawables(null, null, sd.getDrawable(), null);
+		/*Button b = new Button(context);
+		b.setLayoutParams(titleParams);
+		b.setBackgroundResource(R.drawable.blue_button);
+		b.setText(this.label.getText());
+		b.setCompoundDrawables(null, null, sd.getDrawable(), null);
+		b.setOnClickListener(listener);
+		RelativeLayout.LayoutParams btnLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		btnLayoutParams.setMargins(5, 5, 5, 5);
+		b.setLayoutParams(btnLayoutParams);*/
+		this.relativeLayout.addView(b);
+		//this.relativeLayout.addView(ApplicationManager.getDividerLine(context));
 		
 		this.container.addView(this.relativeLayout);
 		this.addView(this.container);		
@@ -61,10 +89,10 @@ public class EntityLink extends UIElement {
 	public void changeBackgroundColor(int backgroundColor){
 		TextView titleView = (TextView)this.relativeLayout.getChildAt(0);
 		titleView.setTextColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
-		ImageView linkView = (ImageView)this.relativeLayout.getChildAt(1);
+		/*ImageView linkView = (ImageView)this.relativeLayout.getChildAt(1);
 		linkView.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.multiple_entity_arrow_black:R.drawable.multiple_entity_arrow_white);
 		View dividerView = (View)this.relativeLayout.getChildAt(2);
-		dividerView.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);
+		dividerView.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);*/
 	}
 	
 	public String getTitle(){

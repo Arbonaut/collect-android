@@ -55,6 +55,9 @@ public class GpsActivity extends Activity {
 						Intent resultHolder = new Intent(); 
 						resultHolder.putExtra(getResources().getString(R.string.latitude), String.valueOf(loc.getLatitude()));
 						resultHolder.putExtra(getResources().getString(R.string.longitude), String.valueOf(loc.getLongitude()));
+						resultHolder.putExtra(getResources().getString(R.string.accuracy), String.valueOf(loc.getAccuracy()));
+						resultHolder.putExtra(getResources().getString(R.string.bearing), String.valueOf(loc.getBearing()));
+						resultHolder.putExtra(getResources().getString(R.string.altitude), String.valueOf(loc.getAltitude()));
 						setResult(getResources().getInteger(R.integer.internalGpsLocationReceived),resultHolder);
 					}
 						

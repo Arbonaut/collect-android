@@ -43,6 +43,9 @@ public class CoordinateField extends InputField implements OnClickListener {
 	
 	private EditText txtLatitude;
 	private EditText txtLongitude;
+	private TextView txtAltitude;
+	private TextView txtAccuracy;
+	private TextView txtBearing;
 	private Button btnGetCoordinates;
 	
 	private TextView coordLabel;
@@ -101,7 +104,7 @@ public class CoordinateField extends InputField implements OnClickListener {
 		    	}	    	
 			}
 		});
-
+		
 		this.txtLatitude = new EditText(context);
 		this.txtLatitude.addTextChangedListener(this);
 
@@ -168,7 +171,7 @@ public class CoordinateField extends InputField implements OnClickListener {
 				}
 				
 			}
-		});	
+		});
 
 		this.srsList = ApplicationManager.getSurvey().getSpatialReferenceSystems();
 		if (this.srsList.size()>0){
@@ -202,9 +205,9 @@ public class CoordinateField extends InputField implements OnClickListener {
 						srsId = CoordinateField.this.srs.getId();
 					}
 			    	if (CoordinateField.this.nodeDefinition.isMultiple()){
-			    		CoordinateField.this.setValue(CoordinateField.form.currInstanceNo, CoordinateField.this.txtLongitude.getText().toString(), CoordinateField.this.txtLatitude.getText().toString(), srsId, CoordinateField.form.getFormScreenId(),false);	
+			    		CoordinateField.this.setValue(CoordinateField.form.currInstanceNo, CoordinateField.this.txtLongitude.getText().toString(), CoordinateField.this.txtLatitude.getText().toString(), srsId, CoordinateField.this.txtAltitude.getText().toString(), CoordinateField.this.txtAccuracy.getText().toString(), CoordinateField.this.txtBearing.getText().toString(), CoordinateField.form.getFormScreenId(),false);	
 			    	} else {
-			    		CoordinateField.this.setValue(0, CoordinateField.this.txtLongitude.getText().toString(), CoordinateField.this.txtLatitude.getText().toString(), srsId, CoordinateField.form.getFormScreenId(),false);
+			    		CoordinateField.this.setValue(0, CoordinateField.this.txtLongitude.getText().toString(), CoordinateField.this.txtLatitude.getText().toString(), srsId, CoordinateField.this.txtAltitude.getText().toString(), CoordinateField.this.txtAccuracy.getText().toString(), CoordinateField.this.txtBearing.getText().toString(), CoordinateField.form.getFormScreenId(),false);
 			    	}
 			    }
 
@@ -216,13 +219,20 @@ public class CoordinateField extends InputField implements OnClickListener {
 			});
 			this.spinner.setSelection(0);
 			
+			this.txtAltitude = new TextView(context);
+			this.txtAccuracy = new TextView(context);
+			this.txtBearing = new TextView(context);
+			
 			this.addView(this.coordLabel);
 			this.addView(this.spinner);
 		
-		this.addView(this.txtLongitude);
-		this.addView(this.txtLatitude);
-		
-
+			this.addView(this.txtLongitude);
+			this.addView(this.txtLatitude);
+			
+			this.addView(this.txtAltitude);
+			
+			this.addView(this.txtAccuracy);
+			this.addView(this.txtBearing);
 		}	
 		
 		this.btnGetCoordinates = new Button(context);
@@ -231,11 +241,18 @@ public class CoordinateField extends InputField implements OnClickListener {
 		this.addView(this.btnGetCoordinates);
 	}
 	
-	public void setValue(Integer position, String lon, String lat, String srsId, String path, boolean isTextChanged)
+	public void setValue(Integer position, String lon, String lat, String srsId, String altitude, String accuracy, String bearing, String path, boolean isTextChanged)
 	{
 		if (!isTextChanged){
 			this.txtLongitude.setText(lon);
 			this.txtLatitude.setText(lat);
+			this.txtAltitude.setText(altitude);
+			if (accuracy.length()>0)
+				accuracy = (String) accuracy.subSequence(accuracy.indexOf(" "), accuracy.length()-1);
+			if (bearing.length()>0)
+				bearing = (String) bearing.subSequence(bearing.indexOf(" "), bearing.length()-1);
+			this.txtAccuracy.setText("Accuracy: "+accuracy);
+			this.txtBearing.setText("Bearing: "+bearing);
 		}
 		
 		int srsIdPosition = 0;
@@ -272,6 +289,7 @@ public class CoordinateField extends InputField implements OnClickListener {
 				nodeChangeSet = ServiceFactory.getMobileRecordManager().addAttribute(parentEntity, this.nodeDefinition.getName(), new Coordinate(Double.valueOf(lon), Double.valueOf(lat), srsId), null, null);
 			}	
 		}
+		
 		validateField(nodeChangeSet);
 	}
 	
@@ -293,7 +311,7 @@ public class CoordinateField extends InputField implements OnClickListener {
 		if (CoordinateField.this.srs!=null){						
 			srsId = CoordinateField.this.srs.getId();
 		}
-		this.setValue(0, CoordinateField.this.txtLongitude.getText().toString(), CoordinateField.this.txtLatitude.getText().toString(), srsId, CoordinateField.form.getFormScreenId(),true);
+		this.setValue(0, CoordinateField.this.txtLongitude.getText().toString(), CoordinateField.this.txtLatitude.getText().toString(), srsId, CoordinateField.this.txtAltitude.getText().toString(), CoordinateField.this.txtAccuracy.getText().toString(), CoordinateField.this.txtBearing.getText().toString(), CoordinateField.form.getFormScreenId(),true);
 	}
 	
 	@Override

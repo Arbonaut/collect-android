@@ -20,14 +20,17 @@ import org.openforis.idm.model.EntityBuilder;
 import org.openforis.idm.model.Node;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.text.Editable;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -127,7 +130,6 @@ public class CodeField extends InputField {
 				for (int j=0;j<parentItems.size();j++){
 					CodeListItem item = parentItems.get(j);
 					this.codes.add(item.getCode().toString());
-					Log.e("heirarchy2","=="+item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage));
 					this.options.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 					//currentChild.aa.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 				}
@@ -183,7 +185,6 @@ public class CodeField extends InputField {
 							for (int j=0;j<parentItems.size();j++){
 								CodeListItem item = parentItems.get(j);
 								this.codes.add(item.getCode().toString());
-								Log.e("heirarchy1","=="+item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage));
 								this.options.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage));
 								//currentChild.aa.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 							}
@@ -243,7 +244,6 @@ public class CodeField extends InputField {
 					for (int j=0;j<parentItems.size();j++){
 						CodeListItem item = parentItems.get(j);
 						this.codes.add(item.getCode().toString());
-						Log.e("heirarchu3","=="+item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage));
 						this.options.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 						//currentChild.aa.add(item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 					}
@@ -273,6 +273,12 @@ public class CodeField extends InputField {
 				}
 			}//end of hierarchical list
 			setSpinnerSelection(selectedItem);
+			//this.spinner.setBackgroundColor(0x1785fc);
+			this.spinner.setBackgroundDrawable(this.spinner.getContext().getResources().getDrawable(R.drawable.aluminium_spinner));
+			
+			LinearLayout.LayoutParams buttonLayoutParams = new  LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 64);
+			buttonLayoutParams.setMargins(10, 10, 10, 10);
+			//this.spinner.setLayoutParams(buttonLayoutParams);
 			this.addView(this.spinner);
 		}//end of dropdown menu
 	}
@@ -385,7 +391,6 @@ public class CodeField extends InputField {
 					for (int j=0;j<parentItems.size();j++){
 						CodeListItem item = parentItems.get(j);
 						currentChild.codes.add(item.getCode().toString());
-						Log.e("heirarchy4","=="+item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage));
 						currentChild.options.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 						currentChild.aa.add(item.getCode().toString()+"/"+item.getLabel(ApplicationManager.selectedLanguage)/*item.getLabels().get(0).getText()*/);
 					}

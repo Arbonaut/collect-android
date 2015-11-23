@@ -270,9 +270,11 @@ public class DownloadActivity extends Activity{
             pd.dismiss();
         } catch (DataUnmarshallerException e){
         	showError("Parsing error: " + e);
+        	e.printStackTrace();
             pd.dismiss();
         } catch (Exception e) {
             showError("Error : Please check your internet connection " + e);
+            e.printStackTrace();
             pd.dismiss();
         }      
     }

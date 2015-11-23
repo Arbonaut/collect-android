@@ -115,6 +115,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	private String photoPath;
 	private String latitude;
 	private String longitude;
+	private String altitude;
+	private String bearing;
+	private String accuracy;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,6 +176,10 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			tableColHeaders.add("Value");
 			
 			FormScreen.this.sv = new ScrollView(FormScreen.this);
+			RelativeLayout.LayoutParams btnLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			btnLayoutParams.setMargins(25, 25, 25, 25);
+			FormScreen.this.sv.setLayoutParams(btnLayoutParams);
+			
 			FormScreen.this.ll = new LinearLayout(FormScreen.this);
 			FormScreen.this.ll.setOrientation(android.widget.LinearLayout.VERTICAL);
 			FormScreen.this.sv.addView(ll);
@@ -330,6 +337,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    				String loadedValueLon = "";
 	    				String loadedValueLat = "";
 	    				String loadedSrsId = "";
+	    				String loadedAltitude = "";
+	    				String loadedAccuracy = "";
+	    				String loadedBearing = "";
 	    				if (!nodeDef.isMultiple()){
 	        				final CoordinateField coordField= new CoordinateField(FormScreen.this, nodeDef);
 	        				coordField.setId(nodeDef.getId());
@@ -342,7 +352,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        					if (FormScreen.this.currentCoordinateField.srs!=null){						
 	        						srsId = FormScreen.this.currentCoordinateField.srs.getId();
 	        					}
-	        					coordField.setValue(0, FormScreen.this.longitude, FormScreen.this.latitude, srsId, FormScreen.this.getFormScreenId(), false);
+	        					coordField.setValue(0, FormScreen.this.longitude, FormScreen.this.latitude, srsId, FormScreen.this.altitude, FormScreen.this.accuracy, FormScreen.this.bearing, FormScreen.this.getFormScreenId(), false);
 	    		    			FormScreen.this.currentCoordinateField = null;
 	    		    			FormScreen.this.longitude = null;
 	    		    			FormScreen.this.latitude = null;
@@ -355,13 +365,13 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		    							loadedValueLon = coordValue.getX().toString();
 		    						if (coordValue.getY()!=null)
 		    							loadedValueLat = coordValue.getY().toString();
-		    						if (coordValue.getSrsId()!=null)
+		    						if (coordValue.getSrsId()!=null)		    	
 		    							loadedSrsId = coordValue.getSrsId().toString();
 		    					}	    				
 		    				}
 	        				coordField.setOnClickListener(FormScreen.this);
 	        				coordField.setId(nodeDef.getId());
-	        				coordField.setValue(0, loadedValueLon, loadedValueLat, loadedSrsId, FormScreen.this.getFormScreenId(),false);
+	        				coordField.setValue(0, loadedValueLon, loadedValueLat, loadedSrsId, loadedAltitude, loadedAccuracy, loadedBearing, FormScreen.this.getFormScreenId(),false);
 	        				ApplicationManager.putUIElement(coordField.getId(), coordField);
 	        				FormScreen.this.ll.addView(coordField);
 	    				} else if (FormScreen.this.intentType==getResources().getInteger(R.integer.multipleAttributeIntent)){
@@ -376,7 +386,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        					if (FormScreen.this.currentCoordinateField.srs!=null){						
 	        						srsId = FormScreen.this.currentCoordinateField.srs.getId();
 	        					}
-	        					coordField.setValue(FormScreen.this.currInstanceNo, FormScreen.this.longitude, FormScreen.this.latitude, srsId, FormScreen.this.parentFormScreenId,false);
+	        					coordField.setValue(FormScreen.this.currInstanceNo, FormScreen.this.longitude, FormScreen.this.latitude, srsId, FormScreen.this.altitude, FormScreen.this.accuracy, FormScreen.this.bearing, FormScreen.this.parentFormScreenId,false);
 	    		    			FormScreen.this.currentCoordinateField = null;
 	    		    			FormScreen.this.longitude = null;
 	    		    			FormScreen.this.latitude = null;
@@ -396,7 +406,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	        				//coordField= new CoordinateField(FormScreen.this, nodeDef);
 	        				coordField.setOnClickListener(FormScreen.this);
 	        				coordField.setId(nodeDef.getId());
-	        				coordField.setValue(FormScreen.this.currInstanceNo, loadedValueLon, loadedValueLat, loadedSrsId, FormScreen.this.parentFormScreenId,false);
+	        				coordField.setValue(FormScreen.this.currInstanceNo, loadedValueLon, loadedValueLat, loadedSrsId, loadedAltitude, loadedAccuracy, loadedBearing, FormScreen.this.parentFormScreenId,false);
 	        				ApplicationManager.putUIElement(coordField.getId(), coordField);
 	        				FormScreen.this.ll.addView(coordField);
 	    				} else {//multiple attribute summary    			    		
@@ -826,84 +836,91 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	public void onClick(View arg0) {
 		if (arg0 instanceof Button){
 			Button btn = (Button)arg0;
-			if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleAttribute)){
-				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
-				refreshMultipleAttributeScreen(0);
-				ApplicationManager.pd.dismiss();
-			} else if (btn.getId()==getResources().getInteger(R.integer.rightButtonMultipleAttribute)){
-				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
-				refreshMultipleAttributeScreen(1);
-				ApplicationManager.pd.dismiss();
-			} else if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleEntity)){
-				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherEntity));
-				refreshEntityScreen(0);
-				ApplicationManager.pd.dismiss();
-			} else if (btn.getId()==getResources().getInteger(R.integer.rightButtonMultipleEntity)){
-				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherEntity));
-				refreshEntityScreen(1);
-				ApplicationManager.pd.dismiss();
-			} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleAttribute)){
-				AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
-	 					getResources().getString(R.string.deleteAttributeTitle), getResources().getString(R.string.deleteAttribute),
-	 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
-	 		    		new DialogInterface.OnClickListener() {
-	 						@Override
-	 						public void onClick(DialogInterface dialog, int which) {
-	 							NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
-	 							Node<?> foundNode = FormScreen.this.parentEntityMultipleAttribute.get(nodeDef.getName(), FormScreen.this.currInstanceNo);
-	 							if (foundNode!=null){
-	 								ServiceFactory.getMobileRecordManager().deleteNode(foundNode);
-	 								refreshMultipleAttributeScreen(2);
-	 								Toast.makeText(FormScreen.this, getResources().getString(R.string.attributeDeletedToast), Toast.LENGTH_SHORT).show();
+			Log.e("button","clicked"+btn.getParent().getParent().getParent().getClass());
+			if (btn.getParent().getParent().getParent() instanceof EntityLink){
+				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
+				this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)btn.getParent().getParent().getParent(),-1));	
+			} else {
+				if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleAttribute)){
+					ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
+					refreshMultipleAttributeScreen(0);
+					ApplicationManager.pd.dismiss();
+				} else if (btn.getId()==getResources().getInteger(R.integer.rightButtonMultipleAttribute)){
+					ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherMultipleAttribute));
+					refreshMultipleAttributeScreen(1);
+					ApplicationManager.pd.dismiss();
+				} else if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleEntity)){
+					ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherEntity));
+					refreshEntityScreen(0);
+					ApplicationManager.pd.dismiss();
+				} else if (btn.getId()==getResources().getInteger(R.integer.rightButtonMultipleEntity)){
+					ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.scrollingToOtherEntity));
+					refreshEntityScreen(1);
+					ApplicationManager.pd.dismiss();
+				} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleAttribute)){
+					AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
+		 					getResources().getString(R.string.deleteAttributeTitle), getResources().getString(R.string.deleteAttribute),
+		 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
+		 		    		new DialogInterface.OnClickListener() {
+		 						@Override
+		 						public void onClick(DialogInterface dialog, int which) {
+		 							NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
+		 							Node<?> foundNode = FormScreen.this.parentEntityMultipleAttribute.get(nodeDef.getName(), FormScreen.this.currInstanceNo);
+		 							if (foundNode!=null){
+		 								ServiceFactory.getMobileRecordManager().deleteNode(foundNode);
+		 								refreshMultipleAttributeScreen(2);
+		 								Toast.makeText(FormScreen.this, getResources().getString(R.string.attributeDeletedToast), Toast.LENGTH_SHORT).show();
+		 								FormScreen.this.onResume();
+		 							}
+		 						}
+		 					},
+		 		    		new DialogInterface.OnClickListener() {
+		 						@Override
+		 						public void onClick(DialogInterface dialog, int which) {
+
+		 						}
+		 					},
+		 					null).show();			
+				} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleEntity)){
+					AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
+		 					getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
+		 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
+		 		    		new DialogInterface.OnClickListener() {
+		 						@Override
+		 						public void onClick(DialogInterface dialog, int which) {
+	 								NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
+		 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
+		 							Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(parentNodeDefinition.getName(), FormScreen.this.currInstanceNo);
+		 							
+		 							if (foundNode!=null){
+		 								ServiceFactory.getMobileRecordManager().deleteNode(foundNode);	 	
+		 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());		 								
+		 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
+		 								if ((tempNode==null)&&(FormScreen.this.currInstanceNo==0))
+		 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());
+		 							}
+	 								refreshEntityScreen(2);
+	 								Toast.makeText(FormScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
+	 								if (FormScreen.this.currInstanceNo>0){
+	 									FormScreen.this.currInstanceNo--;	
+	 								}	 								
 	 								FormScreen.this.onResume();
-	 							}
-	 						}
-	 					},
-	 		    		new DialogInterface.OnClickListener() {
-	 						@Override
-	 						public void onClick(DialogInterface dialog, int which) {
+		 						}
+		 					},
+		 		    		new DialogInterface.OnClickListener() {
+		 						@Override
+		 						public void onClick(DialogInterface dialog, int which) {
 
-	 						}
-	 					},
-	 					null).show();			
-			} else if (btn.getId()==getResources().getInteger(R.integer.deleteButtonMultipleEntity)){
-				AlertMessage.createPositiveNegativeDialog(FormScreen.this, false, getResources().getDrawable(R.drawable.warningsign),
-	 					getResources().getString(R.string.deleteEntityTitle), getResources().getString(R.string.deleteEntity),
-	 					getResources().getString(R.string.yes), getResources().getString(R.string.no),
-	 		    		new DialogInterface.OnClickListener() {
-	 						@Override
-	 						public void onClick(DialogInterface dialog, int which) {
- 								NodeDefinition nodeDef = ApplicationManager.getNodeDefinition(FormScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.attributeId)+"0", -1));
-	 							NodeDefinition parentNodeDefinition = nodeDef.getParentDefinition();
-	 							Node<?> foundNode = FormScreen.this.parentEntitySingleAttribute.getParent().get(parentNodeDefinition.getName(), FormScreen.this.currInstanceNo);
-	 							
-	 							if (foundNode!=null){
-	 								ServiceFactory.getMobileRecordManager().deleteNode(foundNode);	 	
-	 								Entity tempEntity = findParentEntity2(FormScreen.this.getFormScreenId());		 								
-	 								Node<?> tempNode = tempEntity.get(FormScreen.this.parentEntitySingleAttribute.getName(), FormScreen.this.currInstanceNo);
-	 								if ((tempNode==null)&&(FormScreen.this.currInstanceNo==0))
-	 									EntityBuilder.addEntity(tempEntity, parentNodeDefinition.getName());
-	 							}
- 								refreshEntityScreen(2);
- 								Toast.makeText(FormScreen.this, getResources().getString(R.string.entityDeletedToast), Toast.LENGTH_SHORT).show();
- 								if (FormScreen.this.currInstanceNo>0){
- 									FormScreen.this.currInstanceNo--;	
- 								}	 								
- 								FormScreen.this.onResume();
-	 						}
-	 					},
-	 		    		new DialogInterface.OnClickListener() {
-	 						@Override
-	 						public void onClick(DialogInterface dialog, int which) {
-
-	 						}
-	 					},
-	 					null).show();				
-			} else if (btn.getId()==getResources().getInteger(R.integer.addButtonMultipleAttribute)){
-				refreshMultipleAttributeScreen(3);
-			} else if (btn.getId()==getResources().getInteger(R.integer.addButtonMultipleEntity)){
-				refreshEntityScreen(3);
+		 						}
+		 					},
+		 					null).show();				
+				} else if (btn.getId()==getResources().getInteger(R.integer.addButtonMultipleAttribute)){
+					refreshMultipleAttributeScreen(3);
+				} else if (btn.getId()==getResources().getInteger(R.integer.addButtonMultipleEntity)){
+					refreshEntityScreen(3);
+				}
 			}
+			
 		} else if (arg0 instanceof TextView){
 			TextView tv = (TextView)arg0;
 			Object parentView = arg0.getParent().getParent().getParent().getParent();
@@ -1253,7 +1270,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	}
 	
 	private void refreshEntityScreen(int actionCode){
-		Log.e("refreshEntityScreen","actionCode"+actionCode);
 		//0 - previous, 1 - next, 2 - delete, 3 - add
 		//setting current instance number of the entity
 		if (actionCode==0){//scroll left to previous entity
@@ -1570,7 +1586,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
         					if (FormScreen.this.currentCoordinateField.srs!=null){						
         						srsId = FormScreen.this.currentCoordinateField.srs.getId();
         					}
-        					coordField.setValue(0, this.longitude, this.latitude, srsId, this.parentFormScreenId,false);
+        					coordField.setValue(0, this.longitude, this.latitude, srsId, this.altitude, this.accuracy, this.bearing, this.parentFormScreenId,false);
     		    			this.currentCoordinateField = null;
     		    			this.longitude = null;
     		    			this.latitude = null;
@@ -1590,7 +1606,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
         					if (FormScreen.this.currentCoordinateField.srs!=null){						
         						srsId = FormScreen.this.currentCoordinateField.srs.getId();
         					}
-        					coordField.setValue(this.currInstanceNo, this.longitude, this.latitude, srsId, this.parentFormScreenId,false);
+        					coordField.setValue(this.currInstanceNo, this.longitude, this.latitude, srsId, this.altitude, this.accuracy, this.bearing, this.parentFormScreenId,false);
     		    			this.currentCoordinateField = null;
     		    			this.longitude = null;
     		    			this.latitude = null;
@@ -2010,6 +2026,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					String loadedValueLat = "";
 					String loadedValueLon = "";
 					String loadedSrsId = "";
+					String loadedAltitude = "";
+					String loadedAccuracy = "";
+					String loadedBearing = "";
 					Coordinate coordValue = (Coordinate)parentEntity.getValue(nodeDef.getName(), 0);
 					if (coordValue!=null){
 						if (coordValue.getX()!=null)
@@ -2022,7 +2041,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 						
 					CoordinateField coordField = (CoordinateField) ApplicationManager.getUIElement(nodeDef.getId());
 					if (coordField!=null)
-						coordField.setValue(0, loadedValueLon, loadedValueLat, loadedSrsId, this.getFormScreenId(), false);
+						coordField.setValue(0, loadedValueLon, loadedValueLat, loadedSrsId, loadedAltitude, loadedAccuracy, loadedBearing, this.getFormScreenId(), false);
 				} else if (nodeDef instanceof RangeAttributeDefinition){
 					String from = "";
 					String to = "";
@@ -2329,6 +2348,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					String loadedValueLat = "";
 					String loadedValueLon = "";
 					String loadedSrsId = "";
+					String loadedAltitude = "";
+					String loadedAccuracy = "";
+					String loadedBearing = "";
 					Coordinate coordValue = (Coordinate)parentEntity.getValue(nodeDef.getName(), this.currInstanceNo);
 					if (coordValue!=null){
 						loadedValueLon = coordValue.getX().toString();
@@ -2343,7 +2365,7 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 					}						
 					CoordinateField coordField = (CoordinateField) ApplicationManager.getUIElement(nodeDef.getId());
 					if (coordField!=null)
-						coordField.setValue(this.currInstanceNo, loadedValueLon, loadedValueLat, loadedSrsId, this.getFormScreenId(), false);
+						coordField.setValue(this.currInstanceNo, loadedValueLon, loadedValueLat, loadedSrsId, loadedAltitude, loadedAccuracy, loadedBearing, this.getFormScreenId(), false);
 				} else if (nodeDef instanceof RangeAttributeDefinition){
 					String from = "";
 					String to = "";
@@ -2450,6 +2472,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	 	    	if (resultCode==getResources().getInteger(R.integer.internalGpsLocationReceived)){
 	 	    		this.latitude = data.getStringExtra(getResources().getString(R.string.latitude));
 	 	    		this.longitude = data.getStringExtra(getResources().getString(R.string.longitude));
+	 	    		this.altitude = data.getStringExtra(getResources().getString(R.string.altitude));
+	 	    		this.bearing = data.getStringExtra(getResources().getString(R.string.bearing));
+	 	    		this.accuracy = data.getStringExtra(getResources().getString(R.string.accuracy));
 	 	    		AlertMessage.createPositiveDialog(FormScreen.this, true, null,
 							getResources().getString(R.string.gettingCoordsFinishedTitle), 
 							getResources().getString(R.string.gettingCoordsSuccessMessage),

@@ -1,9 +1,11 @@
 package org.openforis.collect.android.fields;
 
 import java.util.List;
+import java.util.Map;
 
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.model.AttributeChange;
+import org.openforis.collect.model.EntityChange;
 import org.openforis.collect.model.NodeChange;
 import org.openforis.collect.model.NodeChangeSet;
 import org.openforis.collect.model.validation.ValidationMessageBuilder;
@@ -20,6 +22,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.text.method.KeyListener;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -95,11 +98,9 @@ public class InputField extends Field implements TextWatcher {
 	public void validateField(NodeChangeSet nodeChangeSet){
     	List<NodeChange<?>> nodeChangesList = nodeChangeSet.getChanges();
     	for (NodeChange<?> nodeChange : nodeChangesList){
-    			//HERE WE CHECK DOES IT HAVE ANY ERRORS or WARNINGS   
+    			//HERE WE CHECK DOES IT HAVE ANY ERRORS or WARNINGS 
     			if (nodeChange instanceof AttributeChange) {
-    				
-    				ValidationResults results = ((AttributeChange)nodeChange).getValidationResults();
-    				    			
+    				ValidationResults results = ((AttributeChange)nodeChange).getValidationResults();    			
     				//Make background color red or yellow if there is any errors/warnings 				
     				String validationMsg = "";
     				if (results.getErrors().size() > 0){
@@ -147,7 +148,10 @@ public class InputField extends Field implements TextWatcher {
     					this.extendedLabel.setVisibility(View.GONE);
     				}
     					
-    			}		
+    			} else if (nodeChange instanceof EntityChange) {
+    				Map<String, Boolean> results = ((EntityChange)nodeChange).getChildrenRequireness();
+    				Log.e("EntityChange",results.size()+"REALentityvalidation=="+this.getLabelText());
+    			}
     		}    				
 	}
 	
