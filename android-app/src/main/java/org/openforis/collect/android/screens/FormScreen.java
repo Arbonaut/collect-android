@@ -63,15 +63,19 @@ import org.openforis.idm.model.Time;
 import org.openforis.idm.model.Value;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -836,9 +840,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	public void onClick(View arg0) {
 		if (arg0 instanceof Button){
 			Button btn = (Button)arg0;
-			Log.e("button","clicked"+btn.getParent().getParent().getParent().getClass());
 			if (btn.getParent().getParent().getParent() instanceof EntityLink){
 				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
+				
 				this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)btn.getParent().getParent().getParent(),-1));	
 			} else {
 				if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleAttribute)){
@@ -1057,6 +1061,8 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			dividerLine.setBackgroundColor((backgroundColor!=Color.WHITE)?Color.WHITE:Color.BLACK);	
 		}
 		
+		
+		
 		int viewsNo = this.ll.getChildCount();
 		int start = 0;
 		for (int i=start;i<viewsNo;i++){
@@ -1091,10 +1097,16 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 				Button leftBtn = (Button)rLayout.getChildAt(0);
 				leftBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_left_black:R.drawable.arrow_left_white);
 				LinearLayout lLayout = (LinearLayout)rLayout.getChildAt(1);				
-				Button addBtn = (Button)lLayout.getChildAt(0);
+				/*Button addBtn = (Button)lLayout.getChildAt(0);
 				addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
 				Button deleteBtn = (Button)lLayout.getChildAt(1);
-				deleteBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.recycle_bin_black:R.drawable.recycle_bin_white);
+				Drawable drawable = getResources().getDrawable(R.drawable.trash_recyclebin_empty_closed);
+		    	drawable.setBounds(0, 0, (int)(drawable.getIntrinsicWidth()*0.25), 
+		    	                         (int)(drawable.getIntrinsicHeight()*0.25));
+		    	ScaleDrawable sd = new ScaleDrawable(drawable, Gravity.CENTER, 1F, 1F);
+				deleteBtn.setCompoundDrawables(null, null, sd.getDrawable(), null);
+				//deleteBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.recycle_bin_black:R.drawable.recycle_bin_white);
+				 * */
 				Button rightBtn = (Button)rLayout.getChildAt(2);
 				rightBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_right_black:R.drawable.arrow_right_white);
 			}
@@ -1106,11 +1118,16 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			Button leftBtn = (Button)rLayout.getChildAt(0);
 			leftBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_left_black:R.drawable.arrow_left_white);
 			RelativeLayout lLayout = (RelativeLayout)rLayout.getChildAt(1);				
-			Button addBtn = (Button)lLayout.getChildAt(0);
+			/*Button addBtn = (Button)lLayout.getChildAt(0);
 			addBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.add_new_black:R.drawable.add_new_white);
 			Button deleteBtn = (Button)lLayout.getChildAt(1);
-			deleteBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.recycle_bin_black:R.drawable.recycle_bin_white);
-			Button rightBtn = (Button)rLayout.getChildAt(2);
+			Drawable drawable = getResources().getDrawable(R.drawable.trash_recyclebin_empty_closed);
+	    	drawable.setBounds(0, 0, (int)(drawable.getIntrinsicWidth()*0.25), 
+	    	                         (int)(drawable.getIntrinsicHeight()*0.25));
+	    	ScaleDrawable sd = new ScaleDrawable(drawable, Gravity.CENTER, 1F, 1F);
+			deleteBtn.setCompoundDrawables(null, null, sd.getDrawable(), null);
+			//deleteBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.recycle_bin_black:R.drawable.recycle_bin_white);
+			*/Button rightBtn = (Button)rLayout.getChildAt(2);
 			rightBtn.setBackgroundResource((backgroundColor!=Color.WHITE)?R.drawable.arrow_right_black:R.drawable.arrow_right_white);
 		}
     }
@@ -1120,14 +1137,15 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
 	            RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 	    relativeButtonsLayout.setLayoutParams(lp);
-	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(32,32);
-	    btnDelete.setLayoutParams(params);
-	    btnDelete.setBackgroundResource(R.drawable.recycle_bin_white);
-	    btnDelete.setId(11111);
-	    params = new RelativeLayout.LayoutParams(getResources().getInteger(R.integer.addButtonWidth),getResources().getInteger(R.integer.addButtonHeight));
+	    btnDelete = this.createButton(this, 32, 32, R.drawable.aluminium_button,
+	    		getResources().getDrawable(R.drawable.trash_recyclebin_empty_closed), 11111);
+	   
+	    /*RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(getResources().getInteger(R.integer.addButtonWidth),getResources().getInteger(R.integer.addButtonHeight));
 	    btnAdd.setLayoutParams(params);
 	    btnAdd.setBackgroundResource(R.drawable.add_new_white);
-	    btnAdd.setId(22222);
+	    btnAdd.setId(22222);*/
+	    btnAdd = this.createButton(this, 32, 32, R.drawable.aluminium_button,
+	    		getResources().getDrawable(R.drawable.plus2), 22222);
 		
 	    btnLeft.setBackgroundResource(R.drawable.arrow_left_white);
 	    
@@ -2919,4 +2937,21 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 		}
 		return valueToReturn;
 	}
+    
+    private Button createButton(Context ctx, int width, int height, int backgroundResource,
+    		Drawable drawable, int id){
+    	Button btn = new Button(ctx);
+	    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+	    btn.setLayoutParams(params);
+	    btn.setBackgroundResource(backgroundResource);
+    	drawable.setBounds(0, 0, (int)(drawable.getIntrinsicWidth()*0.25), 
+    	                         (int)(drawable.getIntrinsicHeight()*0.25));
+    	ScaleDrawable sd = new ScaleDrawable(drawable, Gravity.CENTER, 1F, 1F);
+    	btn.setPadding(0, 0, 8, 0);
+    	btn.setCompoundDrawables(null, null, sd.getDrawable(), null);
+    	//btnDelete.setCompoundDrawablePadding(33);
+    	btn.setId(id);
+	    
+	    return btn;
+    }
 }

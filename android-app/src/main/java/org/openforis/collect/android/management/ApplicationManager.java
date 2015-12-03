@@ -443,10 +443,9 @@ public class ApplicationManager extends BaseActivity {
 				super.run();
 				List<CodeList> codeLists = survey.getCodeLists();
 	        	for (CodeList codeList : codeLists){
-	        		
-	        		if (!codeList.isExternal())
+	        		if (!codeList.isExternal()) {
 	        			ServiceFactory.getCodeListManager().loadRootItems(codeList);
-	        		
+	        		}      				        		
 	        	}	        	            
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -22,7 +22,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.text.method.KeyListener;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -150,7 +149,6 @@ public class InputField extends Field implements TextWatcher {
     					
     			} else if (nodeChange instanceof EntityChange) {
     				Map<String, Boolean> results = ((EntityChange)nodeChange).getChildrenRequireness();
-    				Log.e("EntityChange",results.size()+"REALentityvalidation=="+this.getLabelText());
     			}
     		}    				
 	}

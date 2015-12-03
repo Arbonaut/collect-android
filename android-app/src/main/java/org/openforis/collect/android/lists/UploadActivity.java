@@ -234,7 +234,10 @@ public class UploadActivity extends Activity{
      
                 int i = 0;
                 while(tk.hasMoreTokens()) {
-                    responseList[i++] = tk.nextToken();
+                    responseList[i++] = tk.nextToken();                    
+                }
+                for (int w=0;w<responseList.length;w++){
+                	Log.e("RESPONSE"+w,"=="+responseList[w]);
                 }
             }
             if (filesCount==0){

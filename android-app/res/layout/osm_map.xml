@@ -19,7 +19,7 @@
             android:layout_width="50dp" 
             android:layout_height="32dp"/>
         
-        <ImageButton 
+        <!--<ImageButton 
             android:id="@+id/addPointButton"
             android:contentDescription="@string/addPointButton"
             android:layout_width="50dp" 
@@ -47,5 +47,5 @@
             android:layout_height="32dp"
             android:layout_toRightOf="@id/addPlotButton"
             android:visibility="gone" />
-               
+          -->     
 </RelativeLayout>

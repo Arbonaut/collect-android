@@ -187,9 +187,9 @@
     <string name="memoTextField">MEMO</string>
     
     <!-- MAP CONSTANTS -->
-    <string name="plotEntityField">plot_details</string>
-    <string name="plotCoordinatesField">plot_center_coordinates</string>
-    <string name="plotIdField">plot_number</string>
+    <string name="plotEntityField">plot_general</string>
+    <string name="plotCoordinatesField">gps</string>
+    <string name="plotIdField">plot_id</string>
     <string name="plotBoundariesSavingPath">/ofcm/plot_shape_files</string>
     <string name="plotBoundariesSavingBaseFileName">/plot_shape_</string>
     <string name="plotBoundariesSavingFileExtension">.kml</string>

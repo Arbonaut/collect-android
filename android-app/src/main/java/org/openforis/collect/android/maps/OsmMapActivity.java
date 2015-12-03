@@ -225,7 +225,7 @@ public class OsmMapActivity extends Activity {
     			    //rl.addView(locateButton, params);
     			    locateButton.setLayoutParams(params);
     			    
-    			    ImageButton addPointButton = (ImageButton) findViewById(R.id.addPointButton);
+    			    /*ImageButton addPointButton = (ImageButton) findViewById(R.id.addPointButton);
     			    addPointButton.setOnClickListener(new OnClickListener()
     			    {
     			        @Override
@@ -272,7 +272,7 @@ public class OsmMapActivity extends Activity {
     			        }           
     			    });
     			    addPlotButton.setImageResource(android.R.drawable.star_big_off);
-    			    
+    			    */
 
     			    
     				openingMapHandler.sendEmptyMessage(0);
@@ -410,15 +410,14 @@ public class OsmMapActivity extends Activity {
     		        
     		        DataManager dataManager = new DataManager(OsmMapActivity.this,(CollectSurvey) ApplicationManager.getSurvey(),ApplicationManager.getSurvey().getSchema().getRootEntityDefinition(ApplicationManager.currRootEntityId).getName(),ApplicationManager.getLoggedInUser());
     		        List<CollectRecord> savedRecordsSummaries = dataManager.loadSummaries();
-    		        ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
+    		        Log.e("number of saved records", "=="+savedRecordsSummaries.size());
+    		        //ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
     		        
     		    	for (CollectRecord savedRecordSummary : savedRecordsSummaries){
-    		    		Log.e("savedrecord","id=="+savedRecordSummary.getId());
-    		    		Log.e("currentrecord","id=="+ApplicationManager.currentRecord.getId());
-    		    		if (savedRecordSummary.getId().equals(ApplicationManager.currentRecord.getId())){//it is currently opened plot
+    		    		//if (savedRecordSummary.getId().equals(ApplicationManager.currentRecord.getId())){//it is currently opened plot
     		    			Log.e("currently opened","PLOT");
     		    			//searching for coordinate fields
-    		    			
+    		    			ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
     		    			//opening plot based on strict structure of form
     			        	CollectRecord savedRecord = dataManager.loadRecord(savedRecordSummary.getId());
     			        	List<Node<? extends NodeDefinition>> plotsList = savedRecord.getRootEntity().getAll(getResources().getString(R.string.plotEntityField));
@@ -428,9 +427,9 @@ public class OsmMapActivity extends Activity {
     			        		Coordinate plotCenter = (Coordinate) plotEntity.getValue(getResources().getString(R.string.plotCoordinatesField), 0);
     			        		Log.e("plotCenter==null","=="+(plotCenter==null));
     			        		if (plotCenter!=null){
-    			        			Log.e("plotcoords",plotCenter.getX()+"=="+plotCenter.getY());
+    			        			Log.e("draw",plotCenter.getX()+"=="+plotCenter.getY());
     			        			Log.e("plotEntity==null","=="+(plotEntity==null));    			        			
-    				        		IntegerValue plotNo = (IntegerValue)plotEntity.getValue(getResources().getString(R.string.plotIdField), 0);
+    				        		IntegerValue plotNo = (IntegerValue)plotEntity.getParent().getValue(getResources().getString(R.string.plotIdField), 0);
     				        		if (plotNo!=null)
     				        			Log.e("plotNo","=="+plotNo.getValue());
     				        		else 
@@ -443,15 +442,19 @@ public class OsmMapActivity extends Activity {
     				        		if (plotNo==null)
     				        			plotNo = new IntegerValue(-1,null);
     				        		OverlayItem olItem = new OverlayItem(String.valueOf(savedRecord.getId()), plotNo.getValue().toString(), "Y: "+plotCenter.getY()+"\r\nX:"+plotCenter.getX(),  new GeoPoint(plotCenter.getY(),plotCenter.getX()));
+    	    				        Drawable newMarker = getResources().getDrawable(R.drawable.forest_marker);
+    	    				        olItem.setMarker(newMarker);
     				        		Log.e("olItem.getUid()","=="+olItem.getUid());
     				            	overlayItemArray.add(olItem);	
-    				            	Log.e("item","ADDED");
+    				            	Log.e("item","ADDED"+overlayItemArray.size());
     			        		}	        		
     			        	}        	
     				        PlotMarker overlay = new PlotMarker(OsmMapActivity.this, overlayItemArray);
+    				        Log.e("overlaysNo1","=="+mapView.getOverlays().size());
     				        mapView.getOverlays().add(overlay);
-    				        break;
-    		    		}
+    				        Log.e("overlaysNo2","=="+mapView.getOverlays().size());
+    				        //break;
+    		    		//}
     		    	}
     		        
     		        //mapView.getOverlays().add(new PlotOverlay(this));

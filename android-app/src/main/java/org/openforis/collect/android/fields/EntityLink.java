@@ -69,7 +69,7 @@ public class EntityLink extends UIElement {
 		btnLayoutParams.setMargins(5, 5, 5, 5);
 		b.setLayoutParams(btnLayoutParams);
 		b.setOnClickListener(listener);
-		b.setCompoundDrawables(null, null, sd.getDrawable(), null);
+		//b.setCompoundDrawables(null, null, sd.getDrawable(), null);
 		/*Button b = new Button(context);
 		b.setLayoutParams(titleParams);
 		b.setBackgroundResource(R.drawable.blue_button);

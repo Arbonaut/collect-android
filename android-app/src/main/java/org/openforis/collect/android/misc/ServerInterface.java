@@ -21,6 +21,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import android.util.Log;
+
 /**
  * 
  * @author K. Waga
@@ -74,7 +76,7 @@ public class ServerInterface {
             nameValuePairs.add(new BasicNameValuePair("survey_id", survey_id));
             nameValuePairs.add(new BasicNameValuePair("username",username));
             nameValuePairs.add(new BasicNameValuePair("overwrite",String.valueOf(overwrite)));
-
+            Log.e("postSyncXML","==");
             UrlEncodedFormEntity form;
             try {
                 form = new UrlEncodedFormEntity(nameValuePairs);
@@ -85,6 +87,7 @@ public class ServerInterface {
                 HttpResponse response = (HttpResponse) httpclient .execute(httppost);
                 HttpEntity resEntity = response.getEntity();  
                 String resp = EntityUtils.toString(resEntity);
+                Log.e("RESPONSE", "=="+resp);
                 return resp;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

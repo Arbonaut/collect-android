@@ -20,10 +20,7 @@ import org.openforis.idm.model.EntityBuilder;
 import org.openforis.idm.model.Node;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.text.Editable;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -268,7 +265,6 @@ public class CodeField extends InputField {
 					    public void onNothingSelected(AdapterView<?> parentView) {
 					    	
 					    }
-
 					});
 				}
 			}//end of hierarchical list
