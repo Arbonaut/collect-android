@@ -22,6 +22,7 @@ import org.openforis.idm.model.EntityBuilder;
 import org.openforis.idm.model.Node;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -71,12 +72,12 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	public Entity parentEntityMultipleAttribute;
 	
 	private boolean isTextViewClicked = false;
+	private NodeDefinition currentNodeDef;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try{
         	Log.i(getResources().getString(R.string.app_name),TAG+":onCreate");
-        	ApplicationManager.formScreenActivityList.add(this);
         	
     		this.startingIntent = getIntent();
     		this.breadcrumb = this.startingIntent.getStringExtra(getResources().getString(R.string.breadcrumb));
@@ -86,6 +87,10 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
     		this.parentFormScreenId = this.startingIntent.getStringExtra(getResources().getString(R.string.parentFormScreenId));;
     		this.plotId = this.startingIntent.getIntExtra(getResources().getString(R.string.plotId),-1);
     		this.setScreenOrientation();
+    		
+        	currentNodeDef = ApplicationManager.getNodeDefinition(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1));
+        	if (currentNodeDef.isMultiple())
+        		ApplicationManager.formScreenActivityList.add(this);	
         } catch (Exception e){
     		RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":onCreate",
     				Environment.getExternalStorageDirectory().toString()
@@ -101,6 +106,13 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 	{
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
+		currentNodeDef = ApplicationManager.getNodeDefinition(EntityInstancesScreen.this.startingIntent.getIntExtra(getResources().getString(R.string.idmlId), -1));
+    	if (!currentNodeDef.isMultiple()) {
+			SummaryList summaryListView = new SummaryList(EntityInstancesScreen.this, (EntityDefinition)currentNodeDef, 45, EntityInstancesScreen.this, 0);
+			summaryListView.setOnClickListener(EntityInstancesScreen.this);
+			summaryListView.setId(currentNodeDef.getId());
+			this.onClick(summaryListView);
+		}
 		try{
 			EntityInstancesScreen.this.sv = new ScrollView(EntityInstancesScreen.this);
 			EntityInstancesScreen.this.ll = new LinearLayout(EntityInstancesScreen.this);
@@ -246,6 +258,9 @@ public class EntityInstancesScreen extends BaseActivity implements OnClickListen
 				ApplicationManager.isToBeScrolled = true;	
 			}
 		}*/
+		if (!this.currentNodeDef.isMultiple()){
+			this.finish();
+		}
 		super.onPause();
     }
 

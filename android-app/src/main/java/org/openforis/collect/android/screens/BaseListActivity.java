@@ -11,6 +11,7 @@ import org.openforis.collect.android.lists.FileImportActivity;
 import org.openforis.collect.android.logs.RunnableHandler;
 import org.openforis.collect.android.management.ApplicationManager;
 import org.openforis.collect.android.management.DataManager;
+import org.openforis.collect.android.maps.OsmMapActivity;
 import org.openforis.collect.android.messages.AlertMessage;
 import org.openforis.collect.android.service.ServiceFactory;
 import org.openforis.collect.model.CollectSurvey;
@@ -90,6 +91,7 @@ public class BaseListActivity extends ListActivity {
     	menu.findItem(R.id.menu_add_survey).setVisible(ApplicationManager.getSurvey()==null);
     	menu.findItem(R.id.menu_download).setVisible(ApplicationManager.getSurvey()!=null);
     	menu.findItem(R.id.menu_export_all).setVisible(ApplicationManager.getSurvey()!=null);
+    	menu.findItem(R.id.menu_map).setVisible(ApplicationManager.getSurvey()!=null);
         return true;
     }
  
@@ -125,6 +127,35 @@ public class BaseListActivity extends ListActivity {
 	 					},
 	 					null).show();
 			    return true;
+        	case R.id.menu_map:
+			    final ProgressDialog pdOpeningMap = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.openingMap));
+				final Handler openingMapHandler = new Handler() {
+					@Override
+					public void handleMessage(Message msg) {						
+					}
+				};
+	        	Thread openingMapThread = new Thread() {
+	        		@Override
+	        		public void run() {
+	        			try {
+	        				super.run();
+	        				startActivity(new Intent(BaseListActivity.this, OsmMapActivity.class));
+	        				openingMapHandler.sendEmptyMessage(0);
+	        			} catch (Exception e) {
+	        				openingMapHandler.sendEmptyMessage(1);
+	        				RunnableHandler.reportException(e,getResources().getString(R.string.app_name),TAG+":run",
+	        	    				Environment.getExternalStorageDirectory().toString()
+	        	    				+getResources().getString(R.string.logs_folder)
+	        	    				+getResources().getString(R.string.logs_file_name)
+	        	    				+System.currentTimeMillis()
+	        	    				+getResources().getString(R.string.log_file_extension));
+	        			} finally {
+	        				pdOpeningMap.dismiss();	        				
+	        			}
+	        		}
+	        	};
+	        	openingMapThread.start();  
+	        	return true;
         	/*case R.id.menu_export_all:
 	        	final ProgressDialog pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.backupingData));
 	        	Thread backupThread = new Thread() {

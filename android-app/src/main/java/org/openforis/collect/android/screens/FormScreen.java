@@ -62,6 +62,7 @@ import org.openforis.idm.model.TextValue;
 import org.openforis.idm.model.Time;
 import org.openforis.idm.model.Value;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -163,6 +164,9 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 	{
 		super.onResume();
 		Log.i(getResources().getString(R.string.app_name),TAG+":onResume");
+		for (Activity queuedActivity : ApplicationManager.formScreenActivityList){
+			Log.e("queuedActivity","=="+queuedActivity.getLocalClassName());
+		}
 		try{
 			FormScreen.this.parentEntitySingleAttribute = FormScreen.this.findParentEntity(FormScreen.this.getFormScreenId());
 			FormScreen.this.parentEntityMultipleAttribute = FormScreen.this.findParentEntity(FormScreen.this.parentFormScreenId);
@@ -842,7 +846,6 @@ public class FormScreen extends BaseActivity implements OnClickListener {
 			Button btn = (Button)arg0;
 			if (btn.getParent().getParent().getParent() instanceof EntityLink){
 				ApplicationManager.pd = ProgressDialog.show(this, getResources().getString(R.string.workInProgress), getResources().getString(R.string.loadingMultipleEntitiesList));
-				
 				this.startActivity(this.prepareIntentForEntityInstancesList((EntityLink)btn.getParent().getParent().getParent(),-1));	
 			} else {
 				if (btn.getId()==getResources().getInteger(R.integer.leftButtonMultipleAttribute)){

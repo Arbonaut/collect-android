@@ -497,7 +497,6 @@ public class OsmMapActivity extends Activity {
 	    System.gc();
 	    SharedPreferences.Editor editor = ApplicationManager.appPreferences.edit();
 		int selectedZoomLevel = mapView.getZoomLevel();
-		Log.e("onPause","zoomLEvel=="+selectedZoomLevel);
 		editor.putInt(getResources().getString(R.string.zoomLevel), selectedZoomLevel);
 		editor.putString(this.getResources().getString(R.string.userLocationLat), String.valueOf(mapView.getMapCenter().getLatitudeE6()/1E6));
 		editor.putString(this.getResources().getString(R.string.userLocationLon), String.valueOf(mapView.getMapCenter().getLongitudeE6()/1E6));
